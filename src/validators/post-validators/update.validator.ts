@@ -1,10 +1,16 @@
 import { inputValidationMiddleware } from '../../middlewares/input-validation.middleware';
 import { body } from 'express-validator';
-import { nameValidator } from './content-validator';
-import { youtubeUrlValidator } from './youtube-url-validator';
+import { contentValidator } from './content-validator';
+import { shortDescriptionValidator } from './youtube-url-validator';
+import { titleValidator } from './title-validator';
+import { bloggerIdValidator } from './blogger-id-validator';
 
 export const updateBloggerValidators = [
-	nameValidator(body('name')).optional({ nullable: true }),
-	youtubeUrlValidator(body('youtubeUrl')).optional({ nullable: true }),
+	contentValidator(body('content')).optional({ nullable: true }),
+	shortDescriptionValidator(body('shortDescription')).optional({
+		nullable: true,
+	}),
+	titleValidator(body('title')).optional({ nullable: true }),
+	bloggerIdValidator(body('bloggerId')).optional({ nullable: true }),
 	inputValidationMiddleware,
 ];
