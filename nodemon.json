@@ -1,0 +1,10 @@
+{
+  "restartable": "rs",
+  "ignore": [".git", "node_modules/**/node_modules", "src/__generated__"],
+  "verbose": true,
+  "execMap": {
+    "ts": "node -r ts-node/register src/index.ts"
+  },
+  "watch": ["src/"],
+  "ext": "js,json,ts,graphql,.env"
+}
