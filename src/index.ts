@@ -36,8 +36,8 @@ app.use(contentTypeCheckerMiddleware);
 /**
  * Routes
  */
-app.use('/api/posts', postsRouter);
-app.use('/api/bloggers', bloggersRouter);
+app.use('/posts', postsRouter);
+app.use('/bloggers', bloggersRouter);
 
 app.listen(port, () => {
 	console.log(
