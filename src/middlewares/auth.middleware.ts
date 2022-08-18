@@ -5,7 +5,7 @@ export const authMiddleware = (
 	response: Response,
 	next: NextFunction,
 ) => {
-	if (!request.headers) {
+	if (!request.headers || typeof request.headers === 'undefined') {
 		return response.status(401).send();
 	}
 
