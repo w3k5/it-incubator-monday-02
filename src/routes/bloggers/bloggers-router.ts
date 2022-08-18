@@ -20,7 +20,7 @@ bloggersRouter.get('/', get);
 /**
  * Creates new video
  */
-bloggersRouter.post('/', createBloggerValidators, authMiddleware, create);
+bloggersRouter.post('/', authMiddleware, createBloggerValidators, create);
 
 /**
  * Returns one video by ID
@@ -30,12 +30,12 @@ bloggersRouter.get('/:id', getById);
 /**
  * Updates one video by ID
  */
-bloggersRouter.put('/:id', createBloggerValidators, authMiddleware, updateById);
+bloggersRouter.put('/:id', authMiddleware, createBloggerValidators, updateById);
 
 /**
  * Drops full database
  */
-bloggersRouter.delete('/', dropDatabase, authMiddleware);
+bloggersRouter.delete('/', authMiddleware, dropDatabase);
 
 /**
  * Removes one video by ID

@@ -20,7 +20,7 @@ postsRouter.get('/', getAllPosts);
 /**
  * Creates new video
  */
-postsRouter.post('/', createBloggerValidators, authMiddleware, createPost);
+postsRouter.post('/', authMiddleware, createBloggerValidators, createPost);
 
 /**
  * Returns one video by ID
@@ -32,15 +32,15 @@ postsRouter.get('/:id', getPostById);
  */
 postsRouter.put(
 	'/:id',
-	createBloggerValidators,
 	authMiddleware,
+	createBloggerValidators,
 	updatePostById,
 );
 
 /**
  * Drops full database
  */
-postsRouter.delete('/', dropDatabase);
+postsRouter.delete('/', authMiddleware, dropDatabase);
 
 /**
  * Removes one video by ID
