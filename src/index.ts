@@ -31,7 +31,7 @@ app.use(bodyParser.json());
  */
 app.use(requestCounterMiddleware);
 app.use(blackListMiddleware);
-// app.use(contentTypeCheckerMiddleware);
+app.use(contentTypeCheckerMiddleware);
 
 /**
  * Routes
