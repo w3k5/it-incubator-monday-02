@@ -4,6 +4,7 @@ export const youtubeUrlValidator = (
 	chain: ValidationChain,
 ): ValidationChain => {
 	return chain
+		.trim()
 		.isString()
 		.withMessage('youtubeUrl must be a string!')
 		.isLength({

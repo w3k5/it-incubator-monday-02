@@ -8,7 +8,6 @@ import {
 	updateById,
 } from './handlers';
 import { createBloggerValidators } from '../../validators/blogger-validators/create.validator';
-import { updateBloggerValidators } from '../../validators/blogger-validators/update.validator';
 
 export const bloggersRouter = Router();
 
@@ -30,7 +29,7 @@ bloggersRouter.get('/:id', getById);
 /**
  * Updates one video by ID
  */
-bloggersRouter.put('/:id', updateBloggerValidators, updateById);
+bloggersRouter.put('/:id', createBloggerValidators, updateById);
 
 /**
  * Drops full database

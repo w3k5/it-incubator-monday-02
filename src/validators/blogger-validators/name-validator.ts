@@ -2,6 +2,7 @@ import { ValidationChain } from 'express-validator';
 
 export const nameValidator = (chain: ValidationChain): ValidationChain => {
 	return chain
+		.trim()
 		.isString()
 		.withMessage('Name must be a string!')
 		.isLength({ min: 1, max: 15 })

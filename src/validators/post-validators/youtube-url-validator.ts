@@ -4,6 +4,7 @@ export const shortDescriptionValidator = (
 	chain: ValidationChain,
 ): ValidationChain => {
 	return chain
+		.trim()
 		.isString()
 		.withMessage('shortDescription must be a string!')
 		.isLength({
