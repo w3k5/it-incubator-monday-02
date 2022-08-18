@@ -9,6 +9,7 @@ import { contentTypeCheckerMiddleware } from './middlewares/content-type-checker
 import { requestCounterMiddleware } from './middlewares/request-counter.middleware';
 import { Repository } from './repositories/repository';
 import { BloggerInterface, PostInterface } from '@app/interfaces';
+import { testingRouter } from './routes/testing/testing-router';
 
 export const postsRepository = new Repository<PostInterface>([]);
 export const bloggersRepository = new Repository<BloggerInterface>([]);
@@ -38,6 +39,7 @@ app.use(blackListMiddleware);
  */
 app.use('/posts', postsRouter);
 app.use('/bloggers', bloggersRouter);
+app.use('/testing', testingRouter);
 
 app.listen(port, () => {
 	console.log(
