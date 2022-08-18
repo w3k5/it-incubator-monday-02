@@ -5,6 +5,10 @@ export const authMiddleware = (
 	response: Response,
 	next: NextFunction,
 ) => {
+	if (!request.headers) {
+		return response.status(401).send();
+	}
+
 	const authorization = request.header('authorization');
 
 	if (!authorization) {
