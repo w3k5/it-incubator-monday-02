@@ -21,6 +21,6 @@ const collectUniqueErrors = (errors: ValidationError[]) => {
 
 export const generateErrorsResponse = (errors: ValidationError[]) => {
 	return {
-		errorMessages: collectUniqueErrors(errors).map(generateError),
+		errorsMessages: collectUniqueErrors(errors).map(generateError),
 	};
 };
