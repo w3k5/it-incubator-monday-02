@@ -4,7 +4,7 @@ import { nameValidator } from './name-validator';
 import { youtubeUrlValidator } from './youtube-url-validator';
 
 export const updateBloggerValidators = [
-	nameValidator(body('name')).optional({ nullable: true }),
-	youtubeUrlValidator(body('youtubeUrl')).optional({ nullable: true }),
+	nameValidator(body('name')),
+	youtubeUrlValidator(body('youtubeUrl')),
 	inputValidationMiddleware,
 ];
