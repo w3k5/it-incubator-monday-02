@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from 'express';
+import {NextFunction, Request, Response} from 'express';
 
 export const authMiddleware = (
 	request: Request,
@@ -15,7 +15,12 @@ export const authMiddleware = (
 		return response.status(401).send();
 	}
 
-	const [_, hashedPassword] = authorization.split(' ');
+	const [authorizationName, hashedPassword] = authorization.split(' ');
+
+	if (authorizationName !== 'Basic') {
+		return response.status(401).send();
+	}
+
 	const [login, password] = Buffer.from(hashedPassword, 'base64')
 		.toString('ascii')
 		.split(':');
