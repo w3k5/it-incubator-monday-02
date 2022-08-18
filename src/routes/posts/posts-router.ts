@@ -8,6 +8,7 @@ import {
 	updatePostById,
 } from './handlers';
 import { createBloggerValidators } from '../../validators/post-validators/create.validator';
+import { updatePostValidators } from '../../validators/post-validators/update.validator';
 
 export const postsRouter = Router();
 
@@ -19,12 +20,7 @@ postsRouter.get('/', getAllPosts);
 /**
  * Creates new video
  */
-postsRouter.post(
-	'/',
-
-	createBloggerValidators,
-	createPost,
-);
+postsRouter.post('/', createBloggerValidators, createPost);
 
 /**
  * Returns one video by ID
@@ -34,7 +30,7 @@ postsRouter.get('/:id', getPostById);
 /**
  * Updates one video by ID
  */
-postsRouter.put('/:id', updatePostById);
+postsRouter.put('/:id', updatePostValidators, updatePostById);
 
 /**
  * Drops full database
