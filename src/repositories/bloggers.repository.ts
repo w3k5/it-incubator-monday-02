@@ -1,13 +1,15 @@
-import { Collection, ObjectId } from 'mongodb';
 import { NoSqlRepositoryInterface } from '@app/interfaces';
 import { bloggersCollection } from '../db';
 import { BloggerInterface, BloggerResponseType, CreateBloggerType } from '../entities';
+import { BloggerNameSearchParamType } from '../interfaces/search-param.interface';
+import { MongoRepository } from './mongo.repository';
 
-export class BloggerRepository implements NoSqlRepositoryInterface<BloggerInterface> {
-	private readonly collection: Collection<BloggerInterface>;
-
+export class BloggerRepository
+	extends MongoRepository<BloggerInterface>
+	implements NoSqlRepositoryInterface<BloggerInterface>
+{
 	constructor() {
-		this.collection = bloggersCollection;
+		super(bloggersCollection);
 	}
 
 	async create({ youtubeUrl, name }: CreateBloggerType): Promise<BloggerResponseType> {
@@ -24,15 +26,16 @@ export class BloggerRepository implements NoSqlRepositoryInterface<BloggerInterf
 		await this.collection.drop();
 	}
 
-	async getAll(): Promise<BloggerResponseType[]> {
-		const bloggersWithDBID = await this.collection.find({}).toArray();
-		const responseArray: BloggerResponseType[] = bloggersWithDBID.map(({ _id, ...blogger }) => {
-			return {
-				id: _id.toString(),
-				...blogger,
-			};
-		});
-		return responseArray;
+	async getAll(options: BloggerNameSearchParamType): Promise<BloggerResponseType[]> {
+		const bloggersWithDBID = await this.collection
+			.find({
+				name: { $regex: options.name },
+			})
+			.skip(options.skip)
+			.limit(options.pageSize)
+			.toArray();
+
+		return bloggersWithDBID.map(this.convertMongoEntityToResponse);
 	}
 
 	async getById(id: string): Promise<BloggerResponseType | null> {
@@ -57,10 +60,10 @@ export class BloggerRepository implements NoSqlRepositoryInterface<BloggerInterf
 	async update(id: string, data: CreateBloggerType): Promise<boolean> {
 		const convertedId = this.convertIdToObjectId(id);
 		const result = await this.collection.updateOne({ _id: convertedId }, { $set: { ...data } });
-		return result.matchedCount === 1;
+		return !!result.matchedCount;
 	}
 
-	private convertIdToObjectId = (id: string) => {
-		return new ObjectId(id);
-	};
+	async countCollectionByRegExp(key: keyof BloggerInterface, regexp: RegExp): Promise<number> {
+		return this.collection.countDocuments({ [key]: { $regex: regexp } });
+	}
 }

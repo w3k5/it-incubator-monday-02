@@ -1,7 +1,11 @@
 import { Request, Response } from 'express';
 import { bloggersRepository, postsRepository } from '../index';
 import { HttpStatusesEnum } from '../enums';
-import { PostInterface } from '../entities';
+import { PostInterface, PostsResponseType } from '../entities';
+import { postsQueryBuilder } from '../services/query-builder';
+import { getAllResponse } from '../interfaces/get-all-response.interface';
+import { getAllResponseBuilder } from '../services/get-all-response-builder';
+import { PostBloggerIdSearchParamType } from '../interfaces/search-param.interface';
 
 export class PostsDomain {
 	/**
@@ -9,9 +13,20 @@ export class PostsDomain {
 	 * @param request
 	 * @param response
 	 */
-	async get(request: Request, response: Response) {
-		const videos: PostInterface[] = await postsRepository.getAll();
-		return response.status(HttpStatusesEnum.OK).send(videos);
+	async getAll(request: Request, response: Response) {
+		const searchParams: PostBloggerIdSearchParamType = postsQueryBuilder(request);
+		const items = await postsRepository.getAll(searchParams);
+		const total = searchParams.bloggerId
+			? await postsRepository.countByBloggerId(searchParams.bloggerId)
+			: await postsRepository.countAllDocuments();
+
+		const builtResponse: getAllResponse<PostInterface> = getAllResponseBuilder<PostsResponseType>(
+			searchParams,
+			items,
+			total,
+		);
+
+		return response.status(HttpStatusesEnum.OK).send(builtResponse);
 	}
 
 	/**
@@ -20,7 +35,7 @@ export class PostsDomain {
 	 * @param response
 	 */
 	async create(request: Request, response: Response) {
-		const { bloggerId } = request.body;
+		const bloggerId = request.body.bloggerId || request.params.id;
 		const userCandidate = await bloggersRepository.getById(bloggerId);
 
 		if (!userCandidate) {
@@ -30,6 +45,7 @@ export class PostsDomain {
 		const newPost = await postsRepository.create({
 			...request.body,
 			bloggerName: userCandidate.name,
+			bloggerId: bloggerId.toString(),
 		});
 
 		return response.status(HttpStatusesEnum.CREATED).send(newPost);
@@ -58,7 +74,6 @@ export class PostsDomain {
 	async updateById(request: Request, response: Response) {
 		const { bloggerId: requestBloggerId } = request.body;
 		const userCandidate = await bloggersRepository.getById(requestBloggerId);
-		console.log(requestBloggerId);
 
 		if (!userCandidate) {
 			return response.status(HttpStatusesEnum.NOT_FOUND).send();

@@ -1,7 +1,10 @@
 import { Request, Response } from 'express';
-import { BloggerInterface } from '../entities/blogger.interface';
+import { BloggerInterface, BloggerResponseType } from '../entities';
 import { bloggersRepository } from '../index';
 import { HttpStatusesEnum } from '../enums';
+import { queryBuilder } from '../services/query-builder';
+import { getAllResponse } from '../interfaces/get-all-response.interface';
+import { getAllResponseBuilder } from '../services/get-all-response-builder';
 
 export class BloggerDomain {
 	/**
@@ -9,9 +12,17 @@ export class BloggerDomain {
 	 * @param request
 	 * @param response
 	 */
-	async get(request: Request, response: Response) {
-		const bloggers: BloggerInterface[] = await bloggersRepository.getAll();
-		return response.status(HttpStatusesEnum.OK).send(bloggers);
+	async getAll(request: Request, response: Response) {
+		const searchParams = queryBuilder(request);
+		const items = await bloggersRepository.getAll(searchParams);
+		const total = await bloggersRepository.countCollectionByRegExp('name', searchParams.name);
+
+		const builtResponse: getAllResponse<BloggerInterface> = getAllResponseBuilder<BloggerResponseType>(
+			searchParams,
+			items,
+			total,
+		);
+		return response.status(HttpStatusesEnum.OK).send(builtResponse);
 	}
 
 	/**

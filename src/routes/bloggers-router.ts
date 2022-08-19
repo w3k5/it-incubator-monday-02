@@ -4,28 +4,63 @@ import { authMiddleware } from '../middlewares/auth.middleware';
 import { mongoIdParamValidator } from '../validators/params-validators/mongo-id-param.validator';
 import { inputValidationMiddleware } from '../middlewares/input-validation.middleware';
 import { BloggerDomain } from '../domains/bloggers.domain';
+import { query } from 'express-validator';
+import { postsDomain } from './posts-router';
+import { createPostsValidators } from '../validators/post-validators/create.validator';
 
 export const bloggersRouter = Router();
 
-const bloggerDomain = new BloggerDomain();
+export const bloggerDomain = new BloggerDomain();
 
 /**
- * Returns all videos
+ * Returns all bloggers
  * */
-bloggersRouter.get('/', bloggerDomain.get);
+bloggersRouter.get(
+	'/',
+	query('PageNumber').isInt({ min: 1 }).toInt().optional().default(1),
+	query('PageSize').isInt({ min: 1 }).toInt().optional().default(10),
+	query('name').trim().isString().optional().default(null),
+	inputValidationMiddleware,
+	bloggerDomain.getAll,
+);
 
 /**
- * Creates new video
+ * Get Posts by BloggerId
+ */
+
+bloggersRouter.get(
+	'/:id/posts',
+	mongoIdParamValidator,
+	inputValidationMiddleware,
+	query('PageNumber').isInt({ min: 1 }).toInt().optional().default(1),
+	query('PageSize').isInt({ min: 1 }).toInt().optional().default(10),
+	postsDomain.getAll,
+);
+
+/**
+ * Create Posts by BloggerId
+ */
+
+bloggersRouter.post(
+	'/:id/posts',
+	mongoIdParamValidator,
+	inputValidationMiddleware,
+	createPostsValidators,
+	postsDomain.create,
+);
+
+/**
+ * Creates new blogger
  */
 bloggersRouter.post('/', authMiddleware, createBloggerValidators, bloggerDomain.create);
 
 /**
- * Returns one video by ID
+ * Returns one blogger by ID
  */
 bloggersRouter.get('/:id', mongoIdParamValidator, inputValidationMiddleware, bloggerDomain.getById);
 
 /**
- * Updates one video by ID
+ * Updates one blogger by ID
  */
 bloggersRouter.put('/:id', authMiddleware, mongoIdParamValidator, createBloggerValidators, bloggerDomain.updateById);
 
@@ -35,7 +70,7 @@ bloggersRouter.put('/:id', authMiddleware, mongoIdParamValidator, createBloggerV
 bloggersRouter.delete('/', authMiddleware, bloggerDomain.dropDatabase);
 
 /**
- * Removes one video by ID
+ * Removes one blogger by ID
  */
 bloggersRouter.delete(
 	'/:id',

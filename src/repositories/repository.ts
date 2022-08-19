@@ -1,4 +1,3 @@
-import { RepositoryInterface } from '@app/interfaces';
 import { idGenerator } from '../helpers';
 import { MockRepository } from '../interfaces/mock-repository';
 

@@ -1,38 +1,47 @@
 import { Router } from 'express';
-import { createBloggerValidators } from '../validators/post-validators/create.validator';
+import { body, query } from 'express-validator';
+import { createPostsValidators } from '../validators/post-validators/create.validator';
 import { authMiddleware } from '../middlewares/auth.middleware';
 import { PostsDomain } from '../domains/posts.domain';
 import { mongoIdParamValidator } from '../validators/params-validators/mongo-id-param.validator';
 import { inputValidationMiddleware } from '../middlewares/input-validation.middleware';
+import { bloggerIdValidator } from '../validators/post-validators/blogger-id-validator';
 
 export const postsRouter = Router();
 
-const postsDomain = new PostsDomain();
+export const postsDomain = new PostsDomain();
 
 /**
- * Returns all videos
+ * Returns all posts
  * */
-postsRouter.get('/', postsDomain.get);
+postsRouter.get(
+	'/',
+	query('PageNumber').isInt({ min: 1 }).toInt().optional().default(1),
+	query('PageSize').isInt({ min: 1 }).toInt().optional().default(10),
+	inputValidationMiddleware,
+	postsDomain.getAll,
+);
 
 /**
- * Creates new video
+ * Creates new post
  */
-postsRouter.post('/', authMiddleware, createBloggerValidators, postsDomain.create);
+postsRouter.post('/', authMiddleware, bloggerIdValidator(body('bloggerId')), createPostsValidators, postsDomain.create);
 
 /**
- * Returns one video by ID
+ * Returns one post by ID
  */
 postsRouter.get('/:id', mongoIdParamValidator, inputValidationMiddleware, postsDomain.getById);
 
 /**
- * Updates one video by ID
+ * Updates one post by ID
  */
 postsRouter.put(
 	'/:id',
 	authMiddleware,
 	mongoIdParamValidator,
 	inputValidationMiddleware,
-	createBloggerValidators,
+	bloggerIdValidator(body('bloggerId')),
+	createPostsValidators,
 	postsDomain.updateById,
 );
 
@@ -42,6 +51,6 @@ postsRouter.put(
 postsRouter.delete('/', authMiddleware, postsDomain.dropDatabase);
 
 /**
- * Removes one video by ID
+ * Removes one post by ID
  */
 postsRouter.delete('/:id', authMiddleware, mongoIdParamValidator, postsDomain.removeById);

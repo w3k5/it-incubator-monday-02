@@ -5,10 +5,9 @@ import { shortDescriptionValidator } from './youtube-url-validator';
 import { titleValidator } from './title-validator';
 import { bloggerIdValidator } from './blogger-id-validator';
 
-export const createBloggerValidators = [
+export const createPostsValidators = [
 	contentValidator(body('content')),
 	shortDescriptionValidator(body('shortDescription')),
 	titleValidator(body('title')),
-	bloggerIdValidator(body('bloggerId')),
 	inputValidationMiddleware,
 ];

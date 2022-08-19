@@ -1,8 +1,10 @@
+import { SearchParamType } from './search-param.interface';
+
 export interface RepositoryInterface<Entity> {
 	/**
 	 * Finds all entities from Database
 	 */
-	getAll(): Promise<Entity[]>;
+	getAll(searchParams?: SearchParamType<Entity & any>): Promise<Entity[]>;
 
 	/**
 	 * Creates one Entity in Database

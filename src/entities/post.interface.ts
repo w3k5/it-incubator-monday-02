@@ -1,9 +1,11 @@
+import { ObjectId } from 'mongodb';
+
 export interface PostInterface {
 	bloggerName: string;
 	title: string;
 	shortDescription: string;
 	content: string;
-	bloggerId: number;
+	bloggerId: ObjectId;
 }
 
 export type CreatePostType = Omit<PostInterface, 'bloggerName'>;
