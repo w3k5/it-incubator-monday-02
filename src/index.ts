@@ -2,7 +2,6 @@ import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import { config } from 'dotenv';
-import chalk from 'chalk';
 
 import { runDb } from './db';
 import { blackListMiddleware } from './middlewares/black-list.middleware';
@@ -47,7 +46,7 @@ app.use('/testing', testingRouter);
 const startApp = async () => {
 	await runDb();
 	app.listen(port, () => {
-		console.log(chalk.bgGreen(` IT-Incubator homework monday-2 has been started at port: ${port} `));
+		console.log(` IT-Incubator homework monday-2 has been started at port: ${port} `);
 	});
 };
 
