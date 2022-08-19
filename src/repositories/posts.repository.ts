@@ -30,7 +30,7 @@ export class PostsRepository extends MongoRepository<PostInterface> implements N
 	}
 
 	async getAll({ bloggerId: id, skip, pageSize }: PostBloggerIdSearchParamType): Promise<PostsResponseType[]> {
-		const filter = id ? { bloggerId: id } : {};
+		const filter = id ? { bloggerId: id.toString() } : {};
 		const postsWithDBID = await this.collection.find(filter).skip(skip).limit(pageSize).toArray();
 		return postsWithDBID.map(this.convertMongoEntityToResponse);
 	}
@@ -65,6 +65,6 @@ export class PostsRepository extends MongoRepository<PostInterface> implements N
 	}
 
 	async countByBloggerId(id: ObjectId): Promise<number> {
-		return this.collection.countDocuments({ bloggerId: id });
+		return this.collection.countDocuments({ bloggerId: id.toString() });
 	}
 }

@@ -5,7 +5,7 @@ export interface PostInterface {
 	title: string;
 	shortDescription: string;
 	content: string;
-	bloggerId: ObjectId;
+	bloggerId: string;
 }
 
 export type CreatePostType = Omit<PostInterface, 'bloggerName'>;
