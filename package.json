@@ -6,7 +6,7 @@
   "author": "Vladislav Marchenko <w3k5@yandex.ru>",
   "license": "MIT",
   "scripts": {
-    "dev": " yarn nodemon --inspect -r dotenv/config src/index.ts",
+    "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
     "build": "tsc",
     "start": "node dist/index.js",
     "lint": "eslint src/**/*.ts",
@@ -18,7 +18,8 @@
     "cors": "^2.8.5",
     "dotenv": "^16.0.1",
     "express": "^4.18.1",
-    "express-validator": "^6.14.2"
+    "express-validator": "^6.14.2",
+    "mongodb": "^4.8.1"
   },
   "devDependencies": {
     "@types/cors": "^2.8.12",
@@ -36,7 +37,6 @@
     "ts-jest": "^28.0.8",
     "ts-node": "^10.9.1",
     "ts-node-dev": "^2.0.0",
-    "tsconfig-paths": "^4.1.0",
     "typescript": "^4.7.4"
   }
 }

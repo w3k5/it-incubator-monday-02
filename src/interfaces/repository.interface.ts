@@ -1,8 +1,18 @@
 export interface RepositoryInterface<Entity> {
-	getAll: () => Promise<Entity[]>;
-	getById: (id: number) => Promise<Entity | null>;
-	create: <T>(data: T) => Promise<Entity>;
-	update: (id: number, data: keyof Entity) => Promise<boolean>;
-	removeById: (id: number) => Promise<void>;
-	drop: () => Promise<void>;
+	/**
+	 * Finds all entities from Database
+	 */
+	getAll(): Promise<Entity[]>;
+
+	/**
+	 * Creates one Entity in Database
+	 * @param data Entity without ID
+	 * @returns new Entity
+	 */
+	create(data: Omit<Entity, 'id'>): Promise<Entity>;
+
+	/**
+	 * Drops full database
+	 */
+	drop(): Promise<void>;
 }

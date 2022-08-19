@@ -2,17 +2,18 @@ import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import { config } from 'dotenv';
-import { postsRouter } from './routes/posts/posts-router';
-import { bloggersRouter } from './routes/bloggers/bloggers-router';
-import { blackListMiddleware } from './middlewares/black-list.middleware';
-import { contentTypeCheckerMiddleware } from './middlewares/content-type-checker.middleware';
-import { requestCounterMiddleware } from './middlewares/request-counter.middleware';
-import { Repository } from './repositories/repository';
-import { BloggerInterface, PostInterface } from '@app/interfaces';
-import { testingRouter } from './routes/testing/testing-router';
+import chalk from 'chalk';
 
-export const postsRepository = new Repository<PostInterface>([]);
-export const bloggersRepository = new Repository<BloggerInterface>([]);
+import { runDb } from './db';
+import { blackListMiddleware } from './middlewares/black-list.middleware';
+import { requestCounterMiddleware } from './middlewares/request-counter.middleware';
+import { postsRouter } from './routes/posts-router';
+import { bloggersRouter } from './routes/bloggers-router';
+import { testingRouter } from './routes/testing-router';
+import { BloggerRepository, PostsRepository } from './repositories';
+
+export const postsRepository = new PostsRepository();
+export const bloggersRepository = new BloggerRepository();
 
 /**
  * Setup
@@ -32,6 +33,8 @@ app.use(bodyParser.json());
  */
 app.use(requestCounterMiddleware);
 app.use(blackListMiddleware);
+
+// Описывается в уроках, не работает в тестах домашнего задания - Отключено
 // app.use(contentTypeCheckerMiddleware);
 
 /**
@@ -41,8 +44,13 @@ app.use('/posts', postsRouter);
 app.use('/bloggers', bloggersRouter);
 app.use('/testing', testingRouter);
 
-app.listen(port, () => {
-	console.log(
-		`IT-Incubator homework monday-2 has been started at port: ${port}`,
-	);
+const startApp = async () => {
+	await runDb();
+	app.listen(port, () => {
+		console.log(chalk.bgGreen(` IT-Incubator homework monday-2 has been started at port: ${port} `));
+	});
+};
+
+startApp().catch((error) => {
+	console.log('Application unexpectedly shutdown!', error.message);
 });

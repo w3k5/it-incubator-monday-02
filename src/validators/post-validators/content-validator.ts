@@ -6,7 +6,5 @@ export const contentValidator = (chain: ValidationChain): ValidationChain => {
 		.trim()
 		.withMessage('content must be a string!')
 		.isLength({ min: 1, max: 1000 })
-		.withMessage(
-			'content length must be greater than 1 and less or equal 1000 ',
-		);
+		.withMessage('content length must be greater than 1 and less or equal 1000 ');
 };

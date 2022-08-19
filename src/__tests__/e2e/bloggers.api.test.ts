@@ -1,13 +1,7 @@
 import request from 'supertest';
 import { app } from '../../index';
-import {
-	BloggerInterface,
-	CreatePostInterface,
-	PostInterface,
-	UpdatePostType,
-} from '@app/interfaces';
+import { CreatePostType, PostInterface, UpdatePostType } from '@app/interfaces';
 import { HttpStatusesEnum } from '../../enums';
-import exp from 'constants';
 
 describe('/bloggers', () => {
 	beforeAll(async () => {
@@ -15,10 +9,7 @@ describe('/bloggers', () => {
 	});
 
 	it('Should return 200 and empty array of bloggers', async () => {
-		await request(app)
-			.get('/bloggers')
-			.set('Content-type', 'application/json')
-			.expect(HttpStatusesEnum.OK, []);
+		await request(app).get('/bloggers').set('Content-type', 'application/json').expect(HttpStatusesEnum.OK, []);
 	});
 
 	it("Shouldn't create new blogger with invalid fields", async () => {
@@ -39,10 +30,7 @@ describe('/bloggers', () => {
 				},
 			],
 		});
-		await request(app)
-			.get('/bloggers')
-			.set('Content-type', 'application/json')
-			.expect(HttpStatusesEnum.OK, []);
+		await request(app).get('/bloggers').set('Content-type', 'application/json').expect(HttpStatusesEnum.OK, []);
 	});
 
 	it("Shouldn't create new blogger with empty data", async () => {
@@ -74,10 +62,7 @@ describe('/bloggers', () => {
 				},
 			],
 		});
-		await request(app)
-			.get('/bloggers')
-			.set('Content-type', 'application/json')
-			.expect(HttpStatusesEnum.OK, []);
+		await request(app).get('/bloggers').set('Content-type', 'application/json').expect(HttpStatusesEnum.OK, []);
 	});
 
 	it("Shouldn't create new blogger with empty name", async () => {
@@ -99,10 +84,7 @@ describe('/bloggers', () => {
 				},
 			],
 		});
-		await request(app)
-			.get('/bloggers')
-			.set('Content-type', 'application/json')
-			.expect(HttpStatusesEnum.OK, []);
+		await request(app).get('/bloggers').set('Content-type', 'application/json').expect(HttpStatusesEnum.OK, []);
 	});
 
 	it("Shouldn't create new blogger with empty youtubeUrl", async () => {
@@ -129,10 +111,7 @@ describe('/bloggers', () => {
 			],
 		});
 
-		await request(app)
-			.get('/bloggers')
-			.set('Content-type', 'application/json')
-			.expect(HttpStatusesEnum.OK, []);
+		await request(app).get('/bloggers').set('Content-type', 'application/json').expect(HttpStatusesEnum.OK, []);
 	});
 
 	it('Should create new Blogger with valid data without resolution', async () => {
@@ -150,10 +129,7 @@ describe('/bloggers', () => {
 
 		expect(createdBlogger.body).toEqual(expectedBlogger);
 
-		const bloggers = await request(app)
-			.get('/bloggers')
-			.set('Content-type', 'application/json')
-			.expect(200);
+		const bloggers = await request(app).get('/bloggers').set('Content-type', 'application/json').expect(200);
 		expect(bloggers.body.length).toEqual(1);
 	});
 
@@ -206,10 +182,7 @@ describe('/bloggers', () => {
 	});
 
 	it('Should update blogger', async () => {
-		const { body: bloggers } = await request(app)
-			.get('/bloggers')
-			.set('Content-type', 'application/json')
-			.expect(200);
+		const { body: bloggers } = await request(app).get('/bloggers').set('Content-type', 'application/json').expect(200);
 
 		expect(bloggers.length).not.toEqual(0);
 
@@ -233,10 +206,7 @@ describe('/bloggers', () => {
 	});
 
 	it('Should delete blogger', async () => {
-		const response = await request(app)
-			.get('/bloggers')
-			.set('Content-type', 'application/json')
-			.expect(200);
+		const response = await request(app).get('/bloggers').set('Content-type', 'application/json').expect(200);
 		const [firstBlogger] = response.body;
 
 		await request(app)
@@ -262,10 +232,7 @@ describe('/bloggers', () => {
 	 */
 
 	it('Should return empty array of Posts', async () => {
-		await request(app)
-			.get('/posts')
-			.set('Content-type', 'application/json')
-			.expect(HttpStatusesEnum.OK, []);
+		await request(app).get('/posts').set('Content-type', 'application/json').expect(HttpStatusesEnum.OK, []);
 	});
 
 	it('Should create new Posts', async () => {
@@ -277,7 +244,7 @@ describe('/bloggers', () => {
 			.send({ name: 'Author', youtubeUrl: 'https://vk.com' })
 			.expect(HttpStatusesEnum.CREATED);
 
-		const responseBody: CreatePostInterface = {
+		const responseBody: CreatePostType = {
 			content: 'My new post',
 			shortDescription: 'short post description',
 			title: 'Lorem ipsum',

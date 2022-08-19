@@ -1,8 +1,6 @@
 import { ValidationChain } from 'express-validator';
 
-export const shortDescriptionValidator = (
-	chain: ValidationChain,
-): ValidationChain => {
+export const shortDescriptionValidator = (chain: ValidationChain): ValidationChain => {
 	return chain
 		.trim()
 		.isString()
@@ -11,7 +9,5 @@ export const shortDescriptionValidator = (
 			min: 1,
 			max: 100,
 		})
-		.withMessage(
-			'shortDescription length must be greater than 1 and less or equal 100 ',
-		);
+		.withMessage('shortDescription length must be greater than 1 and less or equal 100 ');
 };

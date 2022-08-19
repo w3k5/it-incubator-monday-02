@@ -1,15 +1,13 @@
 import { ValidationChain } from 'express-validator';
 import { bloggersRepository } from '../../index';
+import { ObjectId } from 'mongodb';
 
 export const bloggerIdValidator = (chain: ValidationChain): ValidationChain => {
-	return chain
-		.isNumeric()
-		.withMessage('bloggerId must be a number!')
-		.custom(async (value) => {
-			const bloggerCandidate = await bloggersRepository.getById(value);
-			if (!bloggerCandidate) {
-				throw new Error('Blogger with that ID is not exists!');
-			}
-			return true;
-		});
+	return chain.custom(async (id) => {
+		const isIdValid = ObjectId.isValid(id);
+		if (!isIdValid) {
+			throw new Error('Mongo ID must be valid!');
+		}
+		return true;
+	});
 };

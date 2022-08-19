@@ -3,11 +3,7 @@ import { HttpStatusesEnum } from '../enums';
 
 const blackList = new Set<string>();
 
-export const blackListMiddleware = (
-	request: Request,
-	response: Response,
-	next: NextFunction,
-) => {
+export const blackListMiddleware = (request: Request, response: Response, next: NextFunction) => {
 	const { ip } = request;
 	if (blackList.has(ip)) {
 		return response.status(HttpStatusesEnum.NOT_ALLOWED).send();
