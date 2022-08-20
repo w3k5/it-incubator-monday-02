@@ -36,6 +36,7 @@ postsRouter.put(
 	mongoIdParamValidator,
 	inputValidationMiddleware,
 	bloggerIdValidator(body('bloggerId')),
+	inputValidationMiddleware,
 	createPostsValidators,
 	postsDomain.updateById,
 );
