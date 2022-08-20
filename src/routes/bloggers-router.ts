@@ -30,7 +30,11 @@ bloggersRouter.get(
 
 bloggersRouter.get(
 	'/:id/posts',
-	authMiddleware,
+	/**
+	 * Авторизация для данного роута не требуется
+	 * @link https://prnt.sc/bP7g0_C-973d
+	 */
+	// authMiddleware,
 	mongoIdParamValidator,
 	inputValidationMiddleware,
 	paginationValidator,
