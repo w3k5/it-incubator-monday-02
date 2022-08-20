@@ -47,6 +47,7 @@ bloggersRouter.get(
 
 bloggersRouter.post(
 	'/:id/posts',
+	authMiddleware,
 	mongoIdParamValidator,
 	inputValidationMiddleware,
 	createPostsValidators,
