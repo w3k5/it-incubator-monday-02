@@ -20,6 +20,10 @@ export class PostsDomain {
 			? await postsRepository.countByBloggerId(searchParams.bloggerId)
 			: await postsRepository.countAllDocuments();
 
+		if (searchParams.bloggerId && !total) {
+			return response.status(HttpStatusesEnum.NOT_FOUND).send();
+		}
+
 		const builtResponse: getAllResponse<PostInterface> = getAllResponseBuilder<PostsResponseType>(
 			searchParams,
 			items,
