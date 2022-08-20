@@ -49,13 +49,13 @@ bloggersRouter.get(
 bloggersRouter.post(
 	'/:id/posts',
 	authMiddleware,
-	body('bloggerId').custom(async (value) => {
-		const bloggerCandidate = await bloggersRepository.getById(value);
-		if (!bloggerCandidate) {
-			throw new Error('Blogger is not exists');
-		}
-		return true;
-	}),
+	// body('bloggerId').custom(async (value) => {
+	// 	const bloggerCandidate = await bloggersRepository.getById(value);
+	// 	if (!bloggerCandidate) {
+	// 		throw new Error('Blogger is not exists');
+	// 	}
+	// 	return true;
+	// }),
 	mongoIdParamValidator,
 	inputValidationMiddleware,
 	createPostsValidators,
