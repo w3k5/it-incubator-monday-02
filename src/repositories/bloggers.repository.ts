@@ -16,7 +16,8 @@ export class BloggerRepository
 		const id = Date.now();
 		const { insertedId } = await this.collection.insertOne({ id, ...data });
 
-		return { id, ...data, _id: insertedId.toString() };
+		// return { id, ...data, _id: insertedId.toString() };
+		return { id, ...data };
 	}
 
 	async drop(): Promise<void> {
@@ -46,7 +47,7 @@ export class BloggerRepository
 		if (candidate) {
 			const { _id, ...blogger } = candidate;
 			return {
-				_id: _id.toString(),
+				// _id: _id.toString(),
 				...blogger,
 			};
 		}

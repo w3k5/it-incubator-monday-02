@@ -12,6 +12,6 @@ export interface PostInterface {
 export type CreatePostType = Omit<PostInterface, 'bloggerName'>;
 
 // export type PostsResponseType = Omit<PostInterface, 'id'> & { id: string };
-export type PostsResponseType = PostInterface & { _id: string };
+export type PostsResponseType = PostInterface;
 
 export type UpdatePostType = Omit<PostInterface, 'bloggerName'>;

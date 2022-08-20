@@ -17,7 +17,7 @@ export class PostsRepository extends MongoRepository<PostInterface> implements N
 		const { insertedId } = await this.collection.insertOne({ id, ...data });
 
 		return {
-			_id: insertedId.toString(),
+			// _id: insertedId.toString(),
 			id,
 			bloggerName,
 			title,
@@ -46,7 +46,7 @@ export class PostsRepository extends MongoRepository<PostInterface> implements N
 		if (candidate) {
 			const { _id, ...post } = candidate;
 			return {
-				_id: _id.toString(),
+				// _id: _id.toString(),
 				...post,
 			};
 		}
