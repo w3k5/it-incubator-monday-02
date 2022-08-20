@@ -55,8 +55,9 @@ export class BloggerRepository
 	}
 
 	async removeById(id: string): Promise<void> {
-		const convertedId = this.convertIdToObjectId(id);
-		await this.collection.deleteOne({ _id: convertedId });
+		// const convertedId = this.convertIdToObjectId(id);
+		// await this.collection.deleteOne({ _id: convertedId });
+		await this.collection.deleteOne({ id: +id });
 	}
 
 	async update(id: number, data: CreateBloggerType): Promise<boolean> {
