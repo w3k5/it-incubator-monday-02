@@ -42,8 +42,11 @@ export class PostsDomain {
 		const bloggerId = request.body.bloggerId || request.params.id;
 		const userCandidate = await bloggersRepository.getById(bloggerId);
 
+		/*
+        POST, GET -> "/bloggers/:bloggerId/posts": should return error if :id from uri param not found; status 404;
+         */
 		if (!userCandidate) {
-			return response.status(HttpStatusesEnum.BAD_REQUEST).send();
+			return response.status(HttpStatusesEnum.NOT_FOUND).send();
 		}
 
 		const newPost = await postsRepository.create({
