@@ -7,6 +7,7 @@ import { BloggerDomain } from '../domains/bloggers.domain';
 import { query } from 'express-validator';
 import { postsDomain } from './posts-router';
 import { createPostsValidators } from '../validators/post-validators/create.validator';
+import { paginationValidator } from '../validators/pagination.validator';
 
 export const bloggersRouter = Router();
 
@@ -17,8 +18,7 @@ export const bloggerDomain = new BloggerDomain();
  * */
 bloggersRouter.get(
 	'/',
-	query('PageNumber').isInt({ min: 1 }).toInt().optional().default(1),
-	query('PageSize').isInt({ min: 1 }).toInt().optional().default(10),
+	...paginationValidator,
 	query('name').trim().isString().optional().default(null),
 	inputValidationMiddleware,
 	bloggerDomain.getAll,
@@ -32,8 +32,7 @@ bloggersRouter.get(
 	'/:id/posts',
 	mongoIdParamValidator,
 	inputValidationMiddleware,
-	query('PageNumber').isInt({ min: 1 }).toInt().optional().default(1),
-	query('PageSize').isInt({ min: 1 }).toInt().optional().default(10),
+	paginationValidator,
 	postsDomain.getAll,
 );
 

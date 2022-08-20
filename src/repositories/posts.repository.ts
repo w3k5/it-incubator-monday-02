@@ -12,12 +12,14 @@ export class PostsRepository extends MongoRepository<PostInterface> implements N
 
 	async create(data: Omit<PostInterface, 'id'>): Promise<PostsResponseType> {
 		const id = Date.now();
+		const createdAt = new Date().toISOString();
+
 		const { bloggerName, title, shortDescription, content, bloggerId } = data;
 
-		const { insertedId } = await this.collection.insertOne({ id, ...data });
+		const { insertedId } = await this.collection.insertOne({ id, ...data, createdAt });
 
 		return {
-			// _id: insertedId.toString(),
+			createdAt,
 			id,
 			bloggerName,
 			title,
@@ -25,10 +27,6 @@ export class PostsRepository extends MongoRepository<PostInterface> implements N
 			content,
 			bloggerId,
 		};
-	}
-
-	async drop(): Promise<void> {
-		await this.collection.drop();
 	}
 
 	async getAll({ bloggerId, skip, pageSize }: PostBloggerIdSearchParamType): Promise<PostsResponseType[]> {
@@ -54,9 +52,7 @@ export class PostsRepository extends MongoRepository<PostInterface> implements N
 		return null;
 	}
 
-	async removeById(id: string): Promise<void> {
-		// const convertedId = this.convertIdToObjectId(id);
-		// const convertedId = this.convertIdToObjectId(id);
+	async removeById(id: number): Promise<void> {
 		await this.collection.deleteOne({ id: +id });
 	}
 

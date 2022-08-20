@@ -55,7 +55,8 @@ export class BloggerDomain {
 	 */
 	async updateById(request: Request, response: Response) {
 		const id = +request.params.id;
-		const isBloggerUpdated = await bloggersRepository.update(id, request.body);
+		const { name, youtubeUrl } = request.body;
+		const isBloggerUpdated = await bloggersRepository.update(id, { name, youtubeUrl });
 		const status = isBloggerUpdated ? HttpStatusesEnum.NO_CONTENT : HttpStatusesEnum.NOT_FOUND;
 		return response.status(status).send();
 	}
@@ -66,8 +67,8 @@ export class BloggerDomain {
 	 * @param response
 	 */
 	async removeById(request: Request, response: Response) {
-		const id = request.params.id;
-		const candidate = await bloggersRepository.getById(+id);
+		const id = +request.params.id;
+		const candidate = await bloggersRepository.getById(id);
 
 		if (!candidate) {
 			return response.status(HttpStatusesEnum.NOT_FOUND).send();

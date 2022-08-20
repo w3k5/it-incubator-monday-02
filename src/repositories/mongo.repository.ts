@@ -22,4 +22,8 @@ export class MongoRepository<Entity> {
 			...rest,
 		};
 	};
+
+	async drop(): Promise<void> {
+		await this.collection.drop();
+	}
 }

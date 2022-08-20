@@ -11,8 +11,19 @@ const db = client.db(dbName);
 export const bloggersCollection = db.collection<BloggerInterface>('bloggers');
 export const postsCollection = db.collection<PostInterface>('posts');
 
+const initCollections = async (collections: string[]) => {
+	const databaseCollections = await db.listCollections().toArray();
+	collections.forEach((collection) => {
+		const isCollectionsExists = databaseCollections.find(({ name }) => name === collection);
+		if (!isCollectionsExists) {
+			db.createCollection(collection);
+		}
+	});
+};
+
 export const runDb = async () => {
 	try {
+		await initCollections(['bloggers', 'posts']);
 		await client.connect();
 		await client.db(dbName).command({ ping: 1 });
 		console.log('Connection to Atlas db Success');

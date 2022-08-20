@@ -1,7 +1,12 @@
+interface createdAtInterface {
+	createdAt: Date;
+}
+
 export interface BloggerInterface {
 	id: number;
 	name: string;
 	youtubeUrl: string;
+	createdAt: string;
 }
 
 export type CreateBloggerType = Pick<BloggerInterface, 'name' | 'youtubeUrl'>;

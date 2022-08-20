@@ -14,14 +14,9 @@ export class BloggerRepository
 
 	async create(data: CreateBloggerType): Promise<BloggerResponseType> {
 		const id = Date.now();
-		const { insertedId } = await this.collection.insertOne({ id, ...data });
-
-		// return { id, ...data, _id: insertedId.toString() };
-		return { id, ...data };
-	}
-
-	async drop(): Promise<void> {
-		await this.collection.drop();
+		const createdAt = new Date().toISOString();
+		await this.collection.insertOne({ id, createdAt, ...data });
+		return { id, createdAt, ...data };
 	}
 
 	async getAll(options: BloggerNameSearchParamType): Promise<BloggerResponseType[]> {
@@ -34,20 +29,14 @@ export class BloggerRepository
 			.toArray();
 
 		const converted = bloggersWithDBID.map(this.convertMongoEntityToResponse);
-		console.log(converted);
 		return converted;
 	}
 
-	// async getById(id: string): Promise<BloggerResponseType | null> {
 	async getById(id: number): Promise<BloggerResponseType | null> {
-		// const convertedId = this.convertIdToObjectId(id);
-		const convertedId = id;
-		// const candidate = await this.collection.findOne({ _id: convertedId });
 		const candidate = await this.collection.findOne({ id });
 		if (candidate) {
 			const { _id, ...blogger } = candidate;
 			return {
-				// _id: _id.toString(),
 				...blogger,
 			};
 		}
@@ -55,9 +44,7 @@ export class BloggerRepository
 		return null;
 	}
 
-	async removeById(id: string): Promise<void> {
-		// const convertedId = this.convertIdToObjectId(id);
-		// await this.collection.deleteOne({ _id: convertedId });
+	async removeById(id: number): Promise<void> {
 		await this.collection.deleteOne({ id: +id });
 	}
 

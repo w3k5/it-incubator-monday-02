@@ -23,5 +23,5 @@ export interface NoSqlRepositoryInterface<Entity> extends RepositoryInterface<En
 	 * @param id
 	 * @returns Promise<void>
 	 */
-	removeById(id: string): Promise<void>;
+	removeById(id: number): Promise<void>;
 }

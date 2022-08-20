@@ -83,7 +83,7 @@ export class PostsDomain {
 		const { name: bloggerName, id: bloggerId } = userCandidate;
 
 		const postId = request.params.id;
-
+		console.log(request.body);
 		const isPostUpdated = await postsRepository.update(+postId, {
 			...request.body,
 			bloggerId,
@@ -98,14 +98,14 @@ export class PostsDomain {
 	 * @param response
 	 */
 	async removeById(request: Request, response: Response) {
-		const id = request.params.id;
-		const candidate = await postsRepository.getById(+id);
+		const id = +request.params.id;
+		const candidate = await postsRepository.getById(id);
 
 		if (!candidate) {
 			return response.status(HttpStatusesEnum.NOT_FOUND).send();
 		}
 
-		await postsRepository.removeById(id);
+		await postsRepository.removeById(+id);
 
 		return response.status(HttpStatusesEnum.NO_CONTENT).send();
 	}

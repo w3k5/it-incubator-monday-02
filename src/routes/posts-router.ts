@@ -6,6 +6,7 @@ import { PostsDomain } from '../domains/posts.domain';
 import { mongoIdParamValidator } from '../validators/params-validators/mongo-id-param.validator';
 import { inputValidationMiddleware } from '../middlewares/input-validation.middleware';
 import { bloggerIdValidator } from '../validators/post-validators/blogger-id-validator';
+import { paginationValidator } from '../validators/pagination.validator';
 
 export const postsRouter = Router();
 
@@ -14,13 +15,7 @@ export const postsDomain = new PostsDomain();
 /**
  * Returns all posts
  * */
-postsRouter.get(
-	'/',
-	query('PageNumber').isInt({ min: 1 }).toInt().optional().default(1),
-	query('PageSize').isInt({ min: 1 }).toInt().optional().default(10),
-	inputValidationMiddleware,
-	postsDomain.getAll,
-);
+postsRouter.get('/', paginationValidator, inputValidationMiddleware, postsDomain.getAll);
 
 /**
  * Creates new post
