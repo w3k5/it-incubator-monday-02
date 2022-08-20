@@ -6,7 +6,7 @@ export interface BloggerInterface {
 	id: number;
 	name: string;
 	youtubeUrl: string;
-	createdAt: string;
+	// createdAt: string;
 }
 
 export type CreateBloggerType = Pick<BloggerInterface, 'name' | 'youtubeUrl'>;

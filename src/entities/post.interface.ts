@@ -7,7 +7,7 @@ export interface PostInterface {
 	shortDescription: string;
 	content: string;
 	bloggerId: number;
-	createdAt: string;
+	// createdAt: string;
 }
 
 export type CreatePostType = Omit<PostInterface, 'bloggerName'>;
