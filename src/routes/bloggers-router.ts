@@ -4,10 +4,11 @@ import { authMiddleware } from '../middlewares/auth.middleware';
 import { mongoIdParamValidator } from '../validators/params-validators/mongo-id-param.validator';
 import { inputValidationMiddleware } from '../middlewares/input-validation.middleware';
 import { BloggerDomain } from '../domains/bloggers.domain';
-import { query } from 'express-validator';
+import { body, query } from 'express-validator';
 import { postsDomain } from './posts-router';
 import { createPostsValidators } from '../validators/post-validators/create.validator';
 import { paginationValidator } from '../validators/pagination.validator';
+import { bloggersRepository } from '../index';
 
 export const bloggersRouter = Router();
 
@@ -48,6 +49,13 @@ bloggersRouter.get(
 bloggersRouter.post(
 	'/:id/posts',
 	authMiddleware,
+	body('bloggerId').custom(async (value) => {
+		const bloggerCandidate = await bloggersRepository.getById(value);
+		if (!bloggerCandidate) {
+			throw new Error('Blogger is not exists');
+		}
+		return true;
+	}),
 	mongoIdParamValidator,
 	inputValidationMiddleware,
 	createPostsValidators,
