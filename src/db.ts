@@ -3,7 +3,9 @@ import { BloggerInterface, PostInterface } from './entities';
 
 const dbName = process.env.DB_NAME || 'monday';
 
-export const client = new MongoClient('mongodb://0.0.0.0:27017');
+export const client = new MongoClient(
+	'mongodb+srv://Admin:btzFds871ZoCtn1b@cluster0.x87el.mongodb.net/?retryWrites=true&w=majority',
+);
 const db = client.db(dbName);
 
 export const bloggersCollection = db.collection<BloggerInterface>('bloggers');
