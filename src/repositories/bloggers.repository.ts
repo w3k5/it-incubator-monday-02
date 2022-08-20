@@ -12,14 +12,11 @@ export class BloggerRepository
 		super(bloggersCollection);
 	}
 
-	async create({ youtubeUrl, name }: CreateBloggerType): Promise<BloggerResponseType> {
-		const { insertedId } = await this.collection.insertOne({ name, youtubeUrl });
+	async create(data: CreateBloggerType): Promise<BloggerResponseType> {
+		const id = Date.now();
+		const { insertedId } = await this.collection.insertOne({ id, ...data });
 
-		return {
-			name,
-			youtubeUrl,
-			id: insertedId.toString(),
-		};
+		return { id, ...data, _id: insertedId.toString() };
 	}
 
 	async drop(): Promise<void> {
@@ -35,16 +32,21 @@ export class BloggerRepository
 			.limit(options.pageSize)
 			.toArray();
 
-		return bloggersWithDBID.map(this.convertMongoEntityToResponse);
+		const converted = bloggersWithDBID.map(this.convertMongoEntityToResponse);
+		console.log(converted);
+		return converted;
 	}
 
-	async getById(id: string): Promise<BloggerResponseType | null> {
-		const convertedId = this.convertIdToObjectId(id);
-		const candidate = await this.collection.findOne({ _id: convertedId });
+	// async getById(id: string): Promise<BloggerResponseType | null> {
+	async getById(id: number): Promise<BloggerResponseType | null> {
+		// const convertedId = this.convertIdToObjectId(id);
+		const convertedId = id;
+		// const candidate = await this.collection.findOne({ _id: convertedId });
+		const candidate = await this.collection.findOne({ id });
 		if (candidate) {
 			const { _id, ...blogger } = candidate;
 			return {
-				id: _id.toString(),
+				_id: _id.toString(),
 				...blogger,
 			};
 		}
@@ -57,9 +59,9 @@ export class BloggerRepository
 		await this.collection.deleteOne({ _id: convertedId });
 	}
 
-	async update(id: string, data: CreateBloggerType): Promise<boolean> {
-		const convertedId = this.convertIdToObjectId(id);
-		const result = await this.collection.updateOne({ _id: convertedId }, { $set: { ...data } });
+	async update(id: number, data: CreateBloggerType): Promise<boolean> {
+		// const convertedId = this.convertIdToObjectId(id);
+		const result = await this.collection.updateOne({ id: id }, { $set: { ...data } });
 		return !!result.matchedCount;
 	}
 

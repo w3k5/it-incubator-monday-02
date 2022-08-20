@@ -41,7 +41,7 @@ export class BloggerDomain {
 	 * @param response
 	 */
 	async getById({ params: { id } }: Request, response: Response) {
-		const candidate = await bloggersRepository.getById(id);
+		const candidate = await bloggersRepository.getById(+id);
 
 		return candidate
 			? response.status(HttpStatusesEnum.OK).send(candidate)
@@ -54,7 +54,7 @@ export class BloggerDomain {
 	 * @param response
 	 */
 	async updateById(request: Request, response: Response) {
-		const id = request.params.id;
+		const id = +request.params.id;
 		const isBloggerUpdated = await bloggersRepository.update(id, request.body);
 		const status = isBloggerUpdated ? HttpStatusesEnum.NO_CONTENT : HttpStatusesEnum.NOT_FOUND;
 		return response.status(status).send();
@@ -67,7 +67,7 @@ export class BloggerDomain {
 	 */
 	async removeById(request: Request, response: Response) {
 		const id = request.params.id;
-		const candidate = await bloggersRepository.getById(id);
+		const candidate = await bloggersRepository.getById(+id);
 
 		if (!candidate) {
 			return response.status(HttpStatusesEnum.NOT_FOUND).send();

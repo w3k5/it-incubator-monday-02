@@ -8,7 +8,8 @@ interface BloggerFilterInterface {
 }
 
 interface PostFilterInterface {
-	bloggerId: ObjectId | null;
+	// bloggerId: ObjectId | null;
+	bloggerId: number | null;
 }
 
 export type BloggerNameSearchParamType = SearchParamType<BloggerFilterInterface>;

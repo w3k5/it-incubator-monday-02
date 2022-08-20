@@ -45,7 +45,8 @@ export class PostsDomain {
 		const newPost = await postsRepository.create({
 			...request.body,
 			bloggerName: userCandidate.name,
-			bloggerId: bloggerId.toString(),
+			// bloggerId: bloggerId.toString(),
+			bloggerId: bloggerId,
 		});
 
 		return response.status(HttpStatusesEnum.CREATED).send(newPost);
@@ -58,7 +59,7 @@ export class PostsDomain {
 	 */
 	async getById(request: Request, response: Response) {
 		const id = request.params.id;
-		const candidate = await postsRepository.getById(id);
+		const candidate = await postsRepository.getById(+id);
 		if (candidate) {
 			return response.status(HttpStatusesEnum.OK).send(candidate);
 		} else {
@@ -83,7 +84,7 @@ export class PostsDomain {
 
 		const postId = request.params.id;
 
-		const isPostUpdated = await postsRepository.update(postId, {
+		const isPostUpdated = await postsRepository.update(+postId, {
 			...request.body,
 			bloggerId,
 			bloggerName,
@@ -98,7 +99,7 @@ export class PostsDomain {
 	 */
 	async removeById(request: Request, response: Response) {
 		const id = request.params.id;
-		const candidate = await postsRepository.getById(id);
+		const candidate = await postsRepository.getById(+id);
 
 		if (!candidate) {
 			return response.status(HttpStatusesEnum.NOT_FOUND).send();

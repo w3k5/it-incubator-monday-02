@@ -19,7 +19,8 @@ export const queryBuilder = (request: Request): BloggerQueryBuilderResponseInter
 
 export const postsQueryBuilder = (request: Request): PostBloggerIdSearchParamType => {
 	const { PageNumber: pageNumberQuery, PageSize: pageSizeQuery } = request.query;
-	const bloggerId = request.params.id ? new ObjectId(request.params.id) : null;
+	// const bloggerId = request.params.id ? new ObjectId(request.params.id) : null;
+	const bloggerId = request.params.id ? +request.params.id : null;
 	const pageNumber = pageNumberQuery ? +pageNumberQuery : 1;
 	const pageSize = pageSizeQuery ? +pageSizeQuery : 10;
 	const skip = (pageNumber - 1) * pageSize;
