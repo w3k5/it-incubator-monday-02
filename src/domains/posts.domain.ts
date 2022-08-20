@@ -45,13 +45,18 @@ export class PostsDomain {
 		/*
         POST, GET -> "/bloggers/:bloggerId/posts": should return error if :id from uri param not found; status 404;
          */
-		if (!userCandidate) {
+		if (!userCandidate && request.params.id) {
 			return response.status(HttpStatusesEnum.NOT_FOUND).send();
+		}
+
+		if (!userCandidate && request.body.bloggerId) {
+			return response.status(HttpStatusesEnum.BAD_REQUEST).send();
 		}
 
 		const newPost = await postsRepository.create({
 			...request.body,
-			bloggerName: userCandidate.name,
+			// TODO: fix that!
+			bloggerName: userCandidate!.name,
 			// bloggerId: bloggerId.toString(),
 			bloggerId: bloggerId,
 		});
