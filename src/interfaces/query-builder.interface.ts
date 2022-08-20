@@ -1,7 +1,7 @@
 import { PaginationInterface } from './pagination.interface';
 
 export interface BloggerQueryBuilderResponseInterface extends PaginationInterface {
-	name: RegExp;
+	searchNameTerm: RegExp;
 }
 
 export interface PostsQueryBuilderResponseInterface extends PaginationInterface {

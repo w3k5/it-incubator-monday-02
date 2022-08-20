@@ -43,7 +43,7 @@ export class PostsDomain {
 		const userCandidate = await bloggersRepository.getById(bloggerId);
 
 		if (!userCandidate) {
-			return response.status(HttpStatusesEnum.NOT_FOUND).send();
+			return response.status(HttpStatusesEnum.BAD_REQUEST).send();
 		}
 
 		const newPost = await postsRepository.create({
@@ -81,7 +81,7 @@ export class PostsDomain {
 		const userCandidate = await bloggersRepository.getById(requestBloggerId);
 
 		if (!userCandidate) {
-			return response.status(HttpStatusesEnum.NOT_FOUND).send();
+			return response.status(HttpStatusesEnum.BAD_REQUEST).send();
 		}
 
 		const { name: bloggerName, id: bloggerId } = userCandidate;

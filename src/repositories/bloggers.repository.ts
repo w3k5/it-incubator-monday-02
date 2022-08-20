@@ -1,12 +1,14 @@
-import {NoSqlRepositoryInterface} from '@app/interfaces';
-import {bloggersCollection} from '../db';
-import {BloggerInterface, BloggerResponseType, CreateBloggerType} from '../entities';
-import {BloggerNameSearchParamType} from '../interfaces/search-param.interface';
-import {MongoRepository} from './mongo.repository';
+import { NoSqlRepositoryInterface } from '@app/interfaces';
+import { bloggersCollection } from '../db';
+import { BloggerInterface, BloggerResponseType, CreateBloggerType } from '../entities';
+import { BloggerNameSearchParamType } from '../interfaces/search-param.interface';
+import { MongoRepository } from './mongo.repository';
+import { BloggerQueryBuilderResponseInterface } from '../interfaces/query-builder.interface';
 
 export class BloggerRepository
 	extends MongoRepository<BloggerInterface>
-	implements NoSqlRepositoryInterface<BloggerInterface> {
+	implements NoSqlRepositoryInterface<BloggerInterface>
+{
 	constructor() {
 		super(bloggersCollection);
 	}
@@ -17,19 +19,19 @@ export class BloggerRepository
 		await this.collection.insertOne({
 			id,
 			// createdAt,
-			...data
+			...data,
 		});
 		return {
 			id,
 			// createdAt,
-			...data
+			...data,
 		};
 	}
 
-	async getAll(options: BloggerNameSearchParamType): Promise<BloggerResponseType[]> {
+	async getAll(options: BloggerQueryBuilderResponseInterface): Promise<BloggerResponseType[]> {
 		const bloggersWithDBID = await this.collection
 			.find({
-				name: {$regex: options.name},
+				name: { $regex: options.searchNameTerm },
 			})
 			.skip(options.skip)
 			.limit(options.pageSize)
@@ -40,9 +42,9 @@ export class BloggerRepository
 	}
 
 	async getById(id: number): Promise<BloggerResponseType | null> {
-		const candidate = await this.collection.findOne({id});
+		const candidate = await this.collection.findOne({ id });
 		if (candidate) {
-			const {_id, ...blogger} = candidate;
+			const { _id, ...blogger } = candidate;
 			return {
 				...blogger,
 			};
@@ -52,16 +54,16 @@ export class BloggerRepository
 	}
 
 	async removeById(id: number): Promise<void> {
-		await this.collection.deleteOne({id: +id});
+		await this.collection.deleteOne({ id: +id });
 	}
 
 	async update(id: number, data: CreateBloggerType): Promise<boolean> {
 		// const convertedId = this.convertIdToObjectId(id);
-		const result = await this.collection.updateOne({id: id}, {$set: {...data}});
+		const result = await this.collection.updateOne({ id: id }, { $set: { ...data } });
 		return !!result.matchedCount;
 	}
 
 	async countCollectionByRegExp(key: keyof BloggerInterface, regexp: RegExp): Promise<number> {
-		return this.collection.countDocuments({[key]: {$regex: regexp}});
+		return this.collection.countDocuments({ [key]: { $regex: regexp } });
 	}
 }

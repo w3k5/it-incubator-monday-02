@@ -15,7 +15,7 @@ export class BloggerDomain {
 	async getAll(request: Request, response: Response) {
 		const searchParams = queryBuilder(request);
 		const items = await bloggersRepository.getAll(searchParams);
-		const total = await bloggersRepository.countCollectionByRegExp('name', searchParams.name);
+		const total = await bloggersRepository.countCollectionByRegExp('name', searchParams.searchNameTerm);
 
 		const builtResponse: getAllResponse<BloggerInterface> = getAllResponseBuilder<BloggerResponseType>(
 			searchParams,

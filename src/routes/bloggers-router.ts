@@ -30,6 +30,7 @@ bloggersRouter.get(
 
 bloggersRouter.get(
 	'/:id/posts',
+	authMiddleware,
 	mongoIdParamValidator,
 	inputValidationMiddleware,
 	paginationValidator,

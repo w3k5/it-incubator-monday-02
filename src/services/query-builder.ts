@@ -4,13 +4,13 @@ import { BloggerQueryBuilderResponseInterface } from '../interfaces/query-builde
 import { PostBloggerIdSearchParamType } from '../interfaces/search-param.interface';
 
 export const queryBuilder = (request: Request): BloggerQueryBuilderResponseInterface => {
-	const { name: nameQuery, PageNumber: pageNumberQuery, PageSize: pageSizeQuery } = request.query;
-	const name = nameQuery ? nameQuery.toString() : '.*';
+	const { SearchNameTerm: nameQuery, PageNumber: pageNumberQuery, PageSize: pageSizeQuery } = request.query;
+	const searchNameTerm = nameQuery ? nameQuery.toString() : '.*';
 	const pageNumber = pageNumberQuery ? +pageNumberQuery : 1;
 	const pageSize = pageSizeQuery ? +pageSizeQuery : 10;
 	const skip = (pageNumber - 1) * pageSize;
 	return {
-		name: new RegExp(name),
+		searchNameTerm: new RegExp(searchNameTerm),
 		pageNumber,
 		pageSize,
 		skip,
