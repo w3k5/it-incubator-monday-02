@@ -1,8 +1,12 @@
 import { query } from 'express-validator';
 import { inputValidationMiddleware } from '../middlewares/input-validation.middleware';
 
+const checkPaginationParam = (param: string, defaultValue: number) => {
+	return query(param).default(defaultValue).isInt({ min: 1 }).toInt();
+};
+
 export const paginationValidator = [
-	query('PageNumber').isInt({ min: 1 }).toInt().optional().default(1),
-	query('PageSize').isInt({ min: 1 }).toInt().optional().default(10),
+	checkPaginationParam('PageNumber', 1),
+	checkPaginationParam('PageSize', 10),
 	inputValidationMiddleware,
 ];

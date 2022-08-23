@@ -1,7 +1,7 @@
 import { param } from 'express-validator';
 import { ObjectId } from 'mongodb';
 
-export const mongoIdParamValidator = param('id').isInt().toInt();
+export const mongoIdParamValidator = param('id').exists().isInt().toInt();
 // .custom((id) => {
 // 	const isIdValid = ObjectId.isValid(id);
 // 	if (!isIdValid) {

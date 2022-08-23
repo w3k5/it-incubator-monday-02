@@ -1,88 +1,77 @@
 import { Request, Response } from 'express';
-import { BloggerInterface, BloggerResponseType } from '../entities';
+import { BloggerInterface } from '../entities';
 import { bloggersRepository } from '../index';
 import { HttpStatusesEnum } from '../enums';
-import { queryBuilder } from '../services/query-builder';
-import { getAllResponse } from '../interfaces/get-all-response.interface';
-import { getAllResponseBuilder } from '../services/get-all-response-builder';
+import { countTotalPages, paginationBuilder } from '../helpers/pagination-builder';
+import { GetAllEntities } from '../dto/common/common.types';
+import { CreateBloggerDto } from '../dto/bloggers/create-blogger.dto';
+import { UpdateBloggerDto } from '../dto/bloggers/update-blogger.dto';
 
 export class BloggerDomain {
 	/**
 	 * Returns all bloggers from database
-	 * @param request
-	 * @param response
 	 */
-	async getAll(request: Request, response: Response) {
-		const searchParams = queryBuilder(request);
-		const items = await bloggersRepository.getAll(searchParams);
-		const total = await bloggersRepository.countCollectionByRegExp('name', searchParams.searchNameTerm);
-
-		const builtResponse: getAllResponse<BloggerInterface> = getAllResponseBuilder<BloggerResponseType>(
-			searchParams,
-			items,
-			total,
-		);
-		return response.status(HttpStatusesEnum.OK).send(builtResponse);
+	async getAllBloggers(
+		pageNumber: number,
+		pageSize: number,
+		searchNameTerm?: string,
+	): Promise<GetAllEntities<BloggerInterface>> {
+		const { skip } = paginationBuilder({ pageNumber, pageSize });
+		const filter = new RegExp(searchNameTerm || '.*');
+		const result = await bloggersRepository.getAll({ pageNumber, pageSize, skip, searchNameTerm: filter });
+		const total = await bloggersRepository.countCollectionByRegExp('name', filter);
+		const pagesCount = countTotalPages(total, pageSize);
+		return {
+			pagesCount,
+			page: pageNumber,
+			pageSize,
+			totalCount: total,
+			items: result,
+		};
 	}
 
 	/**
 	 * Creates new blogger in database
-	 * @param request
-	 * @param response
 	 */
-	async create(request: Request, response: Response) {
-		const newBlogger = await bloggersRepository.create(request.body);
-		return response.status(HttpStatusesEnum.CREATED).send(newBlogger);
+	async createBlogger(createBloggerDto: CreateBloggerDto) {
+		return await bloggersRepository.create(createBloggerDto);
 	}
 
 	/**
 	 * Returns one blogger from database
-	 * @param request
-	 * @param response
 	 */
-	async getById({ params: { id } }: Request, response: Response) {
-		const candidate = await bloggersRepository.getById(+id);
-
-		return candidate
-			? response.status(HttpStatusesEnum.OK).send(candidate)
-			: response.status(HttpStatusesEnum.NOT_FOUND).send();
+	async getBloggerById(id: number): Promise<BloggerInterface | null> {
+		const candidate = await bloggersRepository.getById(id);
+		return candidate;
 	}
 
 	/**
-	 * Return one blogger by ID
-	 * @param request
-	 * @param response
+	 * Updates one blogger by ID
 	 */
-	async updateById(request: Request, response: Response) {
-		const id = +request.params.id;
-		const { name, youtubeUrl } = request.body;
-		const isBloggerUpdated = await bloggersRepository.update(id, { name, youtubeUrl });
-		const status = isBloggerUpdated ? HttpStatusesEnum.NO_CONTENT : HttpStatusesEnum.NOT_FOUND;
-		return response.status(status).send();
+	async updateBloggerById(id: number, updateBloggerDto: UpdateBloggerDto): Promise<boolean> {
+		const isBloggerUpdated: boolean = await bloggersRepository.update(id, updateBloggerDto);
+		return isBloggerUpdated;
 	}
 
 	/**
 	 * Removes one blogger by ID
-	 * @param request
-	 * @param response
 	 */
-	async removeById(request: Request, response: Response) {
-		const id = +request.params.id;
+	async removeBloggerById(id: number): Promise<boolean> {
 		const candidate = await bloggersRepository.getById(id);
 
 		if (!candidate) {
-			return response.status(HttpStatusesEnum.NOT_FOUND).send();
+			return false;
 		}
 
 		await bloggersRepository.removeById(id);
-
-		return response.status(HttpStatusesEnum.NO_CONTENT).send();
+		return true;
 	}
 
 	/**
 	 * Drops full database
 	 * @param request
 	 * @param response
+	 * @deprecated
 	 */
 	async dropDatabase(request: Request, response: Response) {
 		await bloggersRepository.drop();

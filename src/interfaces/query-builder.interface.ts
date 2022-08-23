@@ -5,5 +5,5 @@ export interface BloggerQueryBuilderResponseInterface extends PaginationInterfac
 }
 
 export interface PostsQueryBuilderResponseInterface extends PaginationInterface {
-	bloggerId: string | null;
+	bloggerId: number | null;
 }

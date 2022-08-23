@@ -10,6 +10,7 @@ import { postsRouter } from './routes/posts-router';
 import { bloggersRouter } from './routes/bloggers-router';
 import { testingRouter } from './routes/testing-router';
 import { BloggerRepository, PostsRepository } from './repositories';
+import { loggerMiddleware } from './middlewares/loggerMiddleware';
 
 export const postsRepository = new PostsRepository();
 export const bloggersRepository = new BloggerRepository();
@@ -26,6 +27,9 @@ const port = process.env.PORT || 3000;
  */
 app.use(cors());
 app.use(bodyParser.json());
+if (process.env.APP_MODE === 'development') {
+	app.use(loggerMiddleware);
+}
 
 /**
  * App Middlewares

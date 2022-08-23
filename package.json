@@ -11,9 +11,11 @@
     "start": "node dist/index.js",
     "lint": "eslint src/**/*.ts",
     "test": "jest",
-    "prettier-format": "prettier --config .prettierrc 'src/**/*.ts' --write"
+    "prettier-format": "prettier --config .prettierrc 'src/**/*.ts' --write",
+    "compodoc": "npx compodoc -p tsconfig.doc.json"
   },
   "dependencies": {
+    "@compodoc/compodoc": "^1.1.19",
     "body-parser": "^1.20.0",
     "cors": "^2.8.5",
     "dotenv": "^16.0.1",

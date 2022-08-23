@@ -2,8 +2,8 @@ import { NoSqlRepositoryInterface } from '@app/interfaces';
 import { PostInterface, PostsResponseType } from '../entities';
 import { MongoRepository } from './mongo.repository';
 import { postsCollection } from '../db';
-import { PostBloggerIdSearchParamType } from '../interfaces/search-param.interface';
 import { ObjectId } from 'mongodb';
+import { PostsQueryBuilderResponseInterface } from '../interfaces/query-builder.interface';
 
 export class PostsRepository extends MongoRepository<PostInterface> implements NoSqlRepositoryInterface<PostInterface> {
 	constructor() {
@@ -33,7 +33,12 @@ export class PostsRepository extends MongoRepository<PostInterface> implements N
 		};
 	}
 
-	async getAll({ bloggerId, skip, pageSize }: PostBloggerIdSearchParamType): Promise<PostsResponseType[]> {
+	async getAll({
+		pageNumber,
+		pageSize,
+		skip,
+		bloggerId,
+	}: PostsQueryBuilderResponseInterface): Promise<PostsResponseType[]> {
 		// const filter = id ? { bloggerId: id.toString() } : {};
 		const filter = bloggerId ? { bloggerId: bloggerId } : {};
 		const postsWithDBID = await this.collection.find(filter).skip(skip).limit(pageSize).toArray();

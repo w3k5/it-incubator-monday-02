@@ -18,6 +18,12 @@
       ],
       "@app/helpers": [
         "./helpers/index.ts"
+      ],
+      "@app/common-types": [
+        "./dto/common/common.types.ts"
+      ],
+      "@app/domains/*": [
+        "./domains/*"
       ]
       //      "@app/types": [
       //        "./types/index.ts"

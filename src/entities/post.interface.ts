@@ -1,7 +1,7 @@
 import { ObjectId } from 'mongodb';
+import { EntityId } from '@app/common-types';
 
-export interface PostInterface {
-	id: number;
+export interface PostInterface extends EntityId {
 	bloggerName: string;
 	title: string;
 	shortDescription: string;
@@ -10,9 +10,5 @@ export interface PostInterface {
 	// createdAt: string;
 }
 
-export type CreatePostType = Omit<PostInterface, 'bloggerName'>;
-
 // export type PostsResponseType = Omit<PostInterface, 'id'> & { id: string };
 export type PostsResponseType = PostInterface;
-
-export type UpdatePostType = Omit<PostInterface, 'bloggerName'>;

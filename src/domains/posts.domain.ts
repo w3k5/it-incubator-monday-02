@@ -1,36 +1,40 @@
 import { Request, Response } from 'express';
+import { GetAllEntities } from '@app/common-types';
 import { bloggersRepository, postsRepository } from '../index';
 import { HttpStatusesEnum } from '../enums';
-import { PostInterface, PostsResponseType } from '../entities';
-import { postsQueryBuilder } from '../services/query-builder';
-import { getAllResponse } from '../interfaces/get-all-response.interface';
-import { getAllResponseBuilder } from '../services/get-all-response-builder';
-import { PostBloggerIdSearchParamType } from '../interfaces/search-param.interface';
+import { countTotalPages, paginationBuilder } from '../helpers/pagination-builder';
+import { PostInterface } from '../entities';
+import { PostsQueryBuilderResponseInterface } from '../interfaces/query-builder.interface';
 
 export class PostsDomain {
 	/**
-	 * Returns all posts from database
-	 * @param request
-	 * @param response
+	 * Роут для получения всех постов
+	 * Должен ли этот метод обрабатывать блогера, если роут постов не должен ничего об этом знать?
+	 * Требуется ли нам создать подобный метод в bloggerDomain для получения постов определенного пользователя?
+	 * @param pageNumber
+	 * @param pageSize
+	 * @param bloggerId
 	 */
-	async getAll(request: Request, response: Response) {
-		const searchParams: PostBloggerIdSearchParamType = postsQueryBuilder(request);
-		const items = await postsRepository.getAll(searchParams);
-		const total = searchParams.bloggerId
-			? await postsRepository.countByBloggerId(searchParams.bloggerId)
+	async getAllPosts(pageNumber: number, pageSize: number, bloggerId?: number): Promise<GetAllEntities<PostInterface>> {
+		const { skip } = paginationBuilder({ pageNumber, pageSize });
+		const repositorySearchParams: PostsQueryBuilderResponseInterface = {
+			pageNumber,
+			pageSize,
+			skip,
+			bloggerId: bloggerId || null,
+		};
+		const result = await postsRepository.getAll(repositorySearchParams);
+		const total: number = bloggerId
+			? await postsRepository.countByBloggerId(bloggerId)
 			: await postsRepository.countAllDocuments();
-
-		if (searchParams.bloggerId && !total) {
-			return response.status(HttpStatusesEnum.NOT_FOUND).send();
-		}
-
-		const builtResponse: getAllResponse<PostInterface> = getAllResponseBuilder<PostsResponseType>(
-			searchParams,
-			items,
-			total,
-		);
-
-		return response.status(HttpStatusesEnum.OK).send(builtResponse);
+		const pagesCount: number = countTotalPages(total, pageSize);
+		return {
+			pagesCount,
+			page: pageNumber,
+			pageSize,
+			totalCount: total,
+			items: result,
+		};
 	}
 
 	/**
@@ -40,11 +44,9 @@ export class PostsDomain {
 	 */
 	async create(request: Request, response: Response) {
 		const bloggerId = request.body.bloggerId || request.params.id;
+		// TODO: Service
 		const userCandidate = await bloggersRepository.getById(bloggerId);
 
-		/*
-        POST, GET -> "/bloggers/:bloggerId/posts": should return error if :id from uri param not found; status 404;
-         */
 		if (!userCandidate) {
 			return response.status(HttpStatusesEnum.NOT_FOUND).send();
 		}
@@ -60,7 +62,7 @@ export class PostsDomain {
 	}
 
 	/**
-	 * Returns one video from database
+	 * Returns one post from database
 	 * @param request
 	 * @param response
 	 */
@@ -75,7 +77,7 @@ export class PostsDomain {
 	}
 
 	/**
-	 * Returns one post by ID
+	 * Updates one post by ID
 	 * @param request
 	 * @param response
 	 */

@@ -1,9 +1,10 @@
 import { NoSqlRepositoryInterface } from '@app/interfaces';
 import { bloggersCollection } from '../db';
 import { BloggerInterface, BloggerResponseType, CreateBloggerType } from '../entities';
-import { BloggerNameSearchParamType } from '../interfaces/search-param.interface';
 import { MongoRepository } from './mongo.repository';
 import { BloggerQueryBuilderResponseInterface } from '../interfaces/query-builder.interface';
+import { CreateBloggerDto } from '../dto/bloggers/create-blogger.dto';
+import { UpdateBloggerDto } from '../dto/bloggers/update-blogger.dto';
 
 export class BloggerRepository
 	extends MongoRepository<BloggerInterface>
@@ -13,18 +14,20 @@ export class BloggerRepository
 		super(bloggersCollection);
 	}
 
-	async create(data: CreateBloggerType): Promise<BloggerResponseType> {
+	async create({ name, youtubeUrl }: CreateBloggerDto): Promise<BloggerResponseType> {
 		const id = Date.now();
 		// const createdAt = new Date().toISOString();
 		await this.collection.insertOne({
 			id,
 			// createdAt,
-			...data,
+			name,
+			youtubeUrl,
 		});
 		return {
 			id,
 			// createdAt,
-			...data,
+			name,
+			youtubeUrl,
 		};
 	}
 
@@ -44,9 +47,11 @@ export class BloggerRepository
 	async getById(id: number): Promise<BloggerResponseType | null> {
 		const candidate = await this.collection.findOne({ id });
 		if (candidate) {
-			const { _id, ...blogger } = candidate;
+			const { _id, name, youtubeUrl } = candidate;
 			return {
-				...blogger,
+				id,
+				name,
+				youtubeUrl,
 			};
 		}
 
@@ -54,12 +59,12 @@ export class BloggerRepository
 	}
 
 	async removeById(id: number): Promise<void> {
-		await this.collection.deleteOne({ id: +id });
+		await this.collection.deleteOne({ id });
 	}
 
-	async update(id: number, data: CreateBloggerType): Promise<boolean> {
+	async update(id: number, { name, youtubeUrl }: UpdateBloggerDto): Promise<boolean> {
 		// const convertedId = this.convertIdToObjectId(id);
-		const result = await this.collection.updateOne({ id: id }, { $set: { ...data } });
+		const result = await this.collection.updateOne({ id: id }, { $set: { name, youtubeUrl } });
 		return !!result.matchedCount;
 	}
 

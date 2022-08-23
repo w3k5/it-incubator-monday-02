@@ -1,10 +1,10 @@
 import { ValidationError } from 'express-validator';
 import { ErrorInterface, ErrorMessageInterface } from '@app/interfaces';
 
-const generateError = (error: ValidationError): ErrorInterface => {
+const generateError = ({ msg: message, param: field }: ValidationError): ErrorInterface => {
 	return {
-		message: error.msg,
-		field: error.param,
+		message,
+		field,
 	};
 };
 

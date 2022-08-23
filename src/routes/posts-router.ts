@@ -7,15 +7,16 @@ import { mongoIdParamValidator } from '../validators/params-validators/mongo-id-
 import { inputValidationMiddleware } from '../middlewares/input-validation.middleware';
 import { bloggerIdValidator } from '../validators/post-validators/blogger-id-validator';
 import { paginationValidator } from '../validators/pagination.validator';
+import { PostHandlers, postsDomain } from '../handlers/post.handlers';
 
 export const postsRouter = Router();
 
-export const postsDomain = new PostsDomain();
+const postHandlers = new PostHandlers();
 
 /**
  * Returns all posts
  * */
-postsRouter.get('/', paginationValidator, inputValidationMiddleware, postsDomain.getAll);
+postsRouter.get('/', paginationValidator, postHandlers.getAllPosts);
 
 /**
  * Creates new post

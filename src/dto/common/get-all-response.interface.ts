@@ -1,4 +1,4 @@
-export interface getAllResponse<Entity> {
+export interface GetAllResponseInterface<Entity> {
 	pagesCount: number;
 	page: number;
 	pageSize: number;

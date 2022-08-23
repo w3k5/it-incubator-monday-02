@@ -1,87 +1,74 @@
 import { Router } from 'express';
 import { createBloggerValidators } from '../validators/blogger-validators/create.validator';
 import { authMiddleware } from '../middlewares/auth.middleware';
-import { mongoIdParamValidator } from '../validators/params-validators/mongo-id-param.validator';
-import { inputValidationMiddleware } from '../middlewares/input-validation.middleware';
-import { BloggerDomain } from '../domains/bloggers.domain';
-import { body, query } from 'express-validator';
-import { postsDomain } from './posts-router';
-import { createPostsValidators } from '../validators/post-validators/create.validator';
 import { paginationValidator } from '../validators/pagination.validator';
-import { bloggersRepository } from '../index';
+import { BloggerHandlers } from '../handlers/blogger.handlers';
+import { getOneBloggerParamsValidators } from '../validators/blogger-validators/get-one-blogger.validator';
+import { updateBloggerValidators } from '../validators/blogger-validators/update.validator';
 
 export const bloggersRouter = Router();
 
-export const bloggerDomain = new BloggerDomain();
+const bloggerHandlers = new BloggerHandlers();
 
 /**
  * Returns all bloggers
- * */
-bloggersRouter.get(
-	'/',
-	...paginationValidator,
-	query('name').trim().isString().optional().default(null),
-	inputValidationMiddleware,
-	bloggerDomain.getAll,
-);
+ */
+bloggersRouter.get('/', paginationValidator, bloggerHandlers.getAllBloggers);
 
 /**
  * Get Posts by BloggerId
+ * @deprecated
  */
-
 bloggersRouter.get(
 	'/:id/posts',
-	/**
-	 * Авторизация для данного роута не требуется
-	 * @link https://prnt.sc/bP7g0_C-973d
-	 */
-	// authMiddleware,
-	mongoIdParamValidator,
-	inputValidationMiddleware,
+	getOneBloggerParamsValidators,
 	paginationValidator,
-	postsDomain.getAll,
+	bloggerHandlers.getAllPostBySpecifiedBlogger,
 );
 
 /**
  * Create Posts by BloggerId
+ * @deprecated
  */
-
-bloggersRouter.post(
-	'/:id/posts',
-	authMiddleware,
-	mongoIdParamValidator,
-	inputValidationMiddleware,
-	createPostsValidators,
-	postsDomain.create,
-);
+// bloggersRouter.post(
+// 	'/:id/posts',
+// 	authMiddleware,
+// 	mongoIdParamValidator,
+// 	inputValidationMiddleware,
+// 	createPostsValidators,
+// 	postsDomain.create,
+// );
 
 /**
  * Creates new blogger
+ * @deprecated
  */
-bloggersRouter.post('/', authMiddleware, createBloggerValidators, bloggerDomain.create);
+bloggersRouter.post('/', authMiddleware, createBloggerValidators, bloggerHandlers.createOneBlogger);
 
 /**
  * Returns one blogger by ID
  */
-bloggersRouter.get('/:id', mongoIdParamValidator, inputValidationMiddleware, bloggerDomain.getById);
+bloggersRouter.get('/:id', getOneBloggerParamsValidators, bloggerHandlers.getOneBloggerById);
 
 /**
  * Updates one blogger by ID
+ * @deprecated
  */
-bloggersRouter.put('/:id', authMiddleware, mongoIdParamValidator, createBloggerValidators, bloggerDomain.updateById);
+bloggersRouter.put(
+	'/:id',
+	authMiddleware,
+	getOneBloggerParamsValidators,
+	updateBloggerValidators,
+	bloggerHandlers.updateOneBloggerById,
+);
 
 /**
  * Drops full database
+ * @deprecated
  */
-bloggersRouter.delete('/', authMiddleware, bloggerDomain.dropDatabase);
+bloggersRouter.delete('/', authMiddleware, bloggerHandlers.dropBloggerCollection);
 
 /**
  * Removes one blogger by ID
  */
-bloggersRouter.delete(
-	'/:id',
-	authMiddleware,
-	mongoIdParamValidator,
-	inputValidationMiddleware,
-	bloggerDomain.removeById,
-);
+bloggersRouter.delete('/:id', authMiddleware, getOneBloggerParamsValidators, bloggerHandlers.removeOneBloggerById);
