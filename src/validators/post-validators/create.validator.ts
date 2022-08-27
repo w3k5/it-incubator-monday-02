@@ -6,7 +6,6 @@ import { titleValidator } from './title-validator';
 import { bloggerIdValidator } from './blogger-id-validator';
 
 export const createPostsValidators = [
-	bloggerIdValidator(body('bloggerId')),
 	contentValidator(body('content')),
 	shortDescriptionValidator(body('shortDescription')),
 	titleValidator(body('title')),

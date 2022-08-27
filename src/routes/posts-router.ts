@@ -20,7 +20,13 @@ postsRouter.get('/', paginationValidator, postHandlers.getAllPosts);
 /**
  * Creates new post
  */
-postsRouter.post('/', authMiddleware, createPostsValidators, postHandlers.createPost);
+postsRouter.post(
+	'/',
+	authMiddleware,
+	bloggerIdValidator(body('bloggerId')),
+	createPostsValidators,
+	postHandlers.createPost,
+);
 
 /**
  * Returns one post by ID

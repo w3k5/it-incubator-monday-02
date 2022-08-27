@@ -39,6 +39,7 @@ export class PostsDomain {
 		};
 	}
 
+	// TODO: проверка должна быть в валидаторе
 	/**
 	 * Creates new post in database
 	 */

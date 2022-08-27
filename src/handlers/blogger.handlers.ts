@@ -18,6 +18,7 @@ import { HttpStatusesEnum } from '../enums';
 import { CreateBloggerDto } from '../dto/bloggers/create-blogger.dto';
 import { UpdateBloggerDto } from '../dto/bloggers/update-blogger.dto';
 import { postsDomain } from './post.handlers';
+import { CreatePostDto } from '../dto/posts/create-post.dto';
 
 export const bloggerDomain = new BloggerDomain();
 
@@ -83,12 +84,17 @@ export class BloggerHandlers {
 		return response.status(HttpStatusesEnum.CREATED).send(blogger);
 	}
 
-	// TODO: Реализовать создание поста по параметру BloggerID
 	/**
 	 * Хэндлер для создания поста с помощью Blogger ID
 	 * */
-	async createPostByBloggerId(request: Request, response: Response) {
-		return response.status(201).send('Success');
+	async createPostByBloggerId(
+		request: RequestWithBodyAndParams<Omit<CreatePostDto, 'bloggerId'>, EntityId>,
+		response: Response,
+	) {
+		const { id } = request.params;
+		const createPostDto = request.body;
+		const result = await postsDomain.create({ ...createPostDto, bloggerId: id });
+		return response.status(HttpStatusesEnum.CREATED).send(result);
 	}
 
 	// =================================================================================================================

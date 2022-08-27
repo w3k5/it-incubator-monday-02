@@ -5,6 +5,11 @@ import { paginationValidator } from '../validators/pagination.validator';
 import { BloggerHandlers } from '../handlers/blogger.handlers';
 import { getOneBloggerParamsValidators } from '../validators/blogger-validators/get-one-blogger.validator';
 import { updateBloggerValidators } from '../validators/blogger-validators/update.validator';
+import { createPostsValidators } from '../validators/post-validators/create.validator';
+import { mongoIdParamValidator } from '../validators/params-validators/mongo-id-param.validator';
+import { bloggerIdValidator } from '../validators/post-validators/blogger-id-validator';
+import { body, param } from 'express-validator';
+import { inputValidationMiddleware } from '../middlewares/input-validation.middleware';
 
 export const bloggersRouter = Router();
 
@@ -31,10 +36,9 @@ bloggersRouter.get(
 bloggersRouter.post(
 	'/:id/posts',
 	authMiddleware,
-	// mongoIdParamValidator,
-	// inputValidationMiddleware,
-	// createPostsValidators,
-	// postsDomain.create,
+	bloggerIdValidator(param('id')),
+	inputValidationMiddleware,
+	createPostsValidators,
 	bloggerHandlers.createPostByBloggerId,
 );
 
