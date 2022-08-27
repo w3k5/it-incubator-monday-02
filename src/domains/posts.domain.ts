@@ -1,10 +1,12 @@
 import { Request, Response } from 'express';
-import { GetAllEntities } from '@app/common-types';
+import { GetAllEntities, Nullable } from '@app/common-types';
 import { bloggersRepository, postsRepository } from '../index';
 import { HttpStatusesEnum } from '../enums';
 import { countTotalPages, paginationBuilder } from '../helpers/pagination-builder';
 import { PostInterface } from '../entities';
 import { PostsQueryBuilderResponseInterface } from '../interfaces/query-builder.interface';
+import { CreatePostDto, UpdatePostDto } from '../dto/posts/create-post.dto';
+import { PostResponseInterface } from '../dto/posts/post-response.interface';
 
 export class PostsDomain {
 	/**
@@ -15,7 +17,7 @@ export class PostsDomain {
 	 * @param pageSize
 	 * @param bloggerId
 	 */
-	async getAllPosts(pageNumber: number, pageSize: number, bloggerId?: number): Promise<GetAllEntities<PostInterface>> {
+	async getAllPosts(pageNumber: number, pageSize: number, bloggerId?: string): Promise<GetAllEntities<PostInterface>> {
 		const { skip } = paginationBuilder({ pageNumber, pageSize });
 		const repositorySearchParams: PostsQueryBuilderResponseInterface = {
 			pageNumber,
@@ -39,93 +41,64 @@ export class PostsDomain {
 
 	/**
 	 * Creates new post in database
-	 * @param request
-	 * @param response
 	 */
-	async create(request: Request, response: Response) {
-		const bloggerId = request.body.bloggerId || request.params.id;
-		// TODO: Service
-		const userCandidate = await bloggersRepository.getById(bloggerId);
+	async create(createPostDto: CreatePostDto): Promise<Nullable<PostInterface>> {
+		const { bloggerId } = createPostDto;
+		const bloggerCandidate = await bloggersRepository.getById(bloggerId);
 
-		if (!userCandidate) {
-			return response.status(HttpStatusesEnum.NOT_FOUND).send();
+		if (!bloggerCandidate) {
+			return null;
 		}
 
 		const newPost = await postsRepository.create({
-			...request.body,
-			bloggerName: userCandidate.name,
-			// bloggerId: bloggerId.toString(),
+			...createPostDto,
 			bloggerId: bloggerId,
+			bloggerName: bloggerCandidate.name,
 		});
 
-		return response.status(HttpStatusesEnum.CREATED).send(newPost);
+		return newPost;
 	}
 
 	/**
 	 * Returns one post from database
-	 * @param request
-	 * @param response
 	 */
-	async getById(request: Request, response: Response) {
-		const id = request.params.id;
-		const candidate = await postsRepository.getById(+id);
-		if (candidate) {
-			return response.status(HttpStatusesEnum.OK).send(candidate);
-		} else {
-			return response.status(HttpStatusesEnum.NOT_FOUND).send();
-		}
+	async getById(id: string): Promise<Nullable<PostResponseInterface>> {
+		return postsRepository.getById(id);
 	}
 
 	/**
 	 * Updates one post by ID
-	 * @param request
-	 * @param response
 	 */
-	async updateById(request: Request, response: Response) {
-		const { bloggerId: requestBloggerId } = request.body;
-		const userCandidate = await bloggersRepository.getById(requestBloggerId);
-
-		if (!userCandidate) {
-			return response.status(HttpStatusesEnum.BAD_REQUEST).send();
-		}
-
-		const { name: bloggerName, id: bloggerId } = userCandidate;
-
-		const postId = request.params.id;
-		console.log(request.body);
-		const isPostUpdated = await postsRepository.update(+postId, {
-			...request.body,
+	async updateById(id: string, updatePostDto: UpdatePostDto): Promise<boolean> {
+		const { bloggerId, title, shortDescription, content, bloggerName } = updatePostDto;
+		return postsRepository.update(id, {
+			title,
+			content,
+			shortDescription,
 			bloggerId,
 			bloggerName,
 		});
-		return response.status(isPostUpdated ? HttpStatusesEnum.NO_CONTENT : HttpStatusesEnum.NOT_FOUND).send();
 	}
 
 	/**
 	 * Removes one video by ID
-	 * @param request
-	 * @param response
 	 */
-	async removeById(request: Request, response: Response) {
-		const id = +request.params.id;
-		const candidate = await postsRepository.getById(id);
+	async removeById(id: string) {
+		// const id = request.params.id;
+		// const candidate = await postsRepository.getById(id);
+		// if (!candidate) {
+		// 	return response.status(HttpStatusesEnum.NOT_FOUND).send();
+		// }
 
-		if (!candidate) {
-			return response.status(HttpStatusesEnum.NOT_FOUND).send();
-		}
+		return await postsRepository.removeById(id);
 
-		await postsRepository.removeById(+id);
-
-		return response.status(HttpStatusesEnum.NO_CONTENT).send();
+		// return response.status(HttpStatusesEnum.NO_CONTENT).send();
 	}
 
 	/**
 	 * Drops full database
-	 * @param request
-	 * @param response
 	 */
-	async dropDatabase(request: Request, response: Response) {
+	async dropDatabase() {
 		await postsRepository.drop();
-		return response.status(HttpStatusesEnum.NO_CONTENT).send();
 	}
 }

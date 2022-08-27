@@ -1,7 +1,7 @@
 import { Request } from 'express';
 import { ObjectId } from 'mongodb';
 import { BloggerQueryBuilderResponseInterface } from '../interfaces/query-builder.interface';
-import { PostBloggerIdSearchParamType } from '../interfaces/search-param.interface';
+// import { PostBloggerIdSearchParamType } from '../interfaces/search-param.interface';
 
 /**
  * @deprecated
@@ -34,13 +34,13 @@ export const queryBuilder = (request: Request): BloggerQueryBuilderResponseInter
 /**
  * @deprecated
  */
-export const postsQueryBuilder = (request: Request): PostBloggerIdSearchParamType => {
-	const { PageNumber: pageNumberQuery, PageSize: pageSizeQuery } = request.query;
-	// const bloggerId = request.params.id ? new ObjectId(request.params.id) : null;
-	const bloggerId = request.params.id ? +request.params.id : null;
-	const paginationResult = paginationQueryBuilder(Number(pageNumberQuery), Number(pageSizeQuery));
-	return {
-		bloggerId,
-		...paginationResult,
-	};
-};
+// export const postsQueryBuilder = (request: Request): PostBloggerIdSearchParamType => {
+// 	const { PageNumber: pageNumberQuery, PageSize: pageSizeQuery } = request.query;
+// 	// const bloggerId = request.params.id ? new ObjectId(request.params.id) : null;
+// 	const bloggerId = request.params.id ? +request.params.id : null;
+// 	const paginationResult = paginationQueryBuilder(Number(pageNumberQuery), Number(pageSizeQuery));
+// 	return {
+// 		bloggerId,
+// 		...paginationResult,
+// 	};
+// };

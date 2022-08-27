@@ -18,7 +18,7 @@ export class MongoRepository<Entity> {
 	convertMongoEntityToResponse(entity: Entity & { _id: ObjectId }) {
 		const { _id, ...rest } = entity;
 		return {
-			// _id: _id.toString(),
+			id: _id.toString(),
 			...rest,
 		};
 	}

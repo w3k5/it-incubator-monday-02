@@ -1,8 +1,7 @@
 import { Router } from 'express';
-import { body, query } from 'express-validator';
+import { body } from 'express-validator';
 import { createPostsValidators } from '../validators/post-validators/create.validator';
 import { authMiddleware } from '../middlewares/auth.middleware';
-import { PostsDomain } from '../domains/posts.domain';
 import { mongoIdParamValidator } from '../validators/params-validators/mongo-id-param.validator';
 import { inputValidationMiddleware } from '../middlewares/input-validation.middleware';
 import { bloggerIdValidator } from '../validators/post-validators/blogger-id-validator';
@@ -21,12 +20,12 @@ postsRouter.get('/', paginationValidator, postHandlers.getAllPosts);
 /**
  * Creates new post
  */
-postsRouter.post('/', authMiddleware, bloggerIdValidator(body('bloggerId')), createPostsValidators, postsDomain.create);
+postsRouter.post('/', authMiddleware, createPostsValidators, postHandlers.createPost);
 
 /**
  * Returns one post by ID
  */
-postsRouter.get('/:id', mongoIdParamValidator, inputValidationMiddleware, postsDomain.getById);
+postsRouter.get('/:id', mongoIdParamValidator, inputValidationMiddleware, postHandlers.getPostById);
 
 /**
  * Updates one post by ID
@@ -39,15 +38,15 @@ postsRouter.put(
 	bloggerIdValidator(body('bloggerId')),
 	inputValidationMiddleware,
 	createPostsValidators,
-	postsDomain.updateById,
+	postHandlers.updatePostById,
 );
 
 /**
  * Drops full database
  */
-postsRouter.delete('/', authMiddleware, postsDomain.dropDatabase);
+postsRouter.delete('/', authMiddleware, postHandlers.dropCollection);
 
 /**
  * Removes one post by ID
  */
-postsRouter.delete('/:id', authMiddleware, mongoIdParamValidator, postsDomain.removeById);
+postsRouter.delete('/:id', authMiddleware, mongoIdParamValidator, postHandlers.removePostById);

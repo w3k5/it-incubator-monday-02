@@ -1,4 +1,4 @@
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import {
 	EmptyRequest,
 	EmptyResponse,
@@ -17,7 +17,6 @@ import { GetAllBloggersQueryParams } from '../dto/bloggers/get-all-bloggers.type
 import { HttpStatusesEnum } from '../enums';
 import { CreateBloggerDto } from '../dto/bloggers/create-blogger.dto';
 import { UpdateBloggerDto } from '../dto/bloggers/update-blogger.dto';
-import { bloggersRepository } from '../index';
 import { postsDomain } from './post.handlers';
 
 export const bloggerDomain = new BloggerDomain();
@@ -30,6 +29,7 @@ export class BloggerHandlers {
 	 * Просто хендлер который должен описывать получаемые данные в реквесте
 	 * Обратиться к доменной зоне, запросить готовый вид и отправить результат
 	 * @param request
+	 * @param response
 	 */
 	async getAllBloggers(
 		request: RequestWithQuery<GetAllBloggersQueryParams>,
@@ -46,7 +46,7 @@ export class BloggerHandlers {
 
 	/**
 	 * Хэндлер для получения блоггера по ID (number)
-	 * @param request with id: number
+	 * @param request with id: string
 	 * @param response<BloggerInterface>
 	 */
 	async getOneBloggerById(request: RequestWithParams<EntityId>, response: Response<BloggerInterface>) {
@@ -81,6 +81,14 @@ export class BloggerHandlers {
 		const { youtubeUrl, name } = request.body;
 		const blogger = await bloggerDomain.createBlogger({ name, youtubeUrl });
 		return response.status(HttpStatusesEnum.CREATED).send(blogger);
+	}
+
+	// TODO: Реализовать создание поста по параметру BloggerID
+	/**
+	 * Хэндлер для создания поста с помощью Blogger ID
+	 * */
+	async createPostByBloggerId(request: Request, response: Response) {
+		return response.status(201).send('Success');
 	}
 
 	// =================================================================================================================
@@ -120,7 +128,7 @@ export class BloggerHandlers {
 	 * Дропает всю коллекцию
 	 */
 	async dropBloggerCollection(_: EmptyRequest, response: EmptyResponse) {
-		await bloggersRepository.drop();
+		await bloggerDomain.dropDatabase();
 		return response.status(HttpStatusesEnum.OK).send();
 	}
 }

@@ -17,7 +17,6 @@ bloggersRouter.get('/', paginationValidator, bloggerHandlers.getAllBloggers);
 
 /**
  * Get Posts by BloggerId
- * @deprecated
  */
 bloggersRouter.get(
 	'/:id/posts',
@@ -28,20 +27,19 @@ bloggersRouter.get(
 
 /**
  * Create Posts by BloggerId
- * @deprecated
  */
-// bloggersRouter.post(
-// 	'/:id/posts',
-// 	authMiddleware,
-// 	mongoIdParamValidator,
-// 	inputValidationMiddleware,
-// 	createPostsValidators,
-// 	postsDomain.create,
-// );
+bloggersRouter.post(
+	'/:id/posts',
+	authMiddleware,
+	// mongoIdParamValidator,
+	// inputValidationMiddleware,
+	// createPostsValidators,
+	// postsDomain.create,
+	bloggerHandlers.createPostByBloggerId,
+);
 
 /**
  * Creates new blogger
- * @deprecated
  */
 bloggersRouter.post('/', authMiddleware, createBloggerValidators, bloggerHandlers.createOneBlogger);
 
@@ -52,7 +50,6 @@ bloggersRouter.get('/:id', getOneBloggerParamsValidators, bloggerHandlers.getOne
 
 /**
  * Updates one blogger by ID
- * @deprecated
  */
 bloggersRouter.put(
 	'/:id',
@@ -64,7 +61,6 @@ bloggersRouter.put(
 
 /**
  * Drops full database
- * @deprecated
  */
 bloggersRouter.delete('/', authMiddleware, bloggerHandlers.dropBloggerCollection);
 

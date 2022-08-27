@@ -11,6 +11,7 @@ import { bloggersRouter } from './routes/bloggers-router';
 import { testingRouter } from './routes/testing-router';
 import { BloggerRepository, PostsRepository } from './repositories';
 import { loggerMiddleware } from './middlewares/loggerMiddleware';
+import { globalCatchErrorsMiddleware } from './middlewares/global-catch-errors.middleware';
 
 export const postsRepository = new PostsRepository();
 export const bloggersRepository = new BloggerRepository();
@@ -46,6 +47,7 @@ app.use(blackListMiddleware);
 app.use('/posts', postsRouter);
 app.use('/bloggers', bloggersRouter);
 app.use('/testing', testingRouter);
+app.use(globalCatchErrorsMiddleware);
 
 const startApp = async () => {
 	await runDb();

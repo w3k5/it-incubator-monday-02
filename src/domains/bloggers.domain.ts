@@ -34,47 +34,34 @@ export class BloggerDomain {
 	 * Creates new blogger in database
 	 */
 	async createBlogger(createBloggerDto: CreateBloggerDto) {
-		return await bloggersRepository.create(createBloggerDto);
+		return bloggersRepository.create(createBloggerDto);
 	}
 
 	/**
 	 * Returns one blogger from database
 	 */
-	async getBloggerById(id: number): Promise<BloggerInterface | null> {
-		const candidate = await bloggersRepository.getById(id);
-		return candidate;
+	async getBloggerById(id: string): Promise<BloggerInterface | null> {
+		return bloggersRepository.getById(id);
 	}
 
 	/**
 	 * Updates one blogger by ID
 	 */
-	async updateBloggerById(id: number, updateBloggerDto: UpdateBloggerDto): Promise<boolean> {
-		const isBloggerUpdated: boolean = await bloggersRepository.update(id, updateBloggerDto);
-		return isBloggerUpdated;
+	async updateBloggerById(id: string, updateBloggerDto: UpdateBloggerDto): Promise<boolean> {
+		return bloggersRepository.update(id, updateBloggerDto);
 	}
 
 	/**
 	 * Removes one blogger by ID
 	 */
-	async removeBloggerById(id: number): Promise<boolean> {
-		const candidate = await bloggersRepository.getById(id);
-
-		if (!candidate) {
-			return false;
-		}
-
-		await bloggersRepository.removeById(id);
-		return true;
+	async removeBloggerById(id: string): Promise<boolean> {
+		return bloggersRepository.removeById(id);
 	}
 
 	/**
 	 * Drops full database
-	 * @param request
-	 * @param response
-	 * @deprecated
 	 */
-	async dropDatabase(request: Request, response: Response) {
+	async dropDatabase() {
 		await bloggersRepository.drop();
-		return response.status(HttpStatusesEnum.NO_CONTENT).send();
 	}
 }

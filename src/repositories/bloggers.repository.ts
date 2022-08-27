@@ -1,13 +1,13 @@
 import { NoSqlRepositoryInterface } from '@app/interfaces';
 import { bloggersCollection } from '../db';
-import { BloggerInterface, BloggerResponseType, CreateBloggerType } from '../entities';
+import { BloggerInterface, BloggerResponseType } from '../entities';
 import { MongoRepository } from './mongo.repository';
 import { BloggerQueryBuilderResponseInterface } from '../interfaces/query-builder.interface';
 import { CreateBloggerDto } from '../dto/bloggers/create-blogger.dto';
 import { UpdateBloggerDto } from '../dto/bloggers/update-blogger.dto';
 
 export class BloggerRepository
-	extends MongoRepository<BloggerInterface>
+	extends MongoRepository<Omit<BloggerInterface, 'id'>>
 	implements NoSqlRepositoryInterface<BloggerInterface>
 {
 	constructor() {
@@ -15,17 +15,12 @@ export class BloggerRepository
 	}
 
 	async create({ name, youtubeUrl }: CreateBloggerDto): Promise<BloggerResponseType> {
-		const id = Date.now();
-		// const createdAt = new Date().toISOString();
-		await this.collection.insertOne({
-			id,
-			// createdAt,
+		const { insertedId } = await this.collection.insertOne({
 			name,
 			youtubeUrl,
 		});
 		return {
-			id,
-			// createdAt,
+			id: insertedId.toString(),
 			name,
 			youtubeUrl,
 		};
@@ -44,8 +39,8 @@ export class BloggerRepository
 		return converted;
 	}
 
-	async getById(id: number): Promise<BloggerResponseType | null> {
-		const candidate = await this.collection.findOne({ id });
+	async getById(id: string): Promise<BloggerResponseType | null> {
+		const candidate = await this.collection.findOne({ _id: this.convertIdToObjectId(id) });
 		if (candidate) {
 			const { _id, name, youtubeUrl } = candidate;
 			return {
@@ -58,13 +53,16 @@ export class BloggerRepository
 		return null;
 	}
 
-	async removeById(id: number): Promise<void> {
-		await this.collection.deleteOne({ id });
+	async removeById(id: string): Promise<boolean> {
+		const { deletedCount } = await this.collection.deleteOne({ _id: this.convertIdToObjectId(id) });
+		return !!deletedCount;
 	}
 
-	async update(id: number, { name, youtubeUrl }: UpdateBloggerDto): Promise<boolean> {
-		// const convertedId = this.convertIdToObjectId(id);
-		const result = await this.collection.updateOne({ id: id }, { $set: { name, youtubeUrl } });
+	async update(id: string, { name, youtubeUrl }: UpdateBloggerDto): Promise<boolean> {
+		const result = await this.collection.updateOne(
+			{ _id: this.convertIdToObjectId(id) },
+			{ $set: { name, youtubeUrl } },
+		);
 		return !!result.matchedCount;
 	}
 

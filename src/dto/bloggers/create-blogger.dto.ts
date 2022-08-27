@@ -1,4 +1,3 @@
-export type CreateBloggerDto = {
-	youtubeUrl: string;
-	name: string;
-};
+import { BloggerInterface } from '../../entities';
+
+export type CreateBloggerDto = Pick<BloggerInterface, 'youtubeUrl' | 'name'>;

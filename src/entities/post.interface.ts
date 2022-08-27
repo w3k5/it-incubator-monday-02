@@ -6,7 +6,7 @@ export interface PostInterface extends EntityId {
 	title: string;
 	shortDescription: string;
 	content: string;
-	bloggerId: number;
+	bloggerId: string;
 	// createdAt: string;
 }
 

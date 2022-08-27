@@ -8,8 +8,8 @@ export const client = new MongoClient(
 );
 const db = client.db(dbName);
 
-export const bloggersCollection = db.collection<BloggerInterface>('bloggers');
-export const postsCollection = db.collection<PostInterface>('posts');
+export const bloggersCollection = db.collection<Omit<BloggerInterface, 'id'>>('bloggers');
+export const postsCollection = db.collection<Omit<PostInterface, 'id'>>('posts');
 
 const initCollections = async (collections: string[]) => {
 	const databaseCollections = await db.listCollections().toArray();

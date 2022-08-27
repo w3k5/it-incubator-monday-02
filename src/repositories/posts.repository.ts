@@ -4,27 +4,23 @@ import { MongoRepository } from './mongo.repository';
 import { postsCollection } from '../db';
 import { ObjectId } from 'mongodb';
 import { PostsQueryBuilderResponseInterface } from '../interfaces/query-builder.interface';
+import { CreatePostDto } from '../dto/posts/create-post.dto';
 
-export class PostsRepository extends MongoRepository<PostInterface> implements NoSqlRepositoryInterface<PostInterface> {
+export class PostsRepository
+	extends MongoRepository<Omit<PostInterface, 'id'>>
+	implements NoSqlRepositoryInterface<PostInterface>
+{
 	constructor() {
 		super(postsCollection);
 	}
 
-	async create(data: Omit<PostInterface, 'id'>): Promise<PostsResponseType> {
-		const id = Date.now();
-		const createdAt = new Date().toISOString();
-
+	async create(data: CreatePostDto & { bloggerName: string }): Promise<PostsResponseType> {
 		const { bloggerName, title, shortDescription, content, bloggerId } = data;
 
-		await this.collection.insertOne({
-			id,
-			...data,
-			// createdAt
-		});
+		const { insertedId } = await this.collection.insertOne(data);
 
 		return {
-			// createdAt,
-			id,
+			id: insertedId.toString(),
 			bloggerName,
 			title,
 			shortDescription,
@@ -46,14 +42,12 @@ export class PostsRepository extends MongoRepository<PostInterface> implements N
 	}
 
 	// async getById(id: string): Promise<PostsResponseType | null> {
-	async getById(id: number): Promise<PostsResponseType | null> {
-		// const convertedId = this.convertIdToObjectId(id);
-		// const candidate = await this.collection.findOne({ _id: convertedId });
-		const candidate = await this.collection.findOne({ id });
+	async getById(id: string): Promise<PostsResponseType | null> {
+		const candidate = await this.collection.findOne({ _id: this.convertIdToObjectId(id) });
 		if (candidate) {
 			const { _id, ...post } = candidate;
 			return {
-				// _id: _id.toString(),
+				id: _id.toString(),
 				...post,
 			};
 		}
@@ -61,13 +55,13 @@ export class PostsRepository extends MongoRepository<PostInterface> implements N
 		return null;
 	}
 
-	async removeById(id: number): Promise<void> {
-		await this.collection.deleteOne({ id: +id });
+	async removeById(id: string): Promise<boolean> {
+		const { deletedCount } = await this.collection.deleteOne({ _id: this.convertIdToObjectId(id) });
+		return !!deletedCount;
 	}
 
-	async update(id: number, data: Partial<Omit<PostInterface, 'id'>>): Promise<boolean> {
-		// const convertedId = this.convertIdToObjectId(id);
-		const result = await this.collection.updateOne({ id }, { $set: { ...data } });
+	async update(id: string, data: Partial<Omit<PostInterface, 'id'>>): Promise<boolean> {
+		const result = await this.collection.updateOne({ _id: this.convertIdToObjectId(id) }, { $set: { ...data } });
 		return !!result.matchedCount;
 	}
 
@@ -75,11 +69,7 @@ export class PostsRepository extends MongoRepository<PostInterface> implements N
 		return this.collection.countDocuments({ [key]: { $regex: regexp } });
 	}
 
-	// async countByBloggerId(id: ObjectId): Promise<number> {
-	// 	return this.collection.countDocuments({ bloggerId: id.toString() });
-	// }
-
-	async countByBloggerId(id: number): Promise<number> {
+	async countByBloggerId(id: string): Promise<number> {
 		return this.collection.countDocuments({ bloggerId: id });
 	}
 }
