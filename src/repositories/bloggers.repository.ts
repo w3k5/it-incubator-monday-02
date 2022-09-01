@@ -5,6 +5,7 @@ import { MongoRepository } from './mongo.repository';
 import { BloggerQueryBuilderResponseInterface } from '../interfaces/query-builder.interface';
 import { CreateBloggerDto } from '../dto/bloggers/create-blogger.dto';
 import { UpdateBloggerDto } from '../dto/bloggers/update-blogger.dto';
+import { SortDirectionEnum } from '../enums';
 
 export class BloggerRepository
 	extends MongoRepository<Omit<BloggerInterface, 'id'>>
@@ -15,22 +16,28 @@ export class BloggerRepository
 	}
 
 	async create({ name, youtubeUrl }: CreateBloggerDto): Promise<BloggerResponseType> {
+		const createdAt = this.dateNow();
 		const { insertedId } = await this.collection.insertOne({
 			name,
 			youtubeUrl,
+			createdAt,
 		});
 		return {
 			id: insertedId.toString(),
 			name,
 			youtubeUrl,
+			createdAt,
 		};
 	}
 
 	async getAll(options: BloggerQueryBuilderResponseInterface): Promise<BloggerResponseType[]> {
+		const sortDirection = options.sortDirection === SortDirectionEnum.Asc ? 1 : -1;
+
 		const bloggersWithDBID = await this.collection
 			.find({
-				name: { $regex: options.searchNameTerm },
+				name: { $regex: options.searchNameTerm, $options: 'i' },
 			})
+			.sort({ [options.sortBy]: sortDirection })
 			.skip(options.skip)
 			.limit(options.pageSize)
 			.toArray();
@@ -42,11 +49,12 @@ export class BloggerRepository
 	async getById(id: string): Promise<BloggerResponseType | null> {
 		const candidate = await this.collection.findOne({ _id: this.convertIdToObjectId(id) });
 		if (candidate) {
-			const { _id, name, youtubeUrl } = candidate;
+			const { name, youtubeUrl, createdAt } = candidate;
 			return {
 				id,
 				name,
 				youtubeUrl,
+				createdAt,
 			};
 		}
 

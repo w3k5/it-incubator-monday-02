@@ -1,7 +1,6 @@
-import { Request } from 'express';
-import { ObjectId } from 'mongodb';
 import { BloggerQueryBuilderResponseInterface } from '../interfaces/query-builder.interface';
-// import { PostBloggerIdSearchParamType } from '../interfaces/search-param.interface';
+import { GetAllBloggersQueryParams } from '../dto/bloggers/get-all-bloggers.type';
+import { RequestWithQuery } from '@app/common-types';
 
 /**
  * @deprecated
@@ -20,13 +19,22 @@ export const paginationQueryBuilder = (pageNumber = 1, pageSize = 10) => {
 /**
  * @deprecated
  */
-// export const queryBuilder = (request: Request<GetAllBloggersType>): BloggerQueryBuilderResponseInterface => {
-export const queryBuilder = (request: Request): BloggerQueryBuilderResponseInterface => {
-	const { SearchNameTerm: nameQuery, PageNumber: pageNumberQuery, PageSize: pageSizeQuery } = request.query;
+export const queryBuilder = (
+	request: RequestWithQuery<GetAllBloggersQueryParams>,
+): BloggerQueryBuilderResponseInterface => {
+	const {
+		SearchNameTerm: nameQuery,
+		PageNumber: pageNumberQuery,
+		PageSize: pageSizeQuery,
+		sortBy,
+		sortDirection,
+	} = request.query;
 	const searchNameTerm = nameQuery ? nameQuery.toString() : '.*';
 	const paginationResult = paginationQueryBuilder(Number(pageNumberQuery), Number(pageSizeQuery));
 	return {
 		searchNameTerm: new RegExp(searchNameTerm),
+		sortBy,
+		sortDirection,
 		...paginationResult,
 	};
 };

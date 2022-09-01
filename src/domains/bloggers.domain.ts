@@ -1,7 +1,6 @@
-import { Request, Response } from 'express';
 import { BloggerInterface } from '../entities';
 import { bloggersRepository } from '../index';
-import { HttpStatusesEnum } from '../enums';
+import { SortDirectionEnum } from '../enums';
 import { countTotalPages, paginationBuilder } from '../helpers/pagination-builder';
 import { GetAllEntities } from '../dto/common/common.types';
 import { CreateBloggerDto } from '../dto/bloggers/create-blogger.dto';
@@ -14,11 +13,20 @@ export class BloggerDomain {
 	async getAllBloggers(
 		pageNumber: number,
 		pageSize: number,
+		sortBy: keyof BloggerInterface,
+		sortDirection: SortDirectionEnum,
 		searchNameTerm?: string,
 	): Promise<GetAllEntities<BloggerInterface>> {
 		const { skip } = paginationBuilder({ pageNumber, pageSize });
 		const filter = new RegExp(searchNameTerm || '.*');
-		const result = await bloggersRepository.getAll({ pageNumber, pageSize, skip, searchNameTerm: filter });
+		const result = await bloggersRepository.getAll({
+			pageNumber,
+			pageSize,
+			skip,
+			searchNameTerm: filter,
+			sortBy,
+			sortDirection,
+		});
 		const total = await bloggersRepository.countCollectionByRegExp('name', filter);
 		const pagesCount = countTotalPages(total, pageSize);
 		return {

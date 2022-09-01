@@ -15,6 +15,7 @@ import { PostsDomain } from '../domains/posts.domain';
 import { GetAllPostsQueryParams } from '../dto/posts/get-all-posts.type';
 import { CreatePostDto, UpdatePostDto } from '../dto/posts/create-post.dto';
 import { PostResponseInterface } from '../dto/posts/post-response.interface';
+import { bloggerDomain } from './blogger.handlers';
 
 export const postsDomain = new PostsDomain();
 
@@ -91,11 +92,16 @@ export class PostHandlers {
 
 	async updatePostById(request: RequestWithBodyAndParams<UpdatePostDto, EntityId>, response: EmptyResponse) {
 		const { id } = request.params;
-		const createPostDto = request.body;
-		// TODO: blogger is not exists in request, wrote into request after validator checking
-		//@ts-ignore
-		const { name: bloggerName, id: bloggerId } = request.blogger;
-		const result = await postsDomain.updateById(id, { ...createPostDto, bloggerId, bloggerName });
+		const updatePostDto = request.body;
+		const bloggerCandidate = await bloggerDomain.getBloggerById(updatePostDto.bloggerId);
+
+		if (!bloggerCandidate) {
+			return response.status(HttpStatusesEnum.NOT_FOUND).send();
+		}
+
+		const { id: bloggerId, name: bloggerName } = bloggerCandidate;
+
+		const result = await postsDomain.updateById(id, { ...updatePostDto, bloggerId, bloggerName });
 		if (result === null) {
 			return response.status(HttpStatusesEnum.BAD_REQUEST).send();
 		}

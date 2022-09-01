@@ -23,3 +23,11 @@ export const generateErrorsResponse = (errors: ValidationError[]): ErrorMessageI
 		errorsMessages: collectUniqueErrors(errors).map(generateError),
 	};
 };
+
+// export const generateServerError = (Pick<ServerErrorInterface, 'error'>): ServerErrorInterface => {
+// 	return {
+// 		message: "Internal server error",
+// 		status: HttpStatusesEnum.SERVER_ERROR,
+// 		error
+// 	}
+// }

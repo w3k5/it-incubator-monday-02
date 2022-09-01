@@ -16,7 +16,7 @@ export const authMiddleware = (request: Request, response: Response, next: NextF
 
 	const [authorizationName, hashedPassword] = authorization.split(' ');
 
-	if (authorizationName !== 'Basic') {
+	if (authorizationName !== 'Basic' || !hashedPassword) {
 		return response.status(401).send();
 	}
 

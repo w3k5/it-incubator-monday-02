@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import { param } from 'express-validator';
 import { createBloggerValidators } from '../validators/blogger-validators/create.validator';
 import { authMiddleware } from '../middlewares/auth.middleware';
 import { paginationValidator } from '../validators/pagination.validator';
@@ -6,10 +7,9 @@ import { BloggerHandlers } from '../handlers/blogger.handlers';
 import { getOneBloggerParamsValidators } from '../validators/blogger-validators/get-one-blogger.validator';
 import { updateBloggerValidators } from '../validators/blogger-validators/update.validator';
 import { createPostsValidators } from '../validators/post-validators/create.validator';
-import { mongoIdParamValidator } from '../validators/params-validators/mongo-id-param.validator';
 import { bloggerIdValidator } from '../validators/post-validators/blogger-id-validator';
-import { body, param } from 'express-validator';
 import { inputValidationMiddleware } from '../middlewares/input-validation.middleware';
+import { sortValidators } from '../validators/blogger-validators/sort.validator';
 
 export const bloggersRouter = Router();
 
@@ -18,7 +18,7 @@ const bloggerHandlers = new BloggerHandlers();
 /**
  * Returns all bloggers
  */
-bloggersRouter.get('/', paginationValidator, bloggerHandlers.getAllBloggers);
+bloggersRouter.get('/', paginationValidator, sortValidators, bloggerHandlers.getAllBloggers);
 
 /**
  * Get Posts by BloggerId

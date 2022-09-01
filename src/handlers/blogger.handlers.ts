@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { Response } from 'express';
 import {
 	EmptyRequest,
 	EmptyResponse,
@@ -36,10 +36,13 @@ export class BloggerHandlers {
 		request: RequestWithQuery<GetAllBloggersQueryParams>,
 		response: Response<GetAllEntities<BloggerInterface>>,
 	) {
-		const { PageNumber, PageSize, SearchNameTerm } = request.query;
+		const { PageNumber, PageSize, SearchNameTerm, sortBy, sortDirection } = request.query;
+
 		const result: GetAllEntities<BloggerInterface> = await bloggerDomain.getAllBloggers(
 			PageNumber,
 			PageSize,
+			sortBy,
+			sortDirection,
 			SearchNameTerm,
 		);
 		return response.status(HttpStatusesEnum.OK).send(result);

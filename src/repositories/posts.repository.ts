@@ -2,7 +2,6 @@ import { NoSqlRepositoryInterface } from '@app/interfaces';
 import { PostInterface, PostsResponseType } from '../entities';
 import { MongoRepository } from './mongo.repository';
 import { postsCollection } from '../db';
-import { ObjectId } from 'mongodb';
 import { PostsQueryBuilderResponseInterface } from '../interfaces/query-builder.interface';
 import { CreatePostDto } from '../dto/posts/create-post.dto';
 
@@ -41,7 +40,6 @@ export class PostsRepository
 		return postsWithDBID.map(this.convertMongoEntityToResponse);
 	}
 
-	// async getById(id: string): Promise<PostsResponseType | null> {
 	async getById(id: string): Promise<PostsResponseType | null> {
 		const candidate = await this.collection.findOne({ _id: this.convertIdToObjectId(id) });
 		if (candidate) {

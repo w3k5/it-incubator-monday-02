@@ -1,5 +1,7 @@
 import { Collection, ObjectId } from 'mongodb';
 
+const dayjs = require('dayjs');
+
 export class MongoRepository<Entity> {
 	collection: Collection<Entity>;
 
@@ -25,5 +27,10 @@ export class MongoRepository<Entity> {
 
 	async drop(): Promise<void> {
 		await this.collection.drop();
+	}
+
+	dateNow(): string {
+		const date = dayjs().toISOString();
+		return date;
 	}
 }

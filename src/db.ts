@@ -1,15 +1,22 @@
 import { MongoClient } from 'mongodb';
-import { BloggerInterface, PostInterface } from './entities';
+import { config } from 'dotenv';
+import { BloggerInterface, PostInterface, UserInterface } from './entities';
 
+config();
 const dbName = process.env.DB_NAME || 'monday';
 
-export const client = new MongoClient(
-	'mongodb+srv://Admin:btzFds871ZoCtn1b@cluster0.x87el.mongodb.net/?retryWrites=true&w=majority',
-);
+const dbUri = process.env.MONGO_URI;
+
+if (!dbUri) {
+	throw new Error('MongoDB URI is not defined!');
+}
+
+export const client = new MongoClient(dbUri);
 const db = client.db(dbName);
 
 export const bloggersCollection = db.collection<Omit<BloggerInterface, 'id'>>('bloggers');
 export const postsCollection = db.collection<Omit<PostInterface, 'id'>>('posts');
+export const usersCollection = db.collection<UserInterface>('users');
 
 const initCollections = async (collections: string[]) => {
 	const databaseCollections = await db.listCollections().toArray();
@@ -23,7 +30,7 @@ const initCollections = async (collections: string[]) => {
 
 export const runDb = async () => {
 	try {
-		await initCollections(['bloggers', 'posts']);
+		await initCollections(['bloggers', 'posts', 'users']);
 		await client.connect();
 		await client.db(dbName).command({ ping: 1 });
 		console.log('Connection to Atlas db Success');

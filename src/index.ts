@@ -12,9 +12,12 @@ import { testingRouter } from './routes/testing-router';
 import { BloggerRepository, PostsRepository } from './repositories';
 import { loggerMiddleware } from './middlewares/loggerMiddleware';
 import { globalCatchErrorsMiddleware } from './middlewares/global-catch-errors.middleware';
+import { usersRouter } from './routes/users-router';
+import { UserRepository } from './repositories/user.repository';
 
 export const postsRepository = new PostsRepository();
 export const bloggersRepository = new BloggerRepository();
+export const usersRepository = new UserRepository();
 
 /**
  * Setup
@@ -46,6 +49,7 @@ app.use(blackListMiddleware);
  */
 app.use('/posts', postsRouter);
 app.use('/bloggers', bloggersRouter);
+app.use('/users', usersRouter);
 app.use('/testing', testingRouter);
 app.use(globalCatchErrorsMiddleware);
 

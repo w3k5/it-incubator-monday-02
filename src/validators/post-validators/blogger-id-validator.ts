@@ -1,6 +1,6 @@
 import { ValidationChain } from 'express-validator';
-import { bloggersRepository } from '../../index';
 import { ObjectId } from 'mongodb';
+import { bloggerDomain } from '../../handlers/blogger.handlers';
 
 export const bloggerIdValidator = (chain: ValidationChain): ValidationChain => {
 	return chain
@@ -11,12 +11,11 @@ export const bloggerIdValidator = (chain: ValidationChain): ValidationChain => {
 			}
 			return true;
 		})
-		.custom(async (value, meta) => {
-			const bloggerCandidate = await bloggersRepository.getById(value);
+		.custom(async (value: string) => {
+			const bloggerCandidate = await bloggerDomain.getBloggerById(value);
 			if (!bloggerCandidate) {
 				throw new Error('Blogger is not exists');
 			}
-			meta.req.blogger = bloggerCandidate;
 			return true;
 		});
 };

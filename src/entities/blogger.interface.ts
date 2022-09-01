@@ -7,7 +7,7 @@ interface createdAtInterface {
 export interface BloggerInterface extends EntityId {
 	name: string;
 	youtubeUrl: string;
-	// createdAt: string;
+	createdAt: string;
 }
 
 // TODO: homework 4
