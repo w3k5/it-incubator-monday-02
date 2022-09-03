@@ -75,6 +75,6 @@ export class BloggerRepository
 	}
 
 	async countCollectionByRegExp(key: keyof BloggerInterface, regexp: RegExp): Promise<number> {
-		return this.collection.countDocuments({ [key]: { $regex: regexp } });
+		return this.collection.countDocuments({ [key]: { $regex: regexp, $options: 'i' } });
 	}
 }
