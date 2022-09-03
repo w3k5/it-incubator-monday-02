@@ -7,6 +7,7 @@ import { inputValidationMiddleware } from '../middlewares/input-validation.middl
 import { bloggerBodyIdValidator } from '../validators/post-validators/blogger-id-validator';
 import { paginationValidator } from '../validators/pagination.validator';
 import { PostHandlers, postsDomain } from '../handlers/post.handlers';
+import { getOnePostParamIdValidator } from '../validators/post-validators/posts-id-validator';
 
 export const postsRouter = Router();
 
@@ -25,7 +26,7 @@ postsRouter.post('/', authMiddleware, bloggerBodyIdValidator, createPostsValidat
 /**
  * Returns one post by ID
  */
-postsRouter.get('/:id', mongoIdParamValidator, inputValidationMiddleware, postHandlers.getPostById);
+postsRouter.get('/:id', getOnePostParamIdValidator, postHandlers.getPostById);
 
 /**
  * Updates one post by ID
@@ -33,8 +34,8 @@ postsRouter.get('/:id', mongoIdParamValidator, inputValidationMiddleware, postHa
 postsRouter.put(
 	'/:id',
 	authMiddleware,
-	mongoIdParamValidator,
 	inputValidationMiddleware,
+	getOnePostParamIdValidator,
 	bloggerBodyIdValidator,
 	inputValidationMiddleware,
 	createPostsValidators,
@@ -49,4 +50,4 @@ postsRouter.delete('/', authMiddleware, postHandlers.dropCollection);
 /**
  * Removes one post by ID
  */
-postsRouter.delete('/:id', authMiddleware, mongoIdParamValidator, postHandlers.removePostById);
+postsRouter.delete('/:id', authMiddleware, getOnePostParamIdValidator, postHandlers.removePostById);
