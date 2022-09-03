@@ -26,7 +26,7 @@ export class MongoRepository<Entity> {
 	}
 
 	async drop(): Promise<void> {
-		await this.collection.drop();
+		await this.collection.deleteMany({});
 	}
 
 	dateNow(): string {
