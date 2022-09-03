@@ -19,6 +19,7 @@ export class BloggerDomain {
 	): Promise<GetAllEntities<BloggerDatabaseType>> {
 		const { skip } = paginationBuilder({ pageNumber, pageSize });
 		const filter = new RegExp(searchNameTerm || '.*');
+		console.log({ filter });
 		const result = await bloggersRepository.getAll({
 			pageNumber,
 			pageSize,

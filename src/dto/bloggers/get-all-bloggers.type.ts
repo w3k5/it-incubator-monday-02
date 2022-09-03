@@ -3,7 +3,7 @@ import { SortDirectionEnum } from '../../enums';
 import { BloggerInterface } from '../../entities';
 
 type GetAllBloggersQueryType = {
-	SearchNameTerm: string;
+	searchNameTerm: string;
 	sortBy: keyof BloggerInterface;
 	sortDirection: SortDirectionEnum;
 };

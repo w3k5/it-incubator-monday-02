@@ -36,14 +36,14 @@ export class BloggerHandlers {
 		request: RequestWithQuery<GetAllBloggersQueryParams>,
 		response: Response<GetAllEntities<BloggerInterface>>,
 	) {
-		const { pageNumber, pageSize, SearchNameTerm, sortBy, sortDirection } = request.query;
+		const { pageNumber, pageSize, searchNameTerm, sortBy, sortDirection } = request.query;
 
 		const result: GetAllEntities<BloggerInterface> = await bloggerDomain.getAllBloggers(
 			pageNumber,
 			pageSize,
 			sortBy,
 			sortDirection,
-			SearchNameTerm,
+			searchNameTerm,
 		);
 		return response.status(HttpStatusesEnum.OK).send(result);
 	}

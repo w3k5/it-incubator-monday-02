@@ -23,7 +23,7 @@ export const queryBuilder = (
 	request: RequestWithQuery<GetAllBloggersQueryParams>,
 ): BloggerQueryBuilderResponseInterface => {
 	const {
-		SearchNameTerm: nameQuery,
+		searchNameTerm: nameQuery,
 		pageNumber: pageNumberQuery,
 		pageSize: pageSizeQuery,
 		sortBy,
