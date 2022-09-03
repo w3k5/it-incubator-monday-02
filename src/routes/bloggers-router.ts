@@ -7,7 +7,7 @@ import { BloggerHandlers } from '../handlers/blogger.handlers';
 import { getOneBloggerParamsValidators } from '../validators/blogger-validators/get-one-blogger.validator';
 import { updateBloggerValidators } from '../validators/blogger-validators/update.validator';
 import { createPostsValidators } from '../validators/post-validators/create.validator';
-import { bloggerIdValidator } from '../validators/post-validators/blogger-id-validator';
+import { bloggerParamIdValidator } from '../validators/post-validators/blogger-id-validator';
 import { inputValidationMiddleware } from '../middlewares/input-validation.middleware';
 import { sortValidators } from '../validators/blogger-validators/sort.validator';
 
@@ -36,7 +36,7 @@ bloggersRouter.get(
 bloggersRouter.post(
 	'/:id/posts',
 	authMiddleware,
-	bloggerIdValidator(param('id')),
+	bloggerParamIdValidator,
 	inputValidationMiddleware,
 	createPostsValidators,
 	bloggerHandlers.createPostByBloggerId,

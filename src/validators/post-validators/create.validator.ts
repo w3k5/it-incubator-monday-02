@@ -3,7 +3,6 @@ import { inputValidationMiddleware } from '../../middlewares/input-validation.mi
 import { contentValidator } from './content-validator';
 import { shortDescriptionValidator } from './youtube-url-validator';
 import { titleValidator } from './title-validator';
-import { bloggerIdValidator } from './blogger-id-validator';
 
 export const createPostsValidators = [
 	contentValidator(body('content')),

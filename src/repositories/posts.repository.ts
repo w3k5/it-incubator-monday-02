@@ -14,9 +14,10 @@ export class PostsRepository
 	}
 
 	async create(data: CreatePostDto & { bloggerName: string }): Promise<PostsResponseType> {
+		const createdAt = this.dateNow();
 		const { bloggerName, title, shortDescription, content, bloggerId } = data;
 
-		const { insertedId } = await this.collection.insertOne(data);
+		const { insertedId } = await this.collection.insertOne({ ...data, createdAt });
 
 		return {
 			id: insertedId.toString(),
@@ -25,6 +26,7 @@ export class PostsRepository
 			shortDescription,
 			content,
 			bloggerId,
+			createdAt,
 		};
 	}
 

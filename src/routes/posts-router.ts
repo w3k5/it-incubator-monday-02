@@ -4,7 +4,7 @@ import { createPostsValidators } from '../validators/post-validators/create.vali
 import { authMiddleware } from '../middlewares/auth.middleware';
 import { mongoIdParamValidator } from '../validators/params-validators/mongo-id-param.validator';
 import { inputValidationMiddleware } from '../middlewares/input-validation.middleware';
-import { bloggerIdValidator } from '../validators/post-validators/blogger-id-validator';
+import { bloggerBodyIdValidator } from '../validators/post-validators/blogger-id-validator';
 import { paginationValidator } from '../validators/pagination.validator';
 import { PostHandlers, postsDomain } from '../handlers/post.handlers';
 
@@ -20,13 +20,7 @@ postsRouter.get('/', paginationValidator, postHandlers.getAllPosts);
 /**
  * Creates new post
  */
-postsRouter.post(
-	'/',
-	authMiddleware,
-	bloggerIdValidator(body('bloggerId')),
-	createPostsValidators,
-	postHandlers.createPost,
-);
+postsRouter.post('/', authMiddleware, bloggerBodyIdValidator, createPostsValidators, postHandlers.createPost);
 
 /**
  * Returns one post by ID
@@ -41,7 +35,7 @@ postsRouter.put(
 	authMiddleware,
 	mongoIdParamValidator,
 	inputValidationMiddleware,
-	bloggerIdValidator(body('bloggerId')),
+	bloggerBodyIdValidator,
 	inputValidationMiddleware,
 	createPostsValidators,
 	postHandlers.updatePostById,

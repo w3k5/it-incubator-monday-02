@@ -7,7 +7,7 @@ export interface PostInterface extends EntityId {
 	shortDescription: string;
 	content: string;
 	bloggerId: string;
-	// createdAt: string;
+	createdAt: string;
 }
 
 // export type PostsResponseType = Omit<PostInterface, 'id'> & { id: string };

@@ -14,7 +14,7 @@ if (!dbUri) {
 export const client = new MongoClient(dbUri);
 const db = client.db(dbName);
 
-export const bloggersCollection = db.collection<Omit<BloggerInterface, 'id'>>('bloggers');
+export const bloggersCollection = db.collection<BloggerInterface>('bloggers');
 export const postsCollection = db.collection<Omit<PostInterface, 'id'>>('posts');
 export const usersCollection = db.collection<UserInterface>('users');
 

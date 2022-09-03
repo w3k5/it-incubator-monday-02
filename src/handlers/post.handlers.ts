@@ -90,22 +90,36 @@ export class PostHandlers {
 		}
 	}
 
-	async updatePostById(request: RequestWithBodyAndParams<UpdatePostDto, EntityId>, response: EmptyResponse) {
-		const { id } = request.params;
-		const updatePostDto = request.body;
-		const bloggerCandidate = await bloggerDomain.getBloggerById(updatePostDto.bloggerId);
+	async updatePostById(
+		request: RequestWithBodyAndParams<UpdatePostDto, EntityId>,
+		response: EmptyResponse,
+		next: NextFunction,
+	) {
+		try {
+			const { id } = request.params;
+			const updatePostDto = request.body;
+			const bloggerCandidate = await bloggerDomain.getBloggerById(updatePostDto.bloggerId);
 
-		if (!bloggerCandidate) {
-			return response.status(HttpStatusesEnum.NOT_FOUND).send();
+			if (!bloggerCandidate) {
+				return response.status(HttpStatusesEnum.NOT_FOUND).send();
+			}
+
+			const { id: bloggerId, name: bloggerName } = bloggerCandidate;
+
+			const result = await postsDomain.updateById(id, { ...updatePostDto, bloggerId, bloggerName });
+			if (result === null) {
+				return response.status(HttpStatusesEnum.BAD_REQUEST).send();
+			}
+			return response.status(result ? HttpStatusesEnum.NO_CONTENT : HttpStatusesEnum.NOT_FOUND).send();
+		} catch (error: any) {
+			next({
+				status: 500,
+				message: 'Internal server error',
+				error: error.message || 'something went wrong',
+				route: 'posts',
+				endpoint: 'update post by id',
+			});
 		}
-
-		const { id: bloggerId, name: bloggerName } = bloggerCandidate;
-
-		const result = await postsDomain.updateById(id, { ...updatePostDto, bloggerId, bloggerName });
-		if (result === null) {
-			return response.status(HttpStatusesEnum.BAD_REQUEST).send();
-		}
-		return response.status(result ? HttpStatusesEnum.NO_CONTENT : HttpStatusesEnum.NOT_FOUND).send();
 	}
 
 	async dropCollection(request: Request, response: EmptyResponse) {
