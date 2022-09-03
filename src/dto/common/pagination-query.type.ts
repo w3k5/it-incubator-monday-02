@@ -4,8 +4,8 @@ import { RequestWithQuery } from './common.types';
  * @deprecated
  */
 interface PaginationInterface {
-	PageNumber: number;
-	PageSize: number;
+	pageNumber: number;
+	pageSize: number;
 }
 
 /**

@@ -6,7 +6,7 @@ const checkPaginationParam = (param: string, defaultValue: number) => {
 };
 
 export const paginationValidator = [
-	checkPaginationParam('PageNumber', 1),
-	checkPaginationParam('PageSize', 10),
+	checkPaginationParam('pageNumber', 1),
+	checkPaginationParam('pageSize', 10),
 	inputValidationMiddleware,
 ];

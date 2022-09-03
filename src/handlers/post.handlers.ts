@@ -30,8 +30,8 @@ export class PostHandlers {
 		next: NextFunction,
 	) {
 		try {
-			const { PageNumber, PageSize } = request.query;
-			const result: GetAllEntities<PostInterface> = await postsDomain.getAllPosts(PageNumber, PageSize);
+			const { pageNumber, pageSize } = request.query;
+			const result: GetAllEntities<PostInterface> = await postsDomain.getAllPosts(pageNumber, pageSize);
 			return response.status(HttpStatusesEnum.OK).send(result);
 		} catch (error: any) {
 			next({

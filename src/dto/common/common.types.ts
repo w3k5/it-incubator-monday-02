@@ -12,7 +12,7 @@ export type EmptyRequest = Request<never, never, never, never, never>;
 export type Nullable<T> = T | null;
 
 // Общий тип пагинации
-export type PaginationParams = { PageSize: number; PageNumber: number };
+export type PaginationParams = { pageSize: number; pageNumber: number };
 
 export type GetAllEntities<Entity> = {
 	pagesCount: number;

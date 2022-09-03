@@ -22,8 +22,8 @@ export class UserHandlers {
 		next: NextFunction,
 	) {
 		try {
-			const { PageNumber, PageSize } = request.query;
-			const result: GetAllEntities<UserResponseType> = await usersDomain.getAllUsers(PageNumber, PageSize);
+			const { pageNumber, pageSize } = request.query;
+			const result: GetAllEntities<UserResponseType> = await usersDomain.getAllUsers(pageNumber, pageSize);
 			return response.status(HttpStatusesEnum.OK).send(result);
 		} catch (error: any) {
 			next({

@@ -24,8 +24,8 @@ export const queryBuilder = (
 ): BloggerQueryBuilderResponseInterface => {
 	const {
 		SearchNameTerm: nameQuery,
-		PageNumber: pageNumberQuery,
-		PageSize: pageSizeQuery,
+		pageNumber: pageNumberQuery,
+		pageSize: pageSizeQuery,
 		sortBy,
 		sortDirection,
 	} = request.query;
@@ -43,7 +43,7 @@ export const queryBuilder = (
  * @deprecated
  */
 // export const postsQueryBuilder = (request: Request): PostBloggerIdSearchParamType => {
-// 	const { PageNumber: pageNumberQuery, PageSize: pageSizeQuery } = request.query;
+// 	const { pageNumber: pageNumberQuery, pageSize: pageSizeQuery } = request.query;
 // 	// const bloggerId = request.params.id ? new ObjectId(request.params.id) : null;
 // 	const bloggerId = request.params.id ? +request.params.id : null;
 // 	const paginationResult = paginationQueryBuilder(Number(pageNumberQuery), Number(pageSizeQuery));
