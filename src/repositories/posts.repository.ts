@@ -4,6 +4,7 @@ import { MongoRepository } from './mongo.repository';
 import { postsCollection } from '../db';
 import { PostsQueryBuilderResponseInterface } from '../interfaces/query-builder.interface';
 import { CreatePostDto } from '../dto/posts/create-post.dto';
+import { SortDirectionEnum } from '../enums';
 
 export class PostsRepository
 	extends MongoRepository<Omit<PostInterface, 'id'>>
@@ -30,15 +31,16 @@ export class PostsRepository
 		};
 	}
 
-	async getAll({
-		pageNumber,
-		pageSize,
-		skip,
-		bloggerId,
-	}: PostsQueryBuilderResponseInterface): Promise<PostsResponseType[]> {
+	async getAll(options: PostsQueryBuilderResponseInterface): Promise<PostsResponseType[]> {
 		// const filter = id ? { bloggerId: id.toString() } : {};
-		const filter = bloggerId ? { bloggerId: bloggerId } : {};
-		const postsWithDBID = await this.collection.find(filter).skip(skip).limit(pageSize).toArray();
+		const sortDirection = options.sortDirection === SortDirectionEnum.Asc ? 1 : -1;
+		const filter = options.bloggerId ? { bloggerId: options.bloggerId } : {};
+		const postsWithDBID = await this.collection
+			.find(filter)
+			.sort({ [options.sortBy]: sortDirection })
+			.skip(options.skip)
+			.limit(options.pageSize)
+			.toArray();
 		return postsWithDBID.map(this.convertMongoEntityToResponse);
 	}
 

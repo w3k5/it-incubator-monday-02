@@ -1,3 +1,10 @@
-import { EntityId, PaginationParams } from '@app/common-types';
+import { PaginationParams } from '@app/common-types';
+import { PostInterface } from '../../entities';
+import { SortDirectionEnum } from '@app/enums';
 
-export type GetAllPostsQueryParams = PaginationParams;
+type GetAllPostsQueryType = {
+	sortBy: keyof PostInterface;
+	sortDirection: SortDirectionEnum;
+};
+
+export type GetAllPostsQueryParams = PaginationParams & GetAllPostsQueryType;

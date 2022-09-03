@@ -1,10 +1,14 @@
-import { GetAllEntities, Nullable } from '@app/common-types';
+import { EntityId, GetAllEntities, Nullable } from '@app/common-types';
 import { bloggersRepository, postsRepository } from '../index';
 import { countTotalPages, paginationBuilder } from '../helpers/pagination-builder';
 import { PostInterface } from '../entities';
 import { PostsQueryBuilderResponseInterface } from '../interfaces/query-builder.interface';
 import { CreatePostDto, UpdatePostDto } from '../dto/posts/create-post.dto';
 import { PostResponseInterface } from '../dto/posts/post-response.interface';
+import { PaginationInterface, SortInterface } from '../interfaces/pagination.interface';
+
+type GetAllPostsProps = Pick<PaginationInterface, 'pageNumber' | 'pageSize'> &
+	SortInterface<PostInterface> & { bloggerId?: string };
 
 export class PostsDomain {
 	/**
@@ -15,13 +19,21 @@ export class PostsDomain {
 	 * @param pageSize
 	 * @param bloggerId
 	 */
-	async getAllPosts(pageNumber: number, pageSize: number, bloggerId?: string): Promise<GetAllEntities<PostInterface>> {
+	async getAllPosts({
+		pageNumber,
+		pageSize,
+		bloggerId,
+		sortBy,
+		sortDirection,
+	}: GetAllPostsProps): Promise<GetAllEntities<PostInterface>> {
 		const { skip } = paginationBuilder({ pageNumber, pageSize });
 		const repositorySearchParams: PostsQueryBuilderResponseInterface = {
 			pageNumber,
 			pageSize,
 			skip,
 			bloggerId: bloggerId || null,
+			sortBy,
+			sortDirection,
 		};
 		const result = await postsRepository.getAll(repositorySearchParams);
 		const total: number = bloggerId

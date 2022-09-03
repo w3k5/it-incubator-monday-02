@@ -1,5 +1,5 @@
 import { PaginationInterface } from './pagination.interface';
-import { BloggerInterface } from '../entities';
+import { BloggerInterface, PostInterface } from '../entities';
 import { SortDirectionEnum } from '@app/enums';
 
 export interface BloggerQueryBuilderResponseInterface extends PaginationInterface {
@@ -10,4 +10,6 @@ export interface BloggerQueryBuilderResponseInterface extends PaginationInterfac
 
 export interface PostsQueryBuilderResponseInterface extends PaginationInterface {
 	bloggerId: string | null;
+	sortBy: keyof PostInterface;
+	sortDirection: SortDirectionEnum;
 }
