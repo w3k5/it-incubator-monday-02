@@ -6,9 +6,10 @@ import { PostsQueryBuilderResponseInterface } from '../interfaces/query-builder.
 import { CreatePostDto, UpdatePostDto } from '../dto/posts/create-post.dto';
 import { PostResponseInterface } from '../dto/posts/post-response.interface';
 import { PaginationInterface, SortInterface } from '../interfaces/pagination.interface';
+import { SortDirectionEnum } from '../enums';
 
 type GetAllPostsProps = Pick<PaginationInterface, 'pageNumber' | 'pageSize'> &
-	SortInterface<PostInterface> & { bloggerId?: string };
+	Partial<SortInterface<PostInterface>> & { bloggerId?: string };
 
 export class PostsDomain {
 	/**
@@ -23,8 +24,8 @@ export class PostsDomain {
 		pageNumber,
 		pageSize,
 		bloggerId,
-		sortBy,
-		sortDirection,
+		sortBy = 'createdAt',
+		sortDirection = SortDirectionEnum.Desc,
 	}: GetAllPostsProps): Promise<GetAllEntities<PostInterface>> {
 		const { skip } = paginationBuilder({ pageNumber, pageSize });
 		const repositorySearchParams: PostsQueryBuilderResponseInterface = {

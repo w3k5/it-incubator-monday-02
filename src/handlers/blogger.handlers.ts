@@ -69,7 +69,7 @@ export class BloggerHandlers {
 			params: { id },
 			query: { pageNumber, pageSize },
 		} = request;
-		const result = await postsDomain.getAllPosts(pageNumber, pageSize, id);
+		const result = await postsDomain.getAllPosts({ pageNumber, pageSize, bloggerId: id });
 		return response.status(HttpStatusesEnum.OK).send(result);
 	}
 
