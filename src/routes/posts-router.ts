@@ -4,7 +4,7 @@ import { createPostsValidators } from '../validators/post-validators/create.vali
 import { authMiddleware } from '../middlewares/auth.middleware';
 import { mongoIdParamValidator } from '../validators/params-validators/mongo-id-param.validator';
 import { inputValidationMiddleware } from '../middlewares/input-validation.middleware';
-import { bloggerBodyIdValidator } from '../validators/post-validators/blogger-id-validator';
+import { bloggerBodyIdValidator, bloggerIdValidator } from '../validators/post-validators/blogger-id-validator';
 import { paginationValidator } from '../validators/pagination.validator';
 import { PostHandlers, postsDomain } from '../handlers/post.handlers';
 import { getOnePostParamIdValidator } from '../validators/post-validators/posts-id-validator';
@@ -21,7 +21,13 @@ postsRouter.get('/', paginationValidator, postHandlers.getAllPosts);
 /**
  * Creates new post
  */
-postsRouter.post('/', authMiddleware, bloggerBodyIdValidator, createPostsValidators, postHandlers.createPost);
+postsRouter.post(
+	'/',
+	authMiddleware,
+	bloggerIdValidator(body('bloggerId')),
+	createPostsValidators,
+	postHandlers.createPost,
+);
 
 /**
  * Returns one post by ID
@@ -36,9 +42,9 @@ postsRouter.put(
 	authMiddleware,
 	inputValidationMiddleware,
 	getOnePostParamIdValidator,
-	bloggerBodyIdValidator,
-	inputValidationMiddleware,
+	bloggerIdValidator(body('bloggerId')),
 	createPostsValidators,
+	inputValidationMiddleware,
 	postHandlers.updatePostById,
 );
 

@@ -5,22 +5,23 @@ import { EntityId, RequestWithBody, RequestWithParams } from '@app/common-types'
 import { NextFunction, Response } from 'express';
 import { HttpStatusesEnum } from '../../enums';
 
-// export const bloggerIdValidator = (chain: ValidationChain): ValidationChain => {
-// 	return chain.custom(async (id) => {
-// 		const isIdValid = ObjectId.isValid(id);
-// 		if (!isIdValid) {
-// 			throw new Error('Mongo ID must be valid!');
-// 		}
-// 		return true;
-// 	});
-// .custom(async (value: string) => {
-// 	const bloggerCandidate = await bloggerDomain.getBloggerById(value);
-// 	if (!bloggerCandidate) {
-// 		throw new Error('Blogger is not exists');
-// 	}
-// 	return true;
-// });
-// };
+export const bloggerIdValidator = (chain: ValidationChain): ValidationChain => {
+	return chain
+		.custom(async (id) => {
+			const isIdValid = ObjectId.isValid(id);
+			if (!isIdValid) {
+				throw new Error('Mongo ID must be valid!');
+			}
+			return true;
+		})
+		.custom(async (value: string) => {
+			const bloggerCandidate = await bloggerDomain.getBloggerById(value);
+			if (!bloggerCandidate) {
+				throw new Error('Blogger is not exists');
+			}
+			return true;
+		});
+};
 
 export const bloggerParamIdValidator = async (
 	request: RequestWithParams<EntityId>,
@@ -46,7 +47,6 @@ export const bloggerBodyIdValidator = async (
 	response: Response,
 	next: NextFunction,
 ) => {
-	console.log('BLOGGER BODY ID VALIDATOR');
 	const { bloggerId: id } = request.body;
 	const isIdValid = ObjectId.isValid(id);
 	if (!isIdValid) {
