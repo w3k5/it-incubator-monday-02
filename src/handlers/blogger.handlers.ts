@@ -19,6 +19,7 @@ import { CreateBloggerDto } from '../dto/bloggers/create-blogger.dto';
 import { UpdateBloggerDto } from '../dto/bloggers/update-blogger.dto';
 import { postsDomain } from './post.handlers';
 import { CreatePostDto } from '../dto/posts/create-post.dto';
+import { SortInterface } from '../interfaces/pagination.interface';
 
 export const bloggerDomain = new BloggerDomain();
 
@@ -62,14 +63,14 @@ export class BloggerHandlers {
 	}
 
 	async getAllPostBySpecifiedBlogger(
-		request: RequestWithParamsAndQuery<EntityId, PaginationParams>,
+		request: RequestWithParamsAndQuery<EntityId, PaginationParams & Partial<SortInterface<PostInterface>>>,
 		response: Response<GetAllEntities<PostInterface>>,
 	) {
 		const {
 			params: { id },
-			query: { pageNumber, pageSize },
+			query: { pageNumber, pageSize, sortDirection, sortBy },
 		} = request;
-		const result = await postsDomain.getAllPosts({ pageNumber, pageSize, bloggerId: id });
+		const result = await postsDomain.getAllPosts({ pageNumber, pageSize, bloggerId: id, sortDirection, sortBy });
 		return response.status(HttpStatusesEnum.OK).send(result);
 	}
 
