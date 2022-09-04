@@ -8,4 +8,5 @@ export type UserDatabaseRepositoryType = {
 	create: (data: CreateUserRepositoryDto) => Promise<UserDatabase>;
 	delete: (id: string) => Promise<boolean>;
 	getAll: (params: GetAllUsersQueryParams) => Promise<GetAllRepositoryResponse>;
+	getByLogin: (login: string) => Promise<UserDatabase | null>;
 };

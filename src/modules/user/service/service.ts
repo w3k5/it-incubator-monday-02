@@ -8,11 +8,11 @@ import {
 	UserInputInterface,
 	UserOutputInterface,
 } from '@models/user/types/entities';
-import { HashedPassword } from '@models/user/types/primitives';
 import { PasswordServiceInterface } from '../../../services/passwordService/interfaces';
-import { IOC_TYPES } from '../../../inversify/inversify.types';
+import { IOC_TYPES } from '../../../_inversify/inversify.types';
 import { UserDatabaseRepositoryType } from '../repository/repository.interface';
 import { GetAllUsersQueryParams } from '@models/user/controllers/controller.types';
+import { HashedPassword } from '../../_base/types';
 
 @injectable()
 export class UserService implements UserServiceInterface {

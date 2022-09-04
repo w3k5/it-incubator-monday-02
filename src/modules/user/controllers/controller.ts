@@ -12,7 +12,7 @@ import {
 } from '@models/user/controllers/controller.types';
 import { HttpStatusesEnum, SortDirectionEnum } from '../../../enums';
 import { UserServiceInterface } from '../service/service.types';
-import { IOC_TYPES } from '../../../inversify/inversify.types';
+import { IOC_TYPES } from '../../../_inversify/inversify.types';
 import { ObjectId } from 'mongodb';
 
 @injectable()

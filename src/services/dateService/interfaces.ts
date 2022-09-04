@@ -1,4 +1,4 @@
-import { IsoDate } from '@models/user/types/primitives';
+import { IsoDate } from '../../modules/_base/types';
 
 export interface DateServiceInterface {
 	iso: () => IsoDate;

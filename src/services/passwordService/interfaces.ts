@@ -1,8 +1,8 @@
-import { HashedPassword, UnhashedPassword } from '@models/user/types/primitives';
+import { HashedPassword, UnhashedPassword } from '../../modules/_base/types';
 
 interface PasswordServiceInterface {
 	hashPassword: (password: UnhashedPassword) => Promise<HashedPassword>;
-	check: (password: HashedPassword) => boolean;
+	check: (unhashed: UnhashedPassword, hashed: HashedPassword) => Promise<boolean>;
 }
 
 export { PasswordServiceInterface };

@@ -1,5 +1,5 @@
 import { UserBaseModel } from '../entities';
-import { HashedPassword, UnhashedPassword } from '../primitives';
+import { HashedPassword, UnhashedPassword } from '../../../_base/types';
 
 /**
  * Controller to Service

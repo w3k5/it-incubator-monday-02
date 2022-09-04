@@ -1,4 +1,12 @@
-import { HashedPassword, IsoDate, ModelID, MongoDbID, UnhashedPassword, UserEmail, UserLogin } from '../primitives';
+import {
+	HashedPassword,
+	IsoDate,
+	ModelID,
+	MongoDbID,
+	UnhashedPassword,
+	UserEmail,
+	UserLogin,
+} from '../../../_base/types';
 
 interface DatabaseInterface {
 	createdAt: IsoDate;

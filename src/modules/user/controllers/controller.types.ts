@@ -9,7 +9,7 @@ import {
 	SortInterface,
 } from '@app/common-types';
 import { UserInputInterface, UserOutputInterface } from '@models/user/types/entities';
-import { ModelID } from '@models/user/types/primitives';
+import { ModelID } from '../../_base/types';
 
 type CreateUserControllerRequest = RequestWithBody<UserInputInterface>;
 type CreteUserControllerResponse = Response<UserOutputInterface>;

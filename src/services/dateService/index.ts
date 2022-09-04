@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 import { injectable } from 'inversify';
 import { DateServiceInterface } from './interfaces';
-import { IsoDate } from '@models/user/types/primitives';
+import { IsoDate } from '../../modules/_base/types';
 
 const dayjs = require('dayjs');
 

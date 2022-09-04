@@ -4,7 +4,7 @@ import { GetAllRepositoryResponse, UserDatabaseRepositoryType } from './reposito
 import { CreateUserRepositoryDto } from '@models/user/types/dto/createUserRepositoryDto';
 import { UserDatabase } from '@models/user/types/entities';
 import { UserModel } from '../schema';
-import { IOC_TYPES } from '../../../inversify/inversify.types';
+import { IOC_TYPES } from '../../../_inversify/inversify.types';
 import { DateServiceInterface } from '../../../services/dateService/interfaces';
 import { GetAllUsersQueryParams } from '@models/user/controllers/controller.types';
 import { SortDirectionEnum } from '../../../enums';
@@ -57,5 +57,13 @@ export class UserDatabaseRepository extends BaseRepository implements UserDataba
 		const pagesCount = this.countTotalPages(totalCount, pageSize);
 
 		return { documents, totalCount, pagesCount };
+	}
+
+	async getByLogin(login: string): Promise<UserDatabase | null> {
+		const candidate = await UserModel.findOne({
+			$or: [{ login: { $regex: login ?? '', $options: 'i' } }, { email: { $regex: login ?? '', $options: 'i' } }],
+		});
+
+		return candidate || null;
 	}
 }

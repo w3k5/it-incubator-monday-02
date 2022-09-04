@@ -2,13 +2,12 @@ import 'reflect-metadata';
 import { injectable } from 'inversify';
 import bcrypt from 'bcrypt';
 import { PasswordServiceInterface } from './interfaces';
-import { HashedPassword, UnhashedPassword } from '@models/user/types/primitives';
+import { HashedPassword, UnhashedPassword } from '../../modules/_base/types';
 
 @injectable()
 export class PasswordService implements PasswordServiceInterface {
-	check(password: HashedPassword): boolean {
-		const isPasswordValid = false; // MOCKED
-		return isPasswordValid;
+	async check(unhashed: UnhashedPassword, hashed: HashedPassword): Promise<boolean> {
+		return bcrypt.compare(unhashed, hashed);
 	}
 
 	async hashPassword(password: UnhashedPassword): Promise<HashedPassword> {
