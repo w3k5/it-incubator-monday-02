@@ -61,7 +61,7 @@ export class UserDatabaseRepository extends BaseRepository implements UserDataba
 
 	async getByLogin(login: string): Promise<UserDatabase | null> {
 		const candidate = await UserModel.findOne({
-			$or: [{ login: { $regex: login ?? '', $options: 'i' } }, { email: { $regex: login ?? '', $options: 'i' } }],
+			$or: [{ login: { $regex: login } }, { email: { $regex: login } }],
 		});
 
 		return candidate || null;
