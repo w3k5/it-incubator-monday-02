@@ -1,5 +1,6 @@
 import { LoginUserDto } from '../controller/auth.controller.types';
+import { Token } from '../../../services/tokenService/interfaces';
 
-export interface AuthServiceInterface {
-	isAuth: (dto: LoginUserDto) => Promise<boolean>;
+export abstract class AbstractAuthService {
+	abstract auth: (dto: LoginUserDto) => Promise<false | Token>;
 }

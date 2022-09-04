@@ -11,9 +11,11 @@ import { UserDatabaseRepository } from '../modules/user/repository/repository';
 import { DateServiceInterface } from '../services/dateService/interfaces';
 import { DateService } from '../services/dateService';
 import { AuthController } from '../modules/auth/controller/auth.controller';
-import { AuthControllerInterface } from '../modules/auth/controller/auth.controller.types';
-import { AuthServiceInterface } from '../modules/auth/service/auth.service.types';
+import { AbstractAuthController } from '../modules/auth/controller/auth.controller.types';
+import { AbstractAuthService } from '../modules/auth/service/auth.service.types';
 import { AuthService } from '../modules/auth/service/auth.service';
+import { TokenService } from '../services/tokenService';
+import { AbstractTokenService } from '../services/tokenService/interfaces';
 
 const iocContainer = new Container();
 
@@ -22,6 +24,7 @@ const iocContainer = new Container();
  */
 iocContainer.bind<PasswordServiceInterface>(IOC_TYPES.PasswordService).to(PasswordService);
 iocContainer.bind<DateServiceInterface>(IOC_TYPES.DateService).to(DateService);
+iocContainer.bind<AbstractTokenService>(IOC_TYPES.TokenService).to(TokenService);
 
 /**
  * User
@@ -35,9 +38,9 @@ const userController = iocContainer.get<UserControllerInterface>(IOC_TYPES.UserC
  * Auth
  */
 
-iocContainer.bind<AuthControllerInterface>(IOC_TYPES.AuthController).to(AuthController);
-iocContainer.bind<AuthServiceInterface>(IOC_TYPES.AuthService).to(AuthService);
+iocContainer.bind<AbstractAuthController>(IOC_TYPES.AuthController).to(AuthController);
+iocContainer.bind<AbstractAuthService>(IOC_TYPES.AuthService).to(AuthService);
 
-const authController = iocContainer.get<AuthControllerInterface>(IOC_TYPES.AuthController);
+const authController = iocContainer.get<AbstractAuthController>(IOC_TYPES.AuthController);
 
 export { iocContainer, userController, authController };

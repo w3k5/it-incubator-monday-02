@@ -6,6 +6,7 @@ const IOC_TYPES = {
 	DateService: Symbol.for('DateService'),
 	AuthController: Symbol.for('AuthController'),
 	AuthService: Symbol.for('AuthService'),
+	TokenService: Symbol.for('TokenService'),
 };
 
 export { IOC_TYPES };

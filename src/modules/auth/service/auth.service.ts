@@ -1,25 +1,42 @@
 import 'reflect-metadata';
 import { inject, injectable } from 'inversify';
-import { AuthServiceInterface } from './auth.service.types';
+import { AbstractAuthService } from './auth.service.types';
 import { IOC_TYPES } from '../../../_inversify/inversify.types';
 import { UserDatabaseRepositoryType } from '../../user/repository/repository.interface';
 import { LoginUserDto } from '../controller/auth.controller.types';
 import { PasswordServiceInterface } from '../../../services/passwordService/interfaces';
+import { AbstractTokenService, Token } from '../../../services/tokenService/interfaces';
 
 @injectable()
-export class AuthService implements AuthServiceInterface {
+export class AuthService implements AbstractAuthService {
 	constructor(
 		@inject(IOC_TYPES.UserDatabaseRepository) private readonly userRepository: UserDatabaseRepositoryType,
 		@inject(IOC_TYPES.PasswordService) private readonly passwordService: PasswordServiceInterface,
+		@inject(IOC_TYPES.TokenService) private readonly tokenService: AbstractTokenService,
 	) {}
 
-	async isAuth({ login, password }: LoginUserDto): Promise<boolean> {
+	async auth({ login, password }: LoginUserDto) {
 		const candidate = await this.userRepository.getByLogin(login);
 
 		if (!candidate) {
 			return false;
 		}
 
-		return await this.passwordService.check(password, candidate.password);
+		const isPasswordCorrect = await this.passwordService.check(password, candidate.password);
+
+		if (!isPasswordCorrect) {
+			return false;
+		}
+
+		const { login: candidateLogin, email, createdAt, _id: id } = candidate;
+
+		const accessToken: Token = this.tokenService.generate({
+			candidateLogin,
+			email,
+			createdAt,
+			id: id.toString(),
+		});
+
+		return accessToken;
 	}
 }
