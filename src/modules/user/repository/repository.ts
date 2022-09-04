@@ -38,13 +38,17 @@ export class UserDatabaseRepository extends BaseRepository implements UserDataba
 		const sortDirectionToNumber = sortDirection === SortDirectionEnum.Asc ? 1 : -1;
 
 		const totalCount = await UserModel.countDocuments({
-			login: { $regex: searchLoginTerm ?? '', $options: 'i' },
-			email: { $regex: searchEmailTerm ?? '', $options: 'i' },
+			$or: [
+				{ login: { $regex: searchLoginTerm ?? '', $options: 'i' } },
+				{ email: { $regex: searchEmailTerm ?? '', $options: 'i' } },
+			],
 		});
 
 		const documents = await UserModel.find({
-			login: { $regex: searchLoginTerm ?? '', $options: 'i' },
-			email: { $regex: searchEmailTerm ?? '', $options: 'i' },
+			$or: [
+				{ login: { $regex: searchLoginTerm ?? '', $options: 'i' } },
+				{ email: { $regex: searchEmailTerm ?? '', $options: 'i' } },
+			],
 		})
 			.sort({ [sortBy]: sortDirectionToNumber })
 			.limit(pageSize)
