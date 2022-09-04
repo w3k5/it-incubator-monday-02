@@ -9,14 +9,14 @@ describe('/bloggers', () => {
 	});
 
 	it('Should return 200 and empty array of bloggers', async () => {
-		await request(app).get('/bloggers').set('Content-type', 'application/json').expect(HttpStatusesEnum.OK, []);
+		await request(app).get('/bloggers').set('Content-type', 'service/json').expect(HttpStatusesEnum.OK, []);
 	});
 
 	it("Shouldn't create new blogger with invalid fields", async () => {
 		const { body: errorMessages } = await request(app)
 			.post('/bloggers')
 			.send({ nam: 'somename', youtubeUrl: 'invalid-url' })
-			.set('Content-type', 'application/json')
+			.set('Content-type', 'service/json')
 			.expect(HttpStatusesEnum.BAD_REQUEST);
 		expect(errorMessages).toEqual({
 			errorMessages: [
@@ -30,13 +30,13 @@ describe('/bloggers', () => {
 				},
 			],
 		});
-		await request(app).get('/bloggers').set('Content-type', 'application/json').expect(HttpStatusesEnum.OK, []);
+		await request(app).get('/bloggers').set('Content-type', 'service/json').expect(HttpStatusesEnum.OK, []);
 	});
 
 	it("Shouldn't create new blogger with empty data", async () => {
 		const { body: errorMessages } = await request(app)
 			.post('/bloggers')
-			.set('Content-type', 'application/json')
+			.set('Content-type', 'service/json')
 			.expect(HttpStatusesEnum.BAD_REQUEST);
 		expect(errorMessages).toEqual({
 			errorMessages: [
@@ -62,13 +62,13 @@ describe('/bloggers', () => {
 				},
 			],
 		});
-		await request(app).get('/bloggers').set('Content-type', 'application/json').expect(HttpStatusesEnum.OK, []);
+		await request(app).get('/bloggers').set('Content-type', 'service/json').expect(HttpStatusesEnum.OK, []);
 	});
 
 	it("Shouldn't create new blogger with empty name", async () => {
 		const { body: errorMessages } = await request(app)
 			.post('/bloggers')
-			.set('Content-type', 'application/json')
+			.set('Content-type', 'service/json')
 			.send({ youtubeUrl: 'https://vk.com' })
 			.expect(HttpStatusesEnum.BAD_REQUEST);
 
@@ -84,13 +84,13 @@ describe('/bloggers', () => {
 				},
 			],
 		});
-		await request(app).get('/bloggers').set('Content-type', 'application/json').expect(HttpStatusesEnum.OK, []);
+		await request(app).get('/bloggers').set('Content-type', 'service/json').expect(HttpStatusesEnum.OK, []);
 	});
 
 	it("Shouldn't create new blogger with empty youtubeUrl", async () => {
 		const { body: errorsMessages } = await request(app)
 			.post('/bloggers')
-			.set('Content-type', 'application/json')
+			.set('Content-type', 'service/json')
 			.send({ name: 'Author' })
 			.expect(HttpStatusesEnum.BAD_REQUEST);
 
@@ -111,13 +111,13 @@ describe('/bloggers', () => {
 			],
 		});
 
-		await request(app).get('/bloggers').set('Content-type', 'application/json').expect(HttpStatusesEnum.OK, []);
+		await request(app).get('/bloggers').set('Content-type', 'service/json').expect(HttpStatusesEnum.OK, []);
 	});
 
 	it('Should create new Blogger with valid data without resolution', async () => {
 		const createdBlogger = await request(app)
 			.post('/bloggers')
-			.set('Content-type', 'application/json')
+			.set('Content-type', 'service/json')
 			.send({ name: 'Author', youtubeUrl: 'https://vk.com' })
 			.expect(HttpStatusesEnum.CREATED);
 
@@ -129,14 +129,14 @@ describe('/bloggers', () => {
 
 		expect(createdBlogger.body).toEqual(expectedBlogger);
 
-		const bloggers = await request(app).get('/bloggers').set('Content-type', 'application/json').expect(200);
+		const bloggers = await request(app).get('/bloggers').set('Content-type', 'service/json').expect(200);
 		expect(bloggers.body.length).toEqual(1);
 	});
 
 	it("Shouldn't update not exists blogger", async () => {
 		await request(app)
 			.put(`/bloggers/${+new Date() + 12345}`)
-			.set('Content-type', 'application/json')
+			.set('Content-type', 'service/json')
 			.send({
 				name: 'Author Updated',
 				youtubeUrl: 'https://vk.com',
@@ -147,7 +147,7 @@ describe('/bloggers', () => {
 	it("Shouldn't update video with bad data", async () => {
 		const createdBlogger = await request(app)
 			.post('/bloggers')
-			.set('Content-type', 'application/json')
+			.set('Content-type', 'service/json')
 			.send({
 				name: 'Vladislav',
 				youtubeUrl: 'https://youtube.com',
@@ -156,7 +156,7 @@ describe('/bloggers', () => {
 
 		const { body } = await request(app)
 			.put(`/bloggers/${createdBlogger.body.id}`)
-			.set('Content-type', 'application/json')
+			.set('Content-type', 'service/json')
 			.send({
 				name: '',
 				youtubeUrl: '',
@@ -182,7 +182,7 @@ describe('/bloggers', () => {
 	});
 
 	it('Should update blogger', async () => {
-		const { body: bloggers } = await request(app).get('/bloggers').set('Content-type', 'application/json').expect(200);
+		const { body: bloggers } = await request(app).get('/bloggers').set('Content-type', 'service/json').expect(200);
 
 		expect(bloggers.length).not.toEqual(0);
 
@@ -190,7 +190,7 @@ describe('/bloggers', () => {
 
 		await request(app)
 			.put(`/bloggers/${firstBlogger.id}`)
-			.set('Content-type', 'application/json')
+			.set('Content-type', 'service/json')
 			.send({
 				name: 'Anastasiya',
 				youtubeUrl: 'https://instagram.com',
@@ -199,32 +199,29 @@ describe('/bloggers', () => {
 
 		const { body: updatedBlogger } = await request(app)
 			.get(`/bloggers/${firstBlogger.id}`)
-			.set('Content-type', 'application/json');
+			.set('Content-type', 'service/json');
 
 		expect(updatedBlogger.name).toEqual('Anastasiya');
 		expect(updatedBlogger.youtubeUrl).toEqual('https://instagram.com');
 	});
 
 	it('Should delete blogger', async () => {
-		const response = await request(app).get('/bloggers').set('Content-type', 'application/json').expect(200);
+		const response = await request(app).get('/bloggers').set('Content-type', 'service/json').expect(200);
 		const [firstBlogger] = response.body;
 
 		await request(app)
 			.delete(`/bloggers/${firstBlogger.id}`)
-			.set('Content-type', 'application/json')
+			.set('Content-type', 'service/json')
 			.expect(HttpStatusesEnum.NO_CONTENT);
 
 		await request(app)
 			.get(`/bloggers/${firstBlogger.id}`)
-			.set('Content-type', 'application/json')
+			.set('Content-type', 'service/json')
 			.expect(HttpStatusesEnum.NOT_FOUND);
 	});
 
 	it("Shouldn't delete video with bad id", async () => {
-		await request(app)
-			.delete(`/bloggers/lorem`)
-			.set('Content-type', 'application/json')
-			.expect(HttpStatusesEnum.NOT_FOUND);
+		await request(app).delete(`/bloggers/lorem`).set('Content-type', 'service/json').expect(HttpStatusesEnum.NOT_FOUND);
 	});
 
 	/**
@@ -232,7 +229,7 @@ describe('/bloggers', () => {
 	 */
 
 	it('Should return empty array of Posts', async () => {
-		await request(app).get('/posts').set('Content-type', 'application/json').expect(HttpStatusesEnum.OK, []);
+		await request(app).get('/posts').set('Content-type', 'service/json').expect(HttpStatusesEnum.OK, []);
 	});
 
 	it('Should create new Posts', async () => {
@@ -240,7 +237,7 @@ describe('/bloggers', () => {
 			body: { name: bloggerName, id: bloggerId },
 		} = await request(app)
 			.post('/bloggers')
-			.set('Content-type', 'application/json')
+			.set('Content-type', 'service/json')
 			.send({ name: 'Author', youtubeUrl: 'https://vk.com' })
 			.expect(HttpStatusesEnum.CREATED);
 
@@ -261,7 +258,7 @@ describe('/bloggers', () => {
 		};
 		const { body: createdPost } = await request(app)
 			.post('/posts')
-			.set('Content-type', 'application/json')
+			.set('Content-type', 'service/json')
 			.send(responseBody)
 			.expect(HttpStatusesEnum.CREATED);
 
@@ -273,7 +270,7 @@ describe('/bloggers', () => {
 
 		const { body } = await request(app)
 			.post('/posts')
-			.set('Content-type', 'application/json')
+			.set('Content-type', 'service/json')
 			.send(responseBody)
 			.expect(HttpStatusesEnum.BAD_REQUEST);
 
@@ -321,7 +318,7 @@ describe('/bloggers', () => {
 
 		const { body } = await request(app)
 			.post('/posts')
-			.set('Content-type', 'application/json')
+			.set('Content-type', 'service/json')
 			.send(responseBody)
 			.expect(HttpStatusesEnum.BAD_REQUEST);
 
@@ -357,7 +354,7 @@ describe('/bloggers', () => {
 
 		const { body } = await request(app)
 			.post('/posts')
-			.set('Content-type', 'application/json')
+			.set('Content-type', 'service/json')
 			.send(responseBody)
 			.expect(HttpStatusesEnum.NOT_FOUND);
 	});
@@ -365,7 +362,7 @@ describe('/bloggers', () => {
 	it("Shouldn't update post with not existing blogger", async () => {
 		const { body: posts } = await request(app)
 			.get('/posts')
-			.set('Content-type', 'application/json')
+			.set('Content-type', 'service/json')
 			.expect(HttpStatusesEnum.OK);
 
 		expect(posts.length).toEqual(1);
@@ -382,7 +379,7 @@ describe('/bloggers', () => {
 		await request(app)
 			.put(`/posts/${post.id}`)
 			.send(updateBodyResponse)
-			.set('Content-type', 'application/json')
+			.set('Content-type', 'service/json')
 			.expect(HttpStatusesEnum.NOT_FOUND);
 	});
 
@@ -391,7 +388,7 @@ describe('/bloggers', () => {
 	// 		body: { id: secondBloggerId, name: secondBloggerName },
 	// 	} = await request(app)
 	// 		.post('/bloggers')
-	// 		.set('Content-type', 'application/json')
+	// 		.set('Content-type', 'service/json')
 	// 		.send({ name: 'Vladislav', youtubeUrl: 'https:/.vk.com' })
 	// 		.expect(HttpStatusesEnum.CREATED);
 	//
@@ -399,7 +396,7 @@ describe('/bloggers', () => {
 	//
 	// 	const { body: posts } = await request(app)
 	// 		.get('/posts')
-	// 		.set('Content-type', 'application/json')
+	// 		.set('Content-type', 'service/json')
 	// 		.expect(HttpStatusesEnum.OK);
 	//
 	// 	expect(posts.length).toEqual(1);
@@ -416,12 +413,12 @@ describe('/bloggers', () => {
 	// 	await request(app)
 	// 		.put(`/posts/${post.id}`)
 	// 		.send(updateBodyResponse)
-	// 		.set('Content-type', 'application/json')
+	// 		.set('Content-type', 'service/json')
 	// 		.expect(HttpStatusesEnum.NO_CONTENT);
 	//
 	// 	const { body: updatedPost } = await request(app)
 	// 		.get(`/posts/${post.id}`)
-	// 		.set('Content-type', 'application/json')
+	// 		.set('Content-type', 'service/json')
 	// 		.expect(HttpStatusesEnum.OK);
 	//
 	// 	expect(updatedPost).toEqual({

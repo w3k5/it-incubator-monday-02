@@ -1,11 +1,11 @@
-import { EntityId, GetAllEntities, Nullable } from '@app/common-types';
+import { EntityId, GetAllEntities, Nullable, SortInterface } from '@app/common-types';
 import { bloggersRepository, postsRepository } from '../index';
 import { countTotalPages, paginationBuilder } from '../helpers/pagination-builder';
 import { PostInterface } from '../entities';
 import { PostsQueryBuilderResponseInterface } from '../interfaces/query-builder.interface';
 import { CreatePostDto, UpdatePostDto } from '../dto/posts/create-post.dto';
 import { PostResponseInterface } from '../dto/posts/post-response.interface';
-import { PaginationInterface, SortInterface } from '../interfaces/pagination.interface';
+import { PaginationInterface } from '../interfaces/pagination.interface';
 import { SortDirectionEnum } from '../enums';
 
 type GetAllPostsProps = Pick<PaginationInterface, 'pageNumber' | 'pageSize'> &

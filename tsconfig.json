@@ -3,7 +3,12 @@
   "compilerOptions": {
     "module": "commonjs",
     "moduleResolution": "node",
-    "target": "es5",
+    "target": "ES2019",
+    "types": [
+      "reflect-metadata"
+    ],
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
     "rootDir": "./src",
     "baseUrl": "./src",
     "paths": {
@@ -24,6 +29,9 @@
       ],
       "@app/domains/*": [
         "./domains/*"
+      ],
+      "@models/user/*": [
+        "./modules/user/*"
       ]
       //      "@app/types": [
       //        "./types/index.ts"

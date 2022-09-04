@@ -10,6 +10,7 @@ import {
 	RequestWithParams,
 	RequestWithParamsAndQuery,
 	RequestWithQuery,
+	SortInterface,
 } from '@app/common-types';
 import { BloggerInterface, PostInterface } from '../entities';
 import { BloggerDomain } from '../domains/bloggers.domain';
@@ -19,7 +20,6 @@ import { CreateBloggerDto } from '../dto/bloggers/create-blogger.dto';
 import { UpdateBloggerDto } from '../dto/bloggers/update-blogger.dto';
 import { postsDomain } from './post.handlers';
 import { CreatePostDto } from '../dto/posts/create-post.dto';
-import { SortInterface } from '../interfaces/pagination.interface';
 
 export const bloggerDomain = new BloggerDomain();
 

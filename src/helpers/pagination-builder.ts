@@ -10,6 +10,6 @@ export const paginationBuilder = (options: { pageSize: number; pageNumber: numbe
 	};
 };
 
-export const countTotalPages = (totalPages: number, pageSize: number) => {
-	return Math.ceil(totalPages / pageSize);
+export const countTotalPages = (totalDocuments: number, pageSize: number) => {
+	return Math.ceil(totalDocuments / pageSize);
 };

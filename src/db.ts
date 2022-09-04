@@ -1,5 +1,6 @@
 import { MongoClient } from 'mongodb';
 import { config } from 'dotenv';
+import mongoose from 'mongoose';
 import { BloggerInterface, PostInterface, UserInterface } from './entities';
 
 config();
@@ -34,6 +35,9 @@ export const runDb = async () => {
 		await client.connect();
 		await client.db(dbName).command({ ping: 1 });
 		console.log('Connection to Atlas db Success');
+
+		await mongoose.connect(dbUri, { dbName });
+		console.log('Mongoose connected');
 	} catch (error) {
 		console.log('Something went wrong during connection to database!', error);
 		await client.close();

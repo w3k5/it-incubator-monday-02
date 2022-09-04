@@ -14,6 +14,7 @@ import { loggerMiddleware } from './middlewares/loggerMiddleware';
 import { globalCatchErrorsMiddleware } from './middlewares/global-catch-errors.middleware';
 import { usersRouter } from './routes/users-router';
 import { UserRepository } from './repositories/user.repository';
+import { userRouter } from './modules/user/router';
 
 export const postsRepository = new PostsRepository();
 export const bloggersRepository = new BloggerRepository();
@@ -49,8 +50,9 @@ app.use(blackListMiddleware);
  */
 app.use('/posts', postsRouter);
 app.use('/bloggers', bloggersRouter);
-app.use('/users', usersRouter);
+// app.use('/users', usersRouter);
 app.use('/testing', testingRouter);
+app.use('/users', userRouter);
 app.use(globalCatchErrorsMiddleware);
 
 const startApp = async () => {
