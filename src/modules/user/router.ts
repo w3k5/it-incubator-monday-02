@@ -14,6 +14,7 @@ import { EmptyResponse } from '@app/common-types';
 import { paginationValidator } from '../../validators/pagination.validator';
 import { sortValidators } from '../../validators/blogger-validators/sort.validator';
 import { createUserValidators } from './validators/createUser.validators';
+import { authMiddleware } from '../../middlewares/auth.middleware';
 
 const userController = iocContainer.get<UserControllerInterface>(IOC_TYPES.UserController);
 
@@ -40,6 +41,7 @@ userRouter.get(
 
 userRouter.post(
 	'/',
+	authMiddleware,
 	createUserValidators,
 	async (request: CreateUserControllerRequest, response: CreteUserControllerResponse, next: NextFunction) => {
 		try {
@@ -56,7 +58,7 @@ userRouter.post(
 	},
 );
 
-userRouter.delete('/:id', async (request: DeleteUserByIdRequest, response: EmptyResponse, next) => {
+userRouter.delete('/:id', authMiddleware, async (request: DeleteUserByIdRequest, response: EmptyResponse, next) => {
 	try {
 		await userController.deleteUserById(request, response, next);
 	} catch (error: any) {

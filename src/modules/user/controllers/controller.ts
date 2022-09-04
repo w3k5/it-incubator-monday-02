@@ -27,7 +27,7 @@ export class UserController implements UserControllerInterface {
 	public async createUser({ body }: CreateUserControllerRequest, response: CreteUserControllerResponse) {
 		const { login, email, password } = body;
 		const user = await this.userService.createUser({ login, email, password });
-		return response.send(user);
+		return response.status(HttpStatusesEnum.CREATED).send(user);
 	}
 
 	/**
