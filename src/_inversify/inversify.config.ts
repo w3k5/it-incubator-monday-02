@@ -1,21 +1,23 @@
-import { Container } from 'inversify';
-import { IOC_TYPES } from './inversify.types';
-import { PasswordService } from '../services/passwordService/index';
-import { PasswordServiceInterface } from '../services/passwordService/interfaces';
-import { UserService } from '../modules/user/service/service';
-import { UserServiceInterface } from '@models/user/service/_service.types';
-import { UserController } from '../modules/user/controllers/controller';
-import { UserControllerInterface } from '../modules/user/controllers/controller.types';
-import { AbstractUserDatabaseRepository } from '@models/user/repository/_repository.types';
-import { UserDatabaseRepository } from '../modules/user/repository/repository';
-import { DateServiceInterface } from '../services/dateService/interfaces';
-import { DateService } from '../services/dateService';
-import { AuthController } from '../modules/auth/controller/auth.controller';
-import { AbstractAuthController } from '../modules/auth/controller/auth.controller.types';
-import { AbstractAuthService } from '../modules/auth/service/auth.service.types';
-import { AuthService } from '../modules/auth/service/auth.service';
-import { TokenService } from '../services/tokenService';
-import { AbstractTokenService } from '../services/tokenService/interfaces';
+import {
+	AbstractAuthController,
+	AbstractAuthService,
+	AbstractTokenService,
+	AbstractUserDatabaseRepository,
+	AuthController,
+	AuthService,
+	Container,
+	DateService,
+	DateServiceInterface,
+	IOC_TYPES,
+	PasswordService,
+	PasswordServiceInterface,
+	TokenService,
+	UserController,
+	UserControllerInterface,
+	UserDatabaseRepository,
+	UserService,
+	UserServiceInterface,
+} from './imports';
 
 const iocContainer = new Container();
 
@@ -43,4 +45,4 @@ iocContainer.bind<AbstractAuthService>(IOC_TYPES.AuthService).to(AuthService);
 
 const authController = iocContainer.get<AbstractAuthController>(IOC_TYPES.AuthController);
 
-export { iocContainer, userController, authController };
+export { userController, authController };
