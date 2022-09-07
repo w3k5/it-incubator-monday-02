@@ -1,4 +1,3 @@
-import 'reflect-metadata';
 import { injectable, inject } from 'inversify';
 import { EmptyResponse, GetAllEntities } from '@app/common-types';
 import { GetAllDomainResponse, UserOutputInterface } from '@models/user/types/entities';

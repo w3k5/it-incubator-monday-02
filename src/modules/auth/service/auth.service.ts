@@ -1,4 +1,3 @@
-import 'reflect-metadata';
 import { inject, injectable } from 'inversify';
 import { AbstractAuthService } from './auth.service.types';
 import { IOC_TYPES } from '../../../_inversify/inversify.types';

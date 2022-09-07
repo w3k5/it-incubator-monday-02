@@ -1,4 +1,3 @@
-import 'reflect-metadata';
 import { inject, injectable } from 'inversify';
 import { GetAllRepositoryResponse, AbstractUserDatabaseRepository } from './_repository.types';
 import { CreateUserRepositoryDto } from '@models/user/types/dto/createUserRepositoryDto';

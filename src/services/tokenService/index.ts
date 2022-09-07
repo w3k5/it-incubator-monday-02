@@ -1,4 +1,3 @@
-import 'reflect-metadata';
 import { config } from 'dotenv';
 import jwt from 'jsonwebtoken';
 import { injectable } from 'inversify';

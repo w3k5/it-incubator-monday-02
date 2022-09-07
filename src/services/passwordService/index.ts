@@ -1,4 +1,3 @@
-import 'reflect-metadata';
 import { injectable } from 'inversify';
 import bcrypt from 'bcrypt';
 import { PasswordServiceInterface } from './interfaces';

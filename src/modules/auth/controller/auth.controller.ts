@@ -1,4 +1,3 @@
-import 'reflect-metadata';
 import { inject, injectable } from 'inversify';
 import { AbstractAuthController, LoginRequest, LoginResponse } from './auth.controller.types';
 import { HttpStatusesEnum } from '../../../enums';

@@ -1,5 +1,3 @@
-export { Container } from 'inversify';
-export { IOC_TYPES } from './inversify.types';
 export { PasswordService } from '../services/passwordService/index';
 export { PasswordServiceInterface } from '../services/passwordService/interfaces';
 export { UserService } from '../modules/user/service/service';

@@ -1,3 +1,6 @@
+import 'reflect-metadata';
+import { Container } from 'inversify';
+import { IOC_TYPES } from './inversify.types';
 import {
 	AbstractAuthController,
 	AbstractAuthService,
@@ -5,10 +8,8 @@ import {
 	AbstractUserDatabaseRepository,
 	AuthController,
 	AuthService,
-	Container,
 	DateService,
 	DateServiceInterface,
-	IOC_TYPES,
 	PasswordService,
 	PasswordServiceInterface,
 	TokenService,
@@ -36,10 +37,10 @@ iocContainer.bind<UserControllerInterface>(IOC_TYPES.UserController).to(UserCont
 iocContainer.bind<AbstractUserDatabaseRepository>(IOC_TYPES.UserDatabaseRepository).to(UserDatabaseRepository);
 
 const userController = iocContainer.get<UserControllerInterface>(IOC_TYPES.UserController);
+
 /**
  * Auth
  */
-
 iocContainer.bind<AbstractAuthController>(IOC_TYPES.AuthController).to(AuthController);
 iocContainer.bind<AbstractAuthService>(IOC_TYPES.AuthService).to(AuthService);
 

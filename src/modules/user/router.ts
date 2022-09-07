@@ -1,4 +1,3 @@
-import 'reflect-metadata';
 import { Router } from 'express';
 import { userController } from '../../_inversify/inversify.config';
 import { paginationValidator } from '../../validators/pagination.validator';

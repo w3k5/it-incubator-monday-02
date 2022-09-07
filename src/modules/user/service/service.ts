@@ -1,4 +1,3 @@
-import 'reflect-metadata';
 import { injectable, inject } from 'inversify';
 
 import { UserServiceInterface } from '@models/user/service/_service.types';

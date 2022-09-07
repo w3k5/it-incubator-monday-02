@@ -1,4 +1,3 @@
-import 'reflect-metadata';
 import { injectable } from 'inversify';
 import { DateServiceInterface } from './interfaces';
 import { IsoDate } from '../../modules/_base/types';
