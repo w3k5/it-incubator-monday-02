@@ -3,10 +3,10 @@ import { IOC_TYPES } from './inversify.types';
 import { PasswordService } from '../services/passwordService/index';
 import { PasswordServiceInterface } from '../services/passwordService/interfaces';
 import { UserService } from '../modules/user/service/service';
-import { UserServiceInterface } from '@models/user/service/service.types';
+import { UserServiceInterface } from '@models/user/service/_service.types';
 import { UserController } from '../modules/user/controllers/controller';
 import { UserControllerInterface } from '../modules/user/controllers/controller.types';
-import { UserDatabaseRepositoryType } from '../modules/user/repository/repository.interface';
+import { AbstractUserDatabaseRepository } from '@models/user/repository/_repository.types';
 import { UserDatabaseRepository } from '../modules/user/repository/repository';
 import { DateServiceInterface } from '../services/dateService/interfaces';
 import { DateService } from '../services/dateService';
@@ -31,7 +31,7 @@ iocContainer.bind<AbstractTokenService>(IOC_TYPES.TokenService).to(TokenService)
  */
 iocContainer.bind<UserServiceInterface>(IOC_TYPES.UserService).to(UserService);
 iocContainer.bind<UserControllerInterface>(IOC_TYPES.UserController).to(UserController);
-iocContainer.bind<UserDatabaseRepositoryType>(IOC_TYPES.UserDatabaseRepository).to(UserDatabaseRepository);
+iocContainer.bind<AbstractUserDatabaseRepository>(IOC_TYPES.UserDatabaseRepository).to(UserDatabaseRepository);
 
 const userController = iocContainer.get<UserControllerInterface>(IOC_TYPES.UserController);
 /**

@@ -3,7 +3,7 @@ import { NextFunction, Request, Response } from 'express';
 /**
  * Checks is Headers has header Authorization with value Basic login:password
  */
-export const authMiddleware = (request: Request, response: Response, next: NextFunction) => {
+export const basicAuthMiddleware = (request: Request, response: Response, next: NextFunction) => {
 	if (!request.headers || typeof request.headers === 'undefined') {
 		return response.status(401).send();
 	}

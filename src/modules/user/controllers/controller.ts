@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 import { injectable, inject } from 'inversify';
-import { EmptyResponse, GetAllEntities, PaginationParams, SortInterface } from '@app/common-types';
+import { EmptyResponse, GetAllEntities } from '@app/common-types';
 import { GetAllDomainResponse, UserOutputInterface } from '@models/user/types/entities';
 import {
 	CreateUserControllerRequest,
@@ -11,7 +11,7 @@ import {
 	UserControllerInterface,
 } from '@models/user/controllers/controller.types';
 import { HttpStatusesEnum, SortDirectionEnum } from '../../../enums';
-import { UserServiceInterface } from '../service/service.types';
+import { UserServiceInterface } from '../service/_service.types';
 import { IOC_TYPES } from '../../../_inversify/inversify.types';
 import { ObjectId } from 'mongodb';
 

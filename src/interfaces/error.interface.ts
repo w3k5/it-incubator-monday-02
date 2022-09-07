@@ -10,8 +10,8 @@ export interface ErrorMessageInterface {
 }
 
 export interface ServerErrorInterface {
-	status: HttpStatusesEnum.SERVER_ERROR;
-	message: 'Internal server error';
+	status: HttpStatusesEnum;
+	message: string;
 	error: string;
 	route: string;
 	endpoint: string;

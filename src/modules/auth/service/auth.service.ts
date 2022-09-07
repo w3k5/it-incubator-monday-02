@@ -2,7 +2,7 @@ import 'reflect-metadata';
 import { inject, injectable } from 'inversify';
 import { AbstractAuthService } from './auth.service.types';
 import { IOC_TYPES } from '../../../_inversify/inversify.types';
-import { UserDatabaseRepositoryType } from '../../user/repository/repository.interface';
+import { AbstractUserDatabaseRepository } from '../../user/repository/_repository.types';
 import { LoginUserDto } from '../controller/auth.controller.types';
 import { PasswordServiceInterface } from '../../../services/passwordService/interfaces';
 import { AbstractTokenService, Token } from '../../../services/tokenService/interfaces';
@@ -10,7 +10,7 @@ import { AbstractTokenService, Token } from '../../../services/tokenService/inte
 @injectable()
 export class AuthService implements AbstractAuthService {
 	constructor(
-		@inject(IOC_TYPES.UserDatabaseRepository) private readonly userRepository: UserDatabaseRepositoryType,
+		@inject(IOC_TYPES.UserDatabaseRepository) private readonly userRepository: AbstractUserDatabaseRepository,
 		@inject(IOC_TYPES.PasswordService) private readonly passwordService: PasswordServiceInterface,
 		@inject(IOC_TYPES.TokenService) private readonly tokenService: AbstractTokenService,
 	) {}

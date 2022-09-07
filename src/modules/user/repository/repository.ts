@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 import { inject, injectable } from 'inversify';
-import { GetAllRepositoryResponse, UserDatabaseRepositoryType } from './repository.interface';
+import { GetAllRepositoryResponse, AbstractUserDatabaseRepository } from './_repository.types';
 import { CreateUserRepositoryDto } from '@models/user/types/dto/createUserRepositoryDto';
 import { UserDatabase } from '@models/user/types/entities';
 import { UserModel } from '../schema';
@@ -11,7 +11,7 @@ import { SortDirectionEnum } from '../../../enums';
 import { BaseRepository } from '../../_base/repository';
 
 @injectable()
-export class UserDatabaseRepository extends BaseRepository implements UserDatabaseRepositoryType {
+export class UserDatabaseRepository extends BaseRepository implements AbstractUserDatabaseRepository {
 	constructor(@inject(IOC_TYPES.DateService) private readonly dateService: DateServiceInterface) {
 		super();
 	}
@@ -43,6 +43,10 @@ export class UserDatabaseRepository extends BaseRepository implements UserDataba
 				{ email: { $regex: searchEmailTerm ?? '', $options: 'i' } },
 			],
 		});
+
+		if (!totalCount) {
+			return { documents: [], totalCount: 0, pagesCount: 0 };
+		}
 
 		const documents = await UserModel.find({
 			$or: [

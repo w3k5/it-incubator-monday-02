@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { param } from 'express-validator';
 import { createBloggerValidators } from '../validators/blogger-validators/create.validator';
-import { authMiddleware } from '../middlewares/auth.middleware';
+import { basicAuthMiddleware } from '../middlewares/basicAuth.middleware';
 import { paginationValidator } from '../validators/pagination.validator';
 import { BloggerHandlers } from '../handlers/blogger.handlers';
 import { getOneBloggerParamsValidators } from '../validators/blogger-validators/get-one-blogger.validator';
@@ -35,7 +35,7 @@ bloggersRouter.get(
  */
 bloggersRouter.post(
 	'/:id/posts',
-	authMiddleware,
+	basicAuthMiddleware,
 	bloggerParamIdValidator,
 	inputValidationMiddleware,
 	createPostsValidators,
@@ -45,7 +45,7 @@ bloggersRouter.post(
 /**
  * Creates new blogger
  */
-bloggersRouter.post('/', authMiddleware, createBloggerValidators, bloggerHandlers.createOneBlogger);
+bloggersRouter.post('/', basicAuthMiddleware, createBloggerValidators, bloggerHandlers.createOneBlogger);
 
 /**
  * Returns one blogger by ID
@@ -57,7 +57,7 @@ bloggersRouter.get('/:id', getOneBloggerParamsValidators, bloggerHandlers.getOne
  */
 bloggersRouter.put(
 	'/:id',
-	authMiddleware,
+	basicAuthMiddleware,
 	getOneBloggerParamsValidators,
 	updateBloggerValidators,
 	bloggerHandlers.updateOneBloggerById,
@@ -66,9 +66,9 @@ bloggersRouter.put(
 /**
  * Drops full database
  */
-bloggersRouter.delete('/', authMiddleware, bloggerHandlers.dropBloggerCollection);
+bloggersRouter.delete('/', basicAuthMiddleware, bloggerHandlers.dropBloggerCollection);
 
 /**
  * Removes one blogger by ID
  */
-bloggersRouter.delete('/:id', authMiddleware, getOneBloggerParamsValidators, bloggerHandlers.removeOneBloggerById);
+bloggersRouter.delete('/:id', basicAuthMiddleware, getOneBloggerParamsValidators, bloggerHandlers.removeOneBloggerById);
