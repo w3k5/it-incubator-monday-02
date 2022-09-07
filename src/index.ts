@@ -12,7 +12,6 @@ import { testingRouter } from './routes/testing-router';
 import { BloggerRepository, PostsRepository } from './repositories';
 import { loggerMiddleware } from './middlewares/loggerMiddleware';
 import { globalCatchErrorsMiddleware } from './middlewares/global-catch-errors.middleware';
-import { usersRouter } from './routes/users-router';
 import { UserRepository } from './repositories/user.repository';
 import { userRouter } from './modules/user/router';
 import { authRouter } from './modules/auth/router';
@@ -50,7 +49,7 @@ app.use(blackListMiddleware);
  * Routes
  */
 app.use('/posts', postsRouter);
-app.use('/bloggers', bloggersRouter);
+app.use('/blogs', bloggersRouter);
 app.use('/testing', testingRouter);
 app.use('/users', userRouter);
 app.use('/auth', authRouter);
