@@ -18,7 +18,7 @@ export class AuthController implements AbstractAuthController {
 	async login({ body: { login, password } }: LoginRequest, response: LoginResponse): Promise<LoginResponse> {
 		try {
 			const result: Token = await this.authService.auth({ login, password });
-			return response.status(HttpStatusesEnum.OK).send({ accessToken: result });
+			return response.status(HttpStatusesEnum.NO_CONTENT).send({ accessToken: result });
 		} catch (error) {
 			return this.errorBoundary.sendError<LoginResponse>(response, error);
 		}

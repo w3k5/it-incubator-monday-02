@@ -1,10 +1,9 @@
-import { authService, userService } from '../../../_inversify/inversify.config';
-import { UserInputInterface } from '@models/user/types/entities';
 import { faker } from '@faker-js/faker';
-import { MongoMemoryServer } from 'mongodb-memory-server';
 import mongoose from 'mongoose';
 import jwt from 'jsonwebtoken';
-import exp from 'constants';
+import { MongoMemoryServer } from 'mongodb-memory-server';
+import { UserInputInterface } from '@models/user/types/entities';
+import { authService, userService } from '../../../_inversify/inversify.config';
 import { NotAuthorizedError } from '../../../_common/errors';
 
 describe('Auth Service', () => {
