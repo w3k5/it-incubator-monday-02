@@ -9,6 +9,8 @@ import {
 	GetAllBlogControllerResponse,
 	GetBlogByIdControllerRequest,
 	GetBlogByIdControllerResponse,
+	GetPostsByBlogIdControllerRequest,
+	GetPostsByBlogIdControllerResponse,
 	UpdateBlogControllerRequest,
 	UpdateBlogControllerResponse,
 } from './types/blogs.controller.types';
@@ -20,11 +22,15 @@ import { BlogOutputInterface } from './entities';
 import { EmptyResponse, GetAllEntities } from '../../_common/types';
 import { AbstractErrorBoundaryService } from '../../_common/errors/errorBoundaryService.types';
 import { AbstractBlogService } from './types/blogs.service.types';
+import { AbstractPostService } from '../post/types/post.service.types';
+import { PostOutputInterface } from '../post/entities';
+import { postService } from '../../_inversify/inversify.config';
 
 @injectable()
 export class BlogsController implements AbstractBlogController {
 	constructor(
 		@inject(IOC_TYPES.BlogService) private readonly blogService: AbstractBlogService,
+		// @inject(IOC_TYPES.PostService) private readonly postService: AbstractPostService,
 		@inject(IOC_TYPES.ErrorBoundaryService) private readonly errorBoundary: AbstractErrorBoundaryService,
 	) {}
 
@@ -120,5 +126,38 @@ export class BlogsController implements AbstractBlogController {
 
 	private checkId(id: string): boolean {
 		return ObjectId.isValid(id);
+	}
+
+	public async getPostsByBlogId(
+		{ params: { blogId }, query }: GetPostsByBlogIdControllerRequest,
+		response: GetPostsByBlogIdControllerResponse,
+	): Promise<GetPostsByBlogIdControllerResponse> {
+		try {
+			const { pageNumber = 1, pageSize = 10, sortBy = 'createdAt', sortDirection = SortDirectionEnum.desc } = query;
+
+			const blogCandidate = await this.blogService.getBlogById(blogId);
+
+			const { documents, totalCount, pagesCount }: GetAllRepositoryResponse<PostOutputInterface> =
+				// TODO: SOMETHING WRONG WITH INJECT
+				await postService.getAllPosts({
+					pageNumber,
+					pageSize,
+					sortBy,
+					sortDirection,
+					blogId,
+				});
+
+			const result: GetAllEntities<PostOutputInterface> = {
+				pageSize,
+				page: pageNumber,
+				totalCount,
+				pagesCount,
+				items: documents,
+			};
+
+			return response.status(HttpStatusesEnum.OK).send(result);
+		} catch (error) {
+			return this.errorBoundary.sendError<GetPostsByBlogIdControllerResponse>(response, error);
+		}
 	}
 }

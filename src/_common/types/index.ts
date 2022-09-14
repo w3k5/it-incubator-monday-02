@@ -5,6 +5,7 @@ export type RequestWithBody<Body> = Request<never, never, Body, never>;
 export type RequestWithQuery<Query> = Request<never, never, never, Query>;
 export type RequestWithParams<Params> = Request<Params>;
 export type RequestWithBodyAndParams<Body, Params> = Request<Params, never, Body, never>;
+export type RequestWithParamsAndQuery<Params, Query> = Request<Params, never, never, Query>;
 
 export type EmptyResponse = Response<any>;
 export type Nullable<T> = T | null;

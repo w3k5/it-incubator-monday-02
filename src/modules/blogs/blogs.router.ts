@@ -6,6 +6,8 @@ import { basicAuthMiddleware } from '../../middlewares/basicAuth.middleware';
 import { createBloggerValidators } from '../../validators/blogger-validators/create.validator';
 import { getOneBloggerParamsValidators } from '../../validators/blogger-validators/get-one-blogger.validator';
 import { updateBloggerValidators } from '../../validators/blogger-validators/update.validator';
+import { param } from 'express-validator';
+import { ObjectId } from 'mongodb';
 
 export const blogsRouter = Router({ caseSensitive: true });
 
@@ -42,16 +44,15 @@ blogsRouter.delete(
 	blogController.deleteBlogById.bind(blogController),
 );
 
-// /**
-//  * Get Posts by BloggerId
-//  * @deprecated
-//  */
-// bloggersRouter.get(
-// 	'/:id/posts',
-// 	getOneBloggerParamsValidators,
-// 	paginationValidator,
-// 	bloggerHandlers.getAllPostBySpecifiedBlogger,
-// );
+/**
+ * Get Posts by BloggerId
+ */
+blogsRouter.get(
+	'/:blogId/posts',
+	param('blogId').exists().isMongoId(),
+	paginationValidator,
+	blogController.getPostsByBlogId.bind(blogController),
+);
 //
 // /**
 //  * Create Posts by BloggerId

@@ -9,8 +9,12 @@ import {
 	RequestWithBody,
 	RequestWithBodyAndParams,
 	RequestWithParams,
+	RequestWithParamsAndQuery,
 	RequestWithQuery,
 } from '../../../_common/types';
+import { GetAllPostQueryParams } from '../../post/types/_post.common.types';
+import { PostInputInterface, PostOutputInterface } from '../../post/entities';
+import request from 'supertest';
 
 // Get All Blogs Types (Request, Response, Method)
 type GetAllBlogControllerRequest = RequestWithQuery<GetAllBlogQueryParams>;
@@ -57,15 +61,33 @@ type DeleteBlogByIdControllerHandler = (
 	next: NextFunction,
 ) => Promise<DeleteBlogByIdControllerResponse>;
 
+// Get Posts By Specified BlogID
+type GetPostsByBlogIdControllerRequest = RequestWithParamsAndQuery<{ blogId: ModelID }, GetAllPostQueryParams>;
+type GetPostsByBlogIdControllerResponse = Response<GetAllEntities<PostOutputInterface>>;
+type GetPostsByBlogIdControllerHandler = (
+	request: GetPostsByBlogIdControllerRequest,
+	response: GetPostsByBlogIdControllerResponse,
+	next: NextFunction,
+) => Promise<GetPostsByBlogIdControllerResponse>;
+
+// Create Post By Specified BlogId
+
+type CreatePostByBlogIdControllerRequest = RequestWithBodyAndParams<{ blogId: ModelID }, PostInputInterface>;
+type CreatePostByBlogIdControllerResponse = Response<PostOutputInterface>;
+type CreatePostByBlogIdControllerHandler = (
+	request: CreatePostByBlogIdControllerRequest,
+	response: CreatePostByBlogIdControllerResponse,
+	next: NextFunction,
+) => Promise<CreatePostByBlogIdControllerResponse>;
+
 abstract class AbstractBlogController {
 	abstract getAllBlogs: GetAllBlogsControllerHandler;
 	abstract getBlogById: GetBlogByIdControllerHandler;
 	abstract createBlog: CreateBlogControllerHandler;
 	abstract updateBlog: UpdateBlogControllerHandler;
 	abstract deleteBlogById: DeleteBlogByIdControllerHandler;
-	// TODO: Работа с Постами через Блог
-	// => get posts by blog id
-	// => create posts by blog id
+	abstract getPostsByBlogId: GetPostsByBlogIdControllerHandler;
+	// abstract createPostByBlogId: CreatePostByBlogIdControllerHandler
 }
 
 export {
@@ -85,4 +107,7 @@ export {
 	DeleteBlogByIdControllerRequest,
 	DeleteBlogByIdControllerResponse,
 	DeleteBlogByIdControllerHandler,
+	GetPostsByBlogIdControllerRequest,
+	GetPostsByBlogIdControllerResponse,
+	GetPostsByBlogIdControllerHandler,
 };

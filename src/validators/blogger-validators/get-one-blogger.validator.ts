@@ -3,4 +3,4 @@ import { inputValidationMiddleware } from '../../middlewares/input-validation.mi
 import { bloggerParamIdValidator } from '../post-validators/blogger-id-validator';
 
 // export const getOneBloggerParamsValidators = [mongoIdParamValidator, inputValidationMiddleware];
-export const getOneBloggerParamsValidators = [bloggerParamIdValidator];
+export const getOneBloggerParamsValidators = [mongoIdParamValidator];

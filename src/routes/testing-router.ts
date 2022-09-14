@@ -5,4 +5,5 @@ import { testingService } from '../_inversify/inversify.config';
 
 export const testingRouter = Router();
 
+// TODO: Testing service
 testingRouter.delete('/all-data', (testingService as any).dropAllCollections.bind(testingService));
