@@ -61,6 +61,7 @@ iocContainer.bind<AbstractAuthController>(IOC_TYPES.AuthController).to(AuthContr
 iocContainer.bind<AbstractAuthService>(IOC_TYPES.AuthService).to(AuthService);
 
 const authController = iocContainer.get<AbstractAuthController>(IOC_TYPES.AuthController);
+const authService = iocContainer.get<AbstractAuthService>(IOC_TYPES.AuthService);
 /*	====================================================================================== */
 
 /*	================================== Blog Services ===================================== */
@@ -91,6 +92,7 @@ const testingService = iocContainer.get(IOC_TYPES.TestingService);
 export {
 	userController,
 	authController,
+	authService,
 	testingService,
 	blogController,
 	blogService,
