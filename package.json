@@ -17,6 +17,11 @@
     "compodoc:serve": "compodoc -s",
     "prepare": "husky install"
   },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
   "lint-staged": {
     "linters": {
       "*.ts": [
