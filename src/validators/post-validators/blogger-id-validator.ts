@@ -6,21 +6,24 @@ import { blogService } from '../../_inversify/inversify.config';
 import { EntityId, RequestWithBody, RequestWithParams } from '../../_common/types';
 
 export const bloggerIdValidator = (chain: ValidationChain): ValidationChain => {
-	return chain
-		.custom(async (id) => {
-			const isIdValid = ObjectId.isValid(id);
-			if (!isIdValid) {
-				throw new Error('Mongo ID must be valid!');
-			}
-			return true;
-		})
-		.custom(async (value: string) => {
-			const bloggerCandidate = await blogService.getBlogById(value);
-			if (!bloggerCandidate) {
-				throw new Error('Blogger is not exists');
-			}
-			return true;
-		});
+	return (
+		chain
+			.isMongoId()
+			// .custom(async (id) => {
+			// 	const isIdValid = ObjectId.isValid(id);
+			// 	if (!isIdValid) {
+			// 		throw new Error('Mongo ID must be valid!');
+			// 	}
+			// 	return true;
+			// })
+			.custom(async (value: string) => {
+				const bloggerCandidate = await blogService.getBlogById(value);
+				if (!bloggerCandidate) {
+					throw new Error('Blogger is not exists');
+				}
+				return true;
+			})
+	);
 };
 
 export const bloggerParamIdValidator = async (
@@ -35,10 +38,10 @@ export const bloggerParamIdValidator = async (
 		return response.status(HttpStatusesEnum.NOT_FOUND).send();
 	}
 
-	const bloggerCandidate = await blogService.getBlogById(id);
-	if (!bloggerCandidate) {
-		return response.status(HttpStatusesEnum.NOT_FOUND).send();
-	}
+	// const bloggerCandidate = await blogService.getBlogById(id);
+	// if (!bloggerCandidate) {
+	// 	return response.status(HttpStatusesEnum.NOT_FOUND).send();
+	// }
 	next();
 };
 

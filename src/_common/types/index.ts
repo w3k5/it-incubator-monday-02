@@ -6,7 +6,7 @@ export type RequestWithQuery<Query> = Request<never, never, never, Query>;
 export type RequestWithParams<Params> = Request<Params>;
 export type RequestWithBodyAndParams<Body, Params> = Request<Params, never, Body, never>;
 
-export type EmptyResponse = Response<never>;
+export type EmptyResponse = Response<any>;
 export type Nullable<T> = T | null;
 
 // Общий тип пагинации
@@ -40,10 +40,10 @@ export type ServerError = {
 	endpoint: string;
 };
 
-export interface GetAllResponseInterface<Entity> {
-	pagesCount: number;
-	page: number;
-	pageSize: number;
-	totalCount: number;
-	items: Entity[];
-}
+// export interface GetAllResponseInterface<Entity> {
+// 	pagesCount: number;
+// 	page: number;
+// 	pageSize: number;
+// 	totalCount: number;
+// 	items: Entity[];
+// }

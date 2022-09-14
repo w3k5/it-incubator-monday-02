@@ -1,3 +1,5 @@
+export { ErrorBoundaryService } from '../_common/errors/errorBoundary';
+export { AbstractErrorBoundaryService } from '../_common/errors/errorBoundaryService.types';
 export { BlogsController } from '../modules/blogs/blogs.controller';
 export { AbstractBlogController } from '../modules/blogs/types/blogs.controller.types';
 export { BlogsService } from '../modules/blogs/blogs.service';

@@ -14,6 +14,7 @@ const IOC_TYPES = {
 	PostService: Symbol.for('PostService'),
 	PostDatabaseRepository: Symbol.for('PostDatabaseRepository'),
 	PostController: Symbol.for('PostController'),
+	ErrorBoundaryService: Symbol.for('ErrorBoundaryService'),
 };
 
 export { IOC_TYPES };

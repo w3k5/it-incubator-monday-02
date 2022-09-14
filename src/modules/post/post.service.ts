@@ -23,7 +23,7 @@ export class PostService implements AbstractPostService {
 	}: PostInputInterface): Promise<PostOutputInterface> {
 		const blogCandidate = await this.blogDatabaseRepository.getById(blogId);
 		if (!blogCandidate) {
-			throw new NotFoundError();
+			throw new NotFoundError(`Blog with id ${blogId} is not exists`);
 		}
 
 		const newPost = await this.postDatabaseRepository.create({

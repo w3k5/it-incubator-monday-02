@@ -31,7 +31,7 @@ export class BlogsService implements AbstractBlogService {
 	public async getBlogById(id: ModelID): Promise<BlogOutputInterface> {
 		const candidate = await this.blogDatabaseRepository.getById(id);
 		if (!candidate) {
-			throw new NotFoundError();
+			throw new NotFoundError(`Blog with id ${id} Not Found`);
 		}
 		return this.prepareBlogModel(candidate);
 	}

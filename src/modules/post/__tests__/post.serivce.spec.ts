@@ -1,5 +1,7 @@
+import { postService } from '../../../_inversify/inversify.config';
+
 describe('Post Service tests', () => {
-	it('Should test Create Post', () => {
-		expect(1).toBe(2);
+	it('Should test is ioc container returns postService', () => {
+		expect(postService);
 	});
 });

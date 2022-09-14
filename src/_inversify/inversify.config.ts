@@ -29,6 +29,8 @@ import {
 	PostService,
 	AbstractPostService,
 	PostDatabaseRepository,
+	ErrorBoundaryService,
+	AbstractErrorBoundaryService,
 } from './imports';
 import { AbstractPostController } from '../modules/post/types/post.controller.types';
 import { PostController } from '../modules/post/post.controller';
@@ -39,6 +41,9 @@ const iocContainer = new Container();
 iocContainer.bind<PasswordServiceInterface>(IOC_TYPES.PasswordService).to(PasswordService);
 iocContainer.bind<DateServiceInterface>(IOC_TYPES.DateService).to(DateService);
 iocContainer.bind<AbstractTokenService>(IOC_TYPES.TokenService).to(TokenService);
+iocContainer.bind<AbstractErrorBoundaryService>(IOC_TYPES.ErrorBoundaryService).to(ErrorBoundaryService);
+
+const passwordService = iocContainer.get<PasswordServiceInterface>(IOC_TYPES.PasswordService);
 /*	====================================================================================== */
 
 /*	================================== User Services ===================================== */
@@ -69,6 +74,8 @@ const blogService = iocContainer.get<AbstractBlogService>(IOC_TYPES.BlogService)
 iocContainer.bind<AbstractPostDatabaseRepository>(IOC_TYPES.PostDatabaseRepository).to(PostDatabaseRepository);
 iocContainer.bind<AbstractPostService>(IOC_TYPES.PostService).to(PostService);
 iocContainer.bind<AbstractPostController>(IOC_TYPES.PostController).to(PostController);
+
+const postService = iocContainer.get<AbstractPostService>(IOC_TYPES.PostService);
 const postController = iocContainer.get<AbstractPostController>(IOC_TYPES.PostController);
 /*	====================================================================================== */
 
@@ -79,4 +86,13 @@ iocContainer.bind(IOC_TYPES.TestingService).to(TestingDomain);
 const testingService = iocContainer.get(IOC_TYPES.TestingService);
 /*	====================================================================================== */
 
-export { userController, authController, testingService, blogController, blogService, postController };
+export {
+	userController,
+	authController,
+	testingService,
+	blogController,
+	blogService,
+	postController,
+	postService,
+	passwordService,
+};
