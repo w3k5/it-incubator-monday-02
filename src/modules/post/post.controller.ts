@@ -12,7 +12,6 @@ import {
 	UpdatePostControllerRequest,
 	UpdatePostControllerResponse,
 } from './types/post.controller.types';
-import { NextFunction } from 'express';
 import { IOC_TYPES } from '../../_inversify/inversify.types';
 import { AbstractPostService } from './types/post.service.types';
 import { HttpStatusesEnum, SortDirectionEnum } from '../../enums';
@@ -20,82 +19,106 @@ import { ObjectId } from 'mongodb';
 import { GetAllRepositoryResponse } from '../_base/types';
 import { PostOutputInterface } from './entities';
 import { EmptyResponse, GetAllEntities } from '../../_common/types';
+import { AbstractErrorBoundaryService } from '../../_common/errors/errorBoundaryService.types';
 
 @injectable()
 export class PostController implements AbstractPostController {
-	constructor(@inject(IOC_TYPES.PostService) private readonly postService: AbstractPostService) {}
+	constructor(
+		@inject(IOC_TYPES.PostService) private readonly postService: AbstractPostService,
+		@inject(IOC_TYPES.ErrorBoundaryService) private readonly errorBoundary: AbstractErrorBoundaryService,
+	) {}
 
 	public async createPost(
 		{ body: { content, title, shortDescription, blogId } }: CreatePostControllerRequest,
 		response: CreatePostControllerResponse,
 	): Promise<CreatePostControllerResponse> {
-		const result = await this.postService.createPost({ content, title, shortDescription, blogId });
-		return response.status(HttpStatusesEnum.CREATED).send(result);
+		try {
+			const result = await this.postService.createPost({ content, title, shortDescription, blogId });
+			return response.status(HttpStatusesEnum.CREATED).send(result);
+		} catch (error) {
+			return this.errorBoundary.sendError<CreatePostControllerResponse>(response, error);
+		}
 	}
 
 	public async deletePostById(
 		{ params: { id } }: RemovePostControllerRequest,
 		response: RemovePostControllerResponse,
 	): Promise<EmptyResponse> {
-		if (!this.checkId(id)) {
-			return response.status(HttpStatusesEnum.NOT_FOUND).send();
+		try {
+			if (!this.checkId(id)) {
+				return response.status(HttpStatusesEnum.NOT_FOUND).send();
+			}
+			const result = await this.postService.deletePostById(id);
+			const status = result ? HttpStatusesEnum.NO_CONTENT : HttpStatusesEnum.NOT_FOUND;
+			return response.status(status).send();
+		} catch (error) {
+			return this.errorBoundary.sendError<EmptyResponse>(response, error);
 		}
-		const result = await this.postService.deletePostById(id);
-		const status = result ? HttpStatusesEnum.NO_CONTENT : HttpStatusesEnum.NOT_FOUND;
-		return response.status(status).send();
 	}
 
 	public async getAllPosts(
 		{ query }: GetAllPostControllerRequest,
 		response: GetAllPostControllerResponse,
 	): Promise<GetAllPostControllerResponse> {
-		const {
-			pageNumber = 1,
-			pageSize = 10,
-			blogId = null,
-			sortBy = 'createdAt',
-			sortDirection = SortDirectionEnum.desc,
-		} = query;
-		const { documents, totalCount, pagesCount }: GetAllRepositoryResponse<PostOutputInterface> =
-			await this.postService.getAllPosts({
-				pageNumber,
+		try {
+			const {
+				pageNumber = 1,
+				pageSize = 10,
+				blogId = null,
+				sortBy = 'createdAt',
+				sortDirection = SortDirectionEnum.desc,
+			} = query;
+			const { documents, totalCount, pagesCount }: GetAllRepositoryResponse<PostOutputInterface> =
+				await this.postService.getAllPosts({
+					pageNumber,
+					pageSize,
+					blogId,
+					sortBy,
+					sortDirection,
+				});
+			const result: GetAllEntities<PostOutputInterface> = {
 				pageSize,
-				blogId,
-				sortBy,
-				sortDirection,
-			});
-		const result: GetAllEntities<PostOutputInterface> = {
-			pageSize,
-			page: pageNumber,
-			totalCount,
-			pagesCount,
-			items: documents,
-		};
-		return response.status(HttpStatusesEnum.OK).send(result);
+				page: pageNumber,
+				totalCount,
+				pagesCount,
+				items: documents,
+			};
+			return response.status(HttpStatusesEnum.OK).send(result);
+		} catch (error) {
+			return this.errorBoundary.sendError<GetAllPostControllerResponse>(response, error);
+		}
 	}
 
 	public async getPostById(
 		{ params: { id } }: GetPostByIdControllerRequest,
 		response: GetPostByIdControllerResponse,
 	): Promise<GetPostByIdControllerResponse> {
-		const postCandidate = await this.postService.getPostById(id);
-		return postCandidate
-			? response.status(HttpStatusesEnum.OK).send(postCandidate)
-			: response.status(HttpStatusesEnum.NOT_FOUND).send();
+		try {
+			const postCandidate = await this.postService.getPostById(id);
+			return postCandidate
+				? response.status(HttpStatusesEnum.OK).send(postCandidate)
+				: response.status(HttpStatusesEnum.NOT_FOUND).send();
+		} catch (error) {
+			return this.errorBoundary.sendError<GetPostByIdControllerResponse>(response, error);
+		}
 	}
 
 	public async updatePostById(
 		{ body: { content, shortDescription, blogId, title }, params: { id } }: UpdatePostControllerRequest,
 		response: UpdatePostControllerResponse,
 	): Promise<UpdatePostControllerResponse> {
-		const isUpdated: boolean = await this.postService.updatePostById(id, {
-			content,
-			shortDescription,
-			blogId,
-			title,
-		});
-		const status: number = isUpdated ? HttpStatusesEnum.NO_CONTENT : HttpStatusesEnum.NOT_FOUND;
-		return response.status(status).send();
+		try {
+			const isUpdated: boolean = await this.postService.updatePostById(id, {
+				content,
+				shortDescription,
+				blogId,
+				title,
+			});
+			const status: number = isUpdated ? HttpStatusesEnum.NO_CONTENT : HttpStatusesEnum.NOT_FOUND;
+			return response.status(status).send();
+		} catch (error) {
+			return this.errorBoundary.sendError<UpdatePostControllerResponse>(response, error);
+		}
 	}
 
 	private checkId(id: string): boolean {
