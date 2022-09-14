@@ -14,7 +14,8 @@
     "test:coverage": "jest --coverage --silent",
     "prettier-format": "prettier --config .prettierrc 'src/**/*.ts' --write",
     "compodoc": "npx compodoc -p tsconfig.doc.json",
-    "compodoc:serve": "compodoc -s"
+    "compodoc:serve": "compodoc -s",
+    "prepare": "husky install"
   },
   "lint-staged": {
     "linters": {
@@ -50,6 +51,7 @@
     "@typescript-eslint/eslint-plugin": "^5.33.1",
     "@typescript-eslint/parser": "^5.33.1",
     "eslint": "^8.22.0",
+    "husky": "^8.0.1",
     "jest": "28.1.3",
     "lint-staged": "^13.0.3",
     "mongodb-memory-server": "^8.9.1",
