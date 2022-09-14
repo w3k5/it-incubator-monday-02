@@ -51,6 +51,7 @@ iocContainer.bind<AbstractUserService>(IOC_TYPES.UserService).to(UserService);
 iocContainer.bind<AbstractUserController>(IOC_TYPES.UserController).to(UserController);
 iocContainer.bind<AbstractUserDatabaseRepository>(IOC_TYPES.UserDatabaseRepository).to(UserDatabaseRepository);
 
+const userService = iocContainer.get<AbstractUserService>(IOC_TYPES.UserService);
 const userController = iocContainer.get<AbstractUserController>(IOC_TYPES.UserController);
 /*	====================================================================================== */
 
@@ -93,6 +94,7 @@ export {
 	blogController,
 	blogService,
 	postController,
+	userService,
 	postService,
 	passwordService,
 };

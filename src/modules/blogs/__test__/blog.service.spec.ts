@@ -44,7 +44,8 @@ describe('Blog Service tests', () => {
 
 	it('Должен вернуть все блоги с пустыми квери параметрами (20 блогов)', async () => {
 		const fakedBlogs = [];
-		for (let i = 0; i < 20; i++) {
+		const iterator = Array.from({ length: 20 });
+		for (const request of iterator) {
 			const blogMock: BlogInputInterface = createFakeUser();
 			const fakedBlog = await blogService.createBlog(blogMock);
 			fakedBlogs.push(fakedBlog);

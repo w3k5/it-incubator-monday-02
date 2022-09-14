@@ -6,6 +6,7 @@ abstract class AbstractUserService {
 	abstract getAllUsers: (params: GetAllUsersQueryParams) => Promise<GetAllRepositoryResponse<UserOutputInterface>>;
 	abstract createUser: (dto: UserInputInterface) => Promise<UserOutputInterface>;
 	abstract deleteUser: (id: ModelID) => Promise<boolean>;
+	abstract drop: () => Promise<void>;
 }
 
 export { AbstractUserService };

@@ -12,7 +12,7 @@ import { GetAllRepositoryResponse, HashedPassword, ModelID } from '../../_base/t
 export class UserService implements AbstractUserService {
 	constructor(
 		@inject(IOC_TYPES.PasswordService) private readonly passwordService: PasswordServiceInterface,
-		@inject(IOC_TYPES.UserDatabaseRepository) private readonly userRepository: AbstractUserDatabaseRepository,
+		@inject(IOC_TYPES.UserDatabaseRepository) private readonly userDatabaseRepository: AbstractUserDatabaseRepository,
 	) {}
 
 	public async createUser({
@@ -21,17 +21,21 @@ export class UserService implements AbstractUserService {
 		password: unhashedPassword,
 	}: UserInputInterface): Promise<UserOutputInterface> {
 		const hashedPassword: HashedPassword = await this.passwordService.hashPassword(unhashedPassword);
-		const newUser = await this.userRepository.create({ login, email, password: hashedPassword });
+		const newUser = await this.userDatabaseRepository.create({ login, email, password: hashedPassword });
 		return this.prepareUserModel(newUser);
 	}
 
 	public async deleteUser(id: ModelID): Promise<boolean> {
-		return await this.userRepository.delete(id);
+		return await this.userDatabaseRepository.delete(id);
 	}
 
 	public async getAllUsers(params: GetAllUsersQueryParams): Promise<GetAllRepositoryResponse<UserOutputInterface>> {
-		const { documents, totalCount, pagesCount } = await this.userRepository.getAll(params);
+		const { documents, totalCount, pagesCount } = await this.userDatabaseRepository.getAll(params);
 		return { documents: documents.map(this.prepareUserModel), totalCount, pagesCount };
+	}
+
+	public async drop(): Promise<void> {
+		await this.userDatabaseRepository.drop();
 	}
 
 	private prepareUserModel({ email, login, createdAt, _id }: UserDatabase): UserOutputInterface {

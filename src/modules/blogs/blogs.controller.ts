@@ -23,6 +23,11 @@ import { AbstractBlogService } from './types/blogs.service.types';
 
 @injectable()
 export class BlogsController implements AbstractBlogController {
+	constructor(
+		@inject(IOC_TYPES.BlogService) private readonly blogService: AbstractBlogService,
+		@inject(IOC_TYPES.ErrorBoundaryService) private readonly errorBoundary: AbstractErrorBoundaryService,
+	) {}
+
 	async createBlog(
 		{ body: { name, youtubeUrl } }: CreateBlogControllerRequest,
 		response: CreateBlogControllerResponse,
@@ -116,9 +121,4 @@ export class BlogsController implements AbstractBlogController {
 	private checkId(id: string): boolean {
 		return ObjectId.isValid(id);
 	}
-
-	constructor(
-		@inject(IOC_TYPES.BlogService) private readonly blogService: AbstractBlogService,
-		@inject(IOC_TYPES.ErrorBoundaryService) private readonly errorBoundary: AbstractErrorBoundaryService,
-	) {}
 }
