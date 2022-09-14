@@ -1,9 +1,9 @@
 import { ValidationChain } from 'express-validator';
 import { ObjectId } from 'mongodb';
-import { bloggerDomain } from '../../handlers/blogger.handlers';
-import { EntityId, RequestWithBody, RequestWithParams } from '@app/common-types';
 import { NextFunction, Response } from 'express';
 import { HttpStatusesEnum } from '../../enums';
+import { blogService } from '../../_inversify/inversify.config';
+import { EntityId, RequestWithBody, RequestWithParams } from '../../_common/types';
 
 export const bloggerIdValidator = (chain: ValidationChain): ValidationChain => {
 	return chain
@@ -15,7 +15,7 @@ export const bloggerIdValidator = (chain: ValidationChain): ValidationChain => {
 			return true;
 		})
 		.custom(async (value: string) => {
-			const bloggerCandidate = await bloggerDomain.getBloggerById(value);
+			const bloggerCandidate = await blogService.getBlogById(value);
 			if (!bloggerCandidate) {
 				throw new Error('Blogger is not exists');
 			}
@@ -35,7 +35,7 @@ export const bloggerParamIdValidator = async (
 		return response.status(HttpStatusesEnum.NOT_FOUND).send();
 	}
 
-	const bloggerCandidate = await bloggerDomain.getBloggerById(id);
+	const bloggerCandidate = await blogService.getBlogById(id);
 	if (!bloggerCandidate) {
 		return response.status(HttpStatusesEnum.NOT_FOUND).send();
 	}
@@ -43,17 +43,17 @@ export const bloggerParamIdValidator = async (
 };
 
 export const bloggerBodyIdValidator = async (
-	request: RequestWithBody<{ bloggerId: string }>,
+	request: RequestWithBody<{ blogId: string }>,
 	response: Response,
 	next: NextFunction,
 ) => {
-	const { bloggerId: id } = request.body;
+	const { blogId: id } = request.body;
 	const isIdValid = ObjectId.isValid(id);
 	if (!isIdValid) {
 		return response.status(HttpStatusesEnum.NOT_FOUND).send();
 	}
 
-	const bloggerCandidate = await bloggerDomain.getBloggerById(id);
+	const bloggerCandidate = await blogService.getBlogById(id);
 	if (!bloggerCandidate) {
 		return response.status(HttpStatusesEnum.NOT_FOUND).send();
 	}

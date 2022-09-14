@@ -5,7 +5,7 @@ import { inputValidationMiddleware } from '../../middlewares/input-validation.mi
 export const sortValidators = [
 	query('sortBy').default('createdAt').trim().isString(),
 	query('sortDirection')
-		.default(SortDirectionEnum.Desc)
+		.default(SortDirectionEnum.desc)
 		.custom((sortValue) => {
 			if (sortValue in SortDirectionEnum) {
 				return true;

@@ -7,6 +7,13 @@ const IOC_TYPES = {
 	AuthController: Symbol.for('AuthController'),
 	AuthService: Symbol.for('AuthService'),
 	TokenService: Symbol.for('TokenService'),
+	TestingService: Symbol.for('TestingService'),
+	BlogDatabaseRepository: Symbol.for('BlogDatabaseRepository'),
+	BlogService: Symbol.for('BlogService'),
+	BlogController: Symbol.for('BlogController'),
+	PostService: Symbol.for('PostService'),
+	PostDatabaseRepository: Symbol.for('PostDatabaseRepository'),
+	PostController: Symbol.for('PostController'),
 };
 
 export { IOC_TYPES };

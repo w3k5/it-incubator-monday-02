@@ -1,8 +1,8 @@
 import { Router } from 'express';
-import { TestingDomain } from '../domains/testing.domain';
+import { testingService } from '../_inversify/inversify.config';
 
-const testingDomain = new TestingDomain();
+// const testingDomain = new TestingDomain();
 
 export const testingRouter = Router();
 
-testingRouter.delete('/all-data', testingDomain.dropAllCollections);
+testingRouter.delete('/all-data', (testingService as any).dropAllCollections.bind(testingService));

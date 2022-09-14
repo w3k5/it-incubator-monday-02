@@ -1,5 +1,5 @@
 import { IsoDate } from '../../modules/_base/types';
 
-export interface DateServiceInterface {
-	iso: () => IsoDate;
+export abstract class DateServiceInterface {
+	abstract iso: () => IsoDate;
 }

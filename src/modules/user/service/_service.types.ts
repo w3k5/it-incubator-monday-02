@@ -1,18 +1,11 @@
-import { GetAllDomainResponse, UserInputInterface, UserOutputInterface } from '@models/user/types/entities';
+import { UserInputInterface, UserOutputInterface } from '@models/user/types/entities';
 import { GetAllUsersQueryParams } from '@models/user/controllers/controller.types';
+import { GetAllRepositoryResponse, ModelID } from '../../_base/types';
 
-/**
- * Получает DTO для создания пользователя
- * Возвращает полностью готового пользователя
- */
-type CreateUser = (dto: UserInputInterface) => Promise<UserOutputInterface>;
-type DeleteUser = (id: string) => Promise<boolean>;
-type GetAll = (params: GetAllUsersQueryParams) => Promise<GetAllDomainResponse>;
-
-interface UserServiceInterface {
-	createUser: CreateUser;
-	deleteUser: DeleteUser;
-	getAllUsers: GetAll;
+abstract class AbstractUserService {
+	abstract getAllUsers: (params: GetAllUsersQueryParams) => Promise<GetAllRepositoryResponse<UserOutputInterface>>;
+	abstract createUser: (dto: UserInputInterface) => Promise<UserOutputInterface>;
+	abstract deleteUser: (id: ModelID) => Promise<boolean>;
 }
 
-export { UserServiceInterface };
+export { AbstractUserService };

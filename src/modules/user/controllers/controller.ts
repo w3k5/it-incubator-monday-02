@@ -1,29 +1,30 @@
 import { injectable, inject } from 'inversify';
-import { EmptyResponse, GetAllEntities } from '@app/common-types';
-import { GetAllDomainResponse, UserOutputInterface } from '@models/user/types/entities';
+import { UserOutputInterface } from '@models/user/types/entities';
 import {
 	CreateUserControllerRequest,
-	CreteUserControllerResponse,
+	CreateUserControllerResponse,
 	DeleteUserByIdRequest,
 	GetAllUserControllerRequest,
 	GetAllUsersControllerResponse,
 	UserControllerInterface,
 } from '@models/user/controllers/controller.types';
 import { HttpStatusesEnum, SortDirectionEnum } from '../../../enums';
-import { UserServiceInterface } from '../service/_service.types';
+import { AbstractUserService } from '../service/_service.types';
 import { IOC_TYPES } from '../../../_inversify/inversify.types';
 import { ObjectId } from 'mongodb';
+import { GetAllRepositoryResponse } from '../../_base/types';
+import { EmptyResponse, GetAllEntities } from '../../../_common/types';
 
 @injectable()
 export class UserController implements UserControllerInterface {
-	constructor(@inject(IOC_TYPES.UserService) private readonly userService: UserServiceInterface) {}
+	constructor(@inject(IOC_TYPES.UserService) private readonly userService: AbstractUserService) {}
 
 	/**
 	 * Контроллер для роута POST USER
 	 * Получает request response
 	 * Возвращает созданного пользователя
 	 */
-	public async createUser({ body }: CreateUserControllerRequest, response: CreteUserControllerResponse) {
+	public async createUser({ body }: CreateUserControllerRequest, response: CreateUserControllerResponse) {
 		const { login, email, password } = body;
 		const user = await this.userService.createUser({ login, email, password });
 		return response.status(HttpStatusesEnum.CREATED).send(user);
@@ -42,17 +43,18 @@ export class UserController implements UserControllerInterface {
 			searchEmailTerm = null,
 			searchLoginTerm = null,
 			sortBy = 'createdAt',
-			sortDirection = SortDirectionEnum.Desc,
+			sortDirection = SortDirectionEnum.desc,
 		} = request.query;
 
-		const { documents, totalCount, pagesCount }: GetAllDomainResponse = await this.userService.getAllUsers({
-			pageSize,
-			pageNumber,
-			sortBy,
-			sortDirection,
-			searchLoginTerm,
-			searchEmailTerm,
-		});
+		const { documents, totalCount, pagesCount }: GetAllRepositoryResponse<UserOutputInterface> =
+			await this.userService.getAllUsers({
+				pageSize,
+				pageNumber,
+				sortBy,
+				sortDirection,
+				searchLoginTerm,
+				searchEmailTerm,
+			});
 
 		const result: GetAllEntities<UserOutputInterface> = {
 			pageSize,
@@ -61,7 +63,7 @@ export class UserController implements UserControllerInterface {
 			pagesCount,
 			items: documents,
 		};
-		return response.send(result);
+		return response.status(HttpStatusesEnum.OK).send(result);
 	}
 
 	/**

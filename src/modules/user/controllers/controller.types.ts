@@ -1,4 +1,6 @@
 import { NextFunction, Response } from 'express';
+import { UserInputInterface, UserOutputInterface } from '@models/user/types/entities';
+import { ModelID } from '../../_base/types';
 import {
 	EmptyResponse,
 	GetAllEntities,
@@ -7,12 +9,10 @@ import {
 	RequestWithParams,
 	RequestWithQuery,
 	SortInterface,
-} from '@app/common-types';
-import { UserInputInterface, UserOutputInterface } from '@models/user/types/entities';
-import { ModelID } from '../../_base/types';
+} from '../../../_common/types';
 
 type CreateUserControllerRequest = RequestWithBody<UserInputInterface>;
-type CreteUserControllerResponse = Response<UserOutputInterface>;
+type CreateUserControllerResponse = Response<UserOutputInterface>;
 
 type GetAllUsersQueryParams = Partial<
 	SortInterface<UserOutputInterface> &
@@ -27,9 +27,9 @@ type DeleteUserByIdRequest = RequestWithParams<{ id: ModelID }>;
 
 type CreateUserControllerHandler = (
 	request: CreateUserControllerRequest,
-	response: CreteUserControllerResponse,
+	response: CreateUserControllerResponse,
 	next: NextFunction,
-) => Promise<CreteUserControllerResponse>;
+) => Promise<CreateUserControllerResponse>;
 
 type GetAllUsersControllerHandler = (
 	request: GetAllUserControllerRequest,
@@ -51,7 +51,7 @@ interface UserControllerInterface {
 
 export {
 	CreateUserControllerRequest,
-	CreteUserControllerResponse,
+	CreateUserControllerResponse,
 	GetAllUsersQueryParams,
 	GetAllUserControllerRequest,
 	GetAllUsersControllerResponse,

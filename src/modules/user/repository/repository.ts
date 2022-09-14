@@ -1,5 +1,5 @@
 import { inject, injectable } from 'inversify';
-import { GetAllRepositoryResponse, AbstractUserDatabaseRepository } from './_repository.types';
+import { AbstractUserDatabaseRepository } from './_repository.types';
 import { CreateUserRepositoryDto } from '@models/user/types/dto/createUserRepositoryDto';
 import { UserDatabase } from '@models/user/types/entities';
 import { UserModel } from '../schema';
@@ -7,10 +7,11 @@ import { IOC_TYPES } from '../../../_inversify/inversify.types';
 import { DateServiceInterface } from '../../../services/dateService/interfaces';
 import { GetAllUsersQueryParams } from '@models/user/controllers/controller.types';
 import { SortDirectionEnum } from '../../../enums';
-import { BaseRepository } from '../../_base/repository';
+import { LogicalBaseRepository } from '../../_base/repository';
+import { GetAllRepositoryResponse } from '../../_base/types';
 
 @injectable()
-export class UserDatabaseRepository extends BaseRepository implements AbstractUserDatabaseRepository {
+export class UserDatabaseRepository extends LogicalBaseRepository implements AbstractUserDatabaseRepository {
 	constructor(@inject(IOC_TYPES.DateService) private readonly dateService: DateServiceInterface) {
 		super();
 	}
@@ -31,10 +32,10 @@ export class UserDatabaseRepository extends BaseRepository implements AbstractUs
 		searchEmailTerm = null,
 		searchLoginTerm = null,
 		sortBy = 'createdAt',
-		sortDirection = SortDirectionEnum.Desc,
-	}: GetAllUsersQueryParams): Promise<GetAllRepositoryResponse> {
+		sortDirection = SortDirectionEnum.desc,
+	}: GetAllUsersQueryParams): Promise<GetAllRepositoryResponse<UserDatabase>> {
 		const skip = this.skipCount({ pageSize, pageNumber });
-		const sortDirectionToNumber = sortDirection === SortDirectionEnum.Asc ? 1 : -1;
+		const sortDirectionToNumber = sortDirection === SortDirectionEnum.asc ? 1 : -1;
 
 		const totalCount = await UserModel.countDocuments({
 			$or: [
@@ -68,5 +69,9 @@ export class UserDatabaseRepository extends BaseRepository implements AbstractUs
 		});
 
 		return candidate || null;
+	}
+
+	async drop(): Promise<void> {
+		await UserModel.deleteMany({});
 	}
 }

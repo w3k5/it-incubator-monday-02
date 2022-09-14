@@ -1,8 +1,8 @@
 import { injectable } from 'inversify';
-import { AbstractBaseRepository } from './abstractBaseRepository';
+import { AbstractLogicalBaseRepository } from './abstractLogicalBaseRepository';
 
 @injectable()
-export class BaseRepository implements AbstractBaseRepository {
+export class LogicalBaseRepository implements AbstractLogicalBaseRepository {
 	skipCount(options: { pageSize: number; pageNumber: number }): number {
 		return (options.pageNumber - 1) * options.pageSize;
 	}

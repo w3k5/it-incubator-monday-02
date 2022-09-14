@@ -6,19 +6,14 @@ import { config } from 'dotenv';
 import { runDb } from './db';
 import { blackListMiddleware } from './middlewares/black-list.middleware';
 import { requestCounterMiddleware } from './middlewares/request-counter.middleware';
-import { postsRouter } from './routes/posts-router';
-import { bloggersRouter } from './routes/bloggers-router';
-import { testingRouter } from './routes/testing-router';
-import { BloggerRepository, PostsRepository } from './repositories';
 import { loggerMiddleware } from './middlewares/loggerMiddleware';
 import { globalCatchErrorsMiddleware } from './middlewares/global-catch-errors.middleware';
-import { UserRepository } from './repositories/user.repository';
+
+import { testingRouter } from './routes/testing-router';
 import { userRouter } from './modules/user/router';
 import { authRouter } from './modules/auth/router';
-
-export const postsRepository = new PostsRepository();
-export const bloggersRepository = new BloggerRepository();
-export const usersRepository = new UserRepository();
+import { blogsRouter } from './modules/blogs/blogs.router';
+import { postRouter } from './modules/post/post.router';
 
 /**
  * Setup
@@ -48,8 +43,8 @@ app.use(blackListMiddleware);
 /**
  * Routes
  */
-app.use('/posts', postsRouter);
-app.use('/blogs', bloggersRouter);
+app.use('/posts', postRouter);
+app.use('/blogs', blogsRouter);
 app.use('/testing', testingRouter);
 app.use('/users', userRouter);
 app.use('/auth', authRouter);
