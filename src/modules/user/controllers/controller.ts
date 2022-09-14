@@ -6,7 +6,7 @@ import {
 	DeleteUserByIdRequest,
 	GetAllUserControllerRequest,
 	GetAllUsersControllerResponse,
-	UserControllerInterface,
+	AbstractUserController,
 } from '@models/user/controllers/controller.types';
 import { HttpStatusesEnum, SortDirectionEnum } from '../../../enums';
 import { AbstractUserService } from '../service/_service.types';
@@ -16,7 +16,7 @@ import { GetAllRepositoryResponse } from '../../_base/types';
 import { EmptyResponse, GetAllEntities } from '../../../_common/types';
 
 @injectable()
-export class UserController implements UserControllerInterface {
+export class UserController implements AbstractUserController {
 	constructor(@inject(IOC_TYPES.UserService) private readonly userService: AbstractUserService) {}
 
 	/**

@@ -10,7 +10,7 @@ export { PasswordServiceInterface } from '../services/passwordService/interfaces
 export { UserService } from '../modules/user/service/service';
 export { AbstractUserService } from '../modules/user/service/_service.types';
 export { UserController } from '../modules/user/controllers/controller';
-export { UserControllerInterface } from '../modules/user/controllers/controller.types';
+export { AbstractUserController } from '../modules/user/controllers/controller.types';
 export { AbstractUserDatabaseRepository } from '../modules/user/repository/_repository.types';
 export { UserDatabaseRepository } from '../modules/user/repository/repository';
 export { DateServiceInterface } from '../services/dateService/interfaces';

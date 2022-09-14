@@ -43,10 +43,10 @@ type DeleteUserByIdControllerHandler = (
 	next: NextFunction,
 ) => Promise<EmptyResponse>;
 
-interface UserControllerInterface {
-	createUser: CreateUserControllerHandler;
-	getAllUsers: GetAllUsersControllerHandler;
-	deleteUserById: DeleteUserByIdControllerHandler;
+abstract class AbstractUserController {
+	abstract createUser: CreateUserControllerHandler;
+	abstract getAllUsers: GetAllUsersControllerHandler;
+	abstract deleteUserById: DeleteUserByIdControllerHandler;
 }
 
 export {
@@ -56,5 +56,5 @@ export {
 	GetAllUserControllerRequest,
 	GetAllUsersControllerResponse,
 	DeleteUserByIdRequest,
-	UserControllerInterface,
+	AbstractUserController,
 };

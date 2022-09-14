@@ -21,7 +21,7 @@ import {
 	BlogsDatabaseRepository,
 	TokenService,
 	UserController,
-	UserControllerInterface,
+	AbstractUserController,
 	UserDatabaseRepository,
 	UserService,
 	AbstractUserService,
@@ -48,10 +48,10 @@ const passwordService = iocContainer.get<PasswordServiceInterface>(IOC_TYPES.Pas
 
 /*	================================== User Services ===================================== */
 iocContainer.bind<AbstractUserService>(IOC_TYPES.UserService).to(UserService);
-iocContainer.bind<UserControllerInterface>(IOC_TYPES.UserController).to(UserController);
+iocContainer.bind<AbstractUserController>(IOC_TYPES.UserController).to(UserController);
 iocContainer.bind<AbstractUserDatabaseRepository>(IOC_TYPES.UserDatabaseRepository).to(UserDatabaseRepository);
 
-const userController = iocContainer.get<UserControllerInterface>(IOC_TYPES.UserController);
+const userController = iocContainer.get<AbstractUserController>(IOC_TYPES.UserController);
 /*	====================================================================================== */
 
 /*	================================== Auth Services ===================================== */
