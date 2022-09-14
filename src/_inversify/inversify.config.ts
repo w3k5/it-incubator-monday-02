@@ -44,6 +44,7 @@ iocContainer.bind<AbstractTokenService>(IOC_TYPES.TokenService).to(TokenService)
 iocContainer.bind<AbstractErrorBoundaryService>(IOC_TYPES.ErrorBoundaryService).to(ErrorBoundaryService);
 
 const passwordService = iocContainer.get<PasswordServiceInterface>(IOC_TYPES.PasswordService);
+const tokenService = iocContainer.get<AbstractTokenService>(IOC_TYPES.TokenService);
 /*	====================================================================================== */
 
 /*	================================== User Services ===================================== */
@@ -97,4 +98,5 @@ export {
 	userService,
 	postService,
 	passwordService,
+	tokenService,
 };

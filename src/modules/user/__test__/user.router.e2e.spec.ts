@@ -12,7 +12,7 @@ import { ErrorInterface } from '../../../interfaces';
 describe('End 2 End User Router', () => {
 	let mongoServer: MongoMemoryServer;
 
-	const createFakeUser = (): UserInputInterface => {
+	const createFakeValidUser = (): UserInputInterface => {
 		return {
 			email: faker.internet.email(),
 			login: faker.internet.userName().slice(0, 7),
@@ -72,7 +72,7 @@ describe('End 2 End User Router', () => {
 	describe('E2E Create User Cases', () => {
 		it('E2E [Basic] Создания пользователя с валидными данными', async () => {
 			try {
-				const fakeUser = createFakeUser();
+				const fakeUser = createFakeValidUser();
 				const response = await request(app)
 					.post('/users')
 					.auth(adminLogin, adminPassword, { type: 'basic' })
@@ -86,7 +86,7 @@ describe('End 2 End User Router', () => {
 		});
 
 		it('E2E Создания пользователя с валидными данными с невалидными данными авторизации', async () => {
-			const fakeUser = createFakeUser();
+			const fakeUser = createFakeValidUser();
 			const fakeAdminName = faker.name.firstName();
 			const fakeAdminPassword = faker.internet.password();
 			const response = await request(app)
