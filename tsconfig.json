@@ -5,7 +5,8 @@
     "moduleResolution": "node",
     "target": "ES2019",
     "types": [
-      "reflect-metadata"
+      "reflect-metadata",
+      "jest"
     ],
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
@@ -52,6 +53,6 @@
     "./src"
   ],
   "exclude": [
-    "./src/__tests__"
+    "src/**/*.spec.ts"
   ]
 }
