@@ -1,5 +1,3 @@
-import { SortDirectionEnum } from '@app/enums';
-
 /**
  * @deprecated
  */

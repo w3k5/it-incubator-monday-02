@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from 'express';
+import { Request, Response } from 'express';
 import { ServerError } from '../_common/types';
 
 export const globalCatchErrorsMiddleware = (
