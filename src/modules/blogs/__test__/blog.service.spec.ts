@@ -60,6 +60,14 @@ describe('Blog Service tests', () => {
 		expect(firstElementInDocuments).toEqual(lastCreatedFakedUser);
 	});
 
+	it('Должен вернуть пустые блоги (0 блогов)', async () => {
+		const queryParams: GetAllBlogQueryParams = {};
+		const allBlogs = await blogService.getAllBlogs(queryParams);
+		expect(allBlogs.documents.length).toStrictEqual(0);
+		expect(allBlogs.totalCount).toStrictEqual(0);
+		expect(allBlogs.pagesCount).toStrictEqual(0);
+	});
+
 	it('Должен вернуть блог по ID', async () => {
 		const { createdAt, name, youtubeUrl, id } = await blogService.createBlog(createFakeUser());
 		const blogCandidate = await blogService.getBlogById(id);

@@ -12,7 +12,7 @@
     "lint": "eslint src/**/*.ts",
     "test": "jest",
     "test:watch": "jest --watch",
-    "test:coverage": "jest --coverage --silent --coverageDirectory ./test-coverage",
+    "test:coverage": "jest --collectCoverage",
     "prettier-format": "prettier --config .prettierrc 'src/**/*.ts' --write",
     "compodoc": "npx compodoc -p tsconfig.doc.json",
     "compodoc:serve": "compodoc -s",
