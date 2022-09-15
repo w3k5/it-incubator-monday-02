@@ -129,19 +129,4 @@ describe('Blog Service tests', () => {
 		expect(error).toBeTruthy();
 		expect(error).toBeInstanceOf(NotFoundError);
 	});
-
-	// it('Должен вернуть посты определенного блога по id', async () => {
-	// 	const blogMock: BlogInputInterface = createFakeBlog();
-	// 	const { createdAt, name, youtubeUrl, id } = await blogService.createBlog(blogMock);
-	// 	const amountOfPosts = 20;
-	// 	const iterator = Array.from({ length: amountOfPosts });
-	// 	const createdPosts = [];
-	// 	for (const post of iterator) {
-	// 		const fakePost = createFakePost(id);
-	// 		await postService.createPost(fakePost);
-	// 		createdPosts.push(fakePost);
-	// 	}
-	// 	const reversedPosts = createdPosts.reverse();
-	// 	const postOfSpecifiedBlogger = await blogService.
-	// });
 });

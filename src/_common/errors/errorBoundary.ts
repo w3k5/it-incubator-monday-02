@@ -16,6 +16,6 @@ export class ErrorBoundaryService implements AbstractErrorBoundaryService {
 			return response.status(HttpStatusesEnum.NOT_AUTHORIZED).send();
 		}
 
-		return response.status(HttpStatusesEnum.SERVER_ERROR).send();
+		return response.status(HttpStatusesEnum.SERVER_ERROR).send({ error: error.message || error });
 	}
 }
