@@ -42,7 +42,7 @@ export class PostDatabaseRepository extends LogicalBaseRepository implements Abs
 		const skip = this.skipCount({ pageSize, pageNumber });
 		const sortDirectionToNumber = sortDirection === SortDirectionEnum.asc ? 1 : -1;
 		const totalCount = await PostModel.countDocuments({
-			$or: [{ name: { $regex: blogId ?? '' } }],
+			$or: [{ blogId: { $regex: blogId ?? '' } }],
 		});
 
 		if (!totalCount) {
@@ -50,7 +50,7 @@ export class PostDatabaseRepository extends LogicalBaseRepository implements Abs
 		}
 
 		const documents = await PostModel.find({
-			$or: [{ name: { $regex: blogId ?? '' } }],
+			$or: [{ blogId: { $regex: blogId ?? '' } }],
 		})
 			.sort({ [sortBy]: sortDirectionToNumber })
 			.limit(pageSize)
