@@ -62,7 +62,7 @@ export class PostService implements AbstractPostService {
 		id: ModelID,
 		{ blogId, content, shortDescription, title }: PostInputUpdateInterface,
 	): Promise<boolean> {
-		const { blogName } = await this.getPostById(blogId);
+		const { blogName } = await this.getPostById(id);
 		return await this.postDatabaseRepository.updateById(id, {
 			title,
 			blogId,

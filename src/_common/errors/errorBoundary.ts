@@ -7,7 +7,7 @@ import { NotAuthorizedError } from './notAuthorizedError';
 
 @injectable()
 export class ErrorBoundaryService implements AbstractErrorBoundaryService {
-	sendError<T extends Response>(response: T, error: any): T {
+	sendError<T extends Response>(response: T, error: any, status?: HttpStatusesEnum): T {
 		if (error instanceof NotFoundError) {
 			return response.status(HttpStatusesEnum.NOT_FOUND).send();
 		}
