@@ -7,7 +7,8 @@ import { createBloggerValidators } from '../../validators/blogger-validators/cre
 import { getOneBloggerParamsValidators } from '../../validators/blogger-validators/get-one-blogger.validator';
 import { updateBloggerValidators } from '../../validators/blogger-validators/update.validator';
 import { param } from 'express-validator';
-import { ObjectId } from 'mongodb';
+import { createPostsValidators } from '../../validators/post-validators/create.validator';
+import { inputValidationMiddleware } from '../../middlewares/input-validation.middleware';
 
 export const blogsRouter = Router({ caseSensitive: true });
 
@@ -53,16 +54,15 @@ blogsRouter.get(
 	paginationValidator,
 	blogController.getPostsByBlogId.bind(blogController),
 );
-//
-// /**
-//  * Create Posts by BloggerId
-//  * @deprecated
-//  */
-// bloggersRouter.post(
-// 	'/:id/posts',
-// 	basicAuthMiddleware,
-// 	bloggerParamIdValidator,
-// 	inputValidationMiddleware,
-// 	createPostsValidators,
-// 	bloggerHandlers.createPostByBloggerId,
-// );
+
+/**
+ * Create Posts by BloggerId
+ */
+blogsRouter.post(
+	'/:blogId/posts',
+	basicAuthMiddleware,
+	param('blogId').exists().isMongoId(),
+	inputValidationMiddleware,
+	createPostsValidators,
+	blogController.createPostByBlogId.bind(blogController),
+);

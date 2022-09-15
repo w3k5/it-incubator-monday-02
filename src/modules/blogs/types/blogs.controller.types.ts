@@ -72,7 +72,10 @@ type GetPostsByBlogIdControllerHandler = (
 
 // Create Post By Specified BlogId
 
-type CreatePostByBlogIdControllerRequest = RequestWithBodyAndParams<{ blogId: ModelID }, PostInputInterface>;
+type CreatePostByBlogIdControllerRequest = RequestWithBodyAndParams<
+	Omit<PostInputInterface, 'blogId'>,
+	{ blogId: ModelID }
+>;
 type CreatePostByBlogIdControllerResponse = Response<PostOutputInterface>;
 type CreatePostByBlogIdControllerHandler = (
 	request: CreatePostByBlogIdControllerRequest,
@@ -87,7 +90,7 @@ abstract class AbstractBlogController {
 	abstract updateBlog: UpdateBlogControllerHandler;
 	abstract deleteBlogById: DeleteBlogByIdControllerHandler;
 	abstract getPostsByBlogId: GetPostsByBlogIdControllerHandler;
-	// abstract createPostByBlogId: CreatePostByBlogIdControllerHandler
+	abstract createPostByBlogId: CreatePostByBlogIdControllerHandler;
 }
 
 export {
@@ -110,4 +113,7 @@ export {
 	GetPostsByBlogIdControllerRequest,
 	GetPostsByBlogIdControllerResponse,
 	GetPostsByBlogIdControllerHandler,
+	CreatePostByBlogIdControllerRequest,
+	CreatePostByBlogIdControllerResponse,
+	CreatePostByBlogIdControllerHandler,
 };

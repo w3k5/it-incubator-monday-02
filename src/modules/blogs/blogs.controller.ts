@@ -3,6 +3,8 @@ import {
 	AbstractBlogController,
 	CreateBlogControllerRequest,
 	CreateBlogControllerResponse,
+	CreatePostByBlogIdControllerRequest,
+	CreatePostByBlogIdControllerResponse,
 	DeleteBlogByIdControllerRequest,
 	DeleteBlogByIdControllerResponse,
 	GetAllBlogControllerRequest,
@@ -158,6 +160,24 @@ export class BlogsController implements AbstractBlogController {
 			return response.status(HttpStatusesEnum.OK).send(result);
 		} catch (error) {
 			return this.errorBoundary.sendError<GetPostsByBlogIdControllerResponse>(response, error);
+		}
+	}
+
+	async createPostByBlogId(
+		{ params: { blogId }, body: { content, shortDescription, title } }: CreatePostByBlogIdControllerRequest,
+		response: CreatePostByBlogIdControllerResponse,
+	): Promise<CreatePostByBlogIdControllerResponse> {
+		try {
+			const blogCandidate = await this.blogService.getBlogById(blogId);
+			const createdPost = await postService.createPost({
+				blogId: blogCandidate.id,
+				content,
+				shortDescription,
+				title,
+			});
+			return response.status(HttpStatusesEnum.CREATED).send(createdPost);
+		} catch (error) {
+			return this.errorBoundary.sendError<CreatePostByBlogIdControllerResponse>(response, error);
 		}
 	}
 }

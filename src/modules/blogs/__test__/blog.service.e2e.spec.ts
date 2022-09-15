@@ -1,9 +1,8 @@
 import { MongoMemoryServer } from 'mongodb-memory-server';
-import { UserInputInterface } from '../../user/types/entities';
 import { faker } from '@faker-js/faker';
 import { blogService, postService, userService } from '../../../_inversify/inversify.config';
 import mongoose from 'mongoose';
-import { PostInputInterface } from '../../post/entities';
+import { PostInputInterface, PostOutputInterface } from '../../post/entities';
 import request from 'supertest';
 import { app } from '../../../app';
 import { BlogInputInterface, BlogOutputInterface } from '../entities';
@@ -12,6 +11,13 @@ import { GetAllEntities } from '../../../_common/types';
 import { ErrorInterface } from '../../../interfaces';
 
 describe('e2e Blog Router Tests', () => {
+	const adminLogin = process.env.LOGIN;
+	const adminPassword = process.env.PASSWORD;
+
+	if (!adminLogin || !adminPassword) {
+		throw new Error('Admin Login or Admin Password was not provided in ENV!');
+	}
+
 	let mongoServer: MongoMemoryServer;
 
 	const createFakeValidBlog = (): BlogInputInterface => {
@@ -25,7 +31,7 @@ describe('e2e Blog Router Tests', () => {
 		return {
 			blogId,
 			title: faker.company.name(),
-			shortDescription: faker.commerce.productDescription(),
+			shortDescription: faker.commerce.productDescription().slice(0, 100),
 			content: faker.lorem.paragraph(10),
 		};
 	};
@@ -100,6 +106,67 @@ describe('e2e Blog Router Tests', () => {
 			expect(response.statusCode).toEqual(HttpStatusesEnum.BAD_REQUEST);
 			const expectedErrors = generateErrorsObjectByErrorArray([blogIdError]);
 			expect(response.body).toEqual(expectedErrors);
+		});
+	});
+
+	describe('Create Post by Blog ID', () => {
+		const firstValidUser: BlogInputInterface = createFakeValidBlog();
+		const secondValidUser: BlogInputInterface = createFakeValidBlog();
+		let firstCreatedUser: BlogOutputInterface;
+		let secondCreatedUser: BlogOutputInterface;
+
+		beforeAll(async () => {
+			firstCreatedUser = await blogService.createBlog(firstValidUser);
+			secondCreatedUser = await blogService.createBlog(secondValidUser);
+			expect(firstCreatedUser).toBeTruthy();
+			expect(secondCreatedUser).toBeTruthy();
+			// const amountOfPosts = 20;
+			// const iterator = Array.from({ length: amountOfPosts });
+			// const createdPostOfFirstUser = [];
+			// for (const post of iterator) {
+			// 	const fakePost = createFakePost(firstCreatedUser.id);
+			// 	const createdPost = await postService.createPost(fakePost);
+			// 	createdPostOfFirstUser.push(createdPost);
+			// }
+		});
+
+		it('Should create new post for valid blog id', async () => {
+			const fakePost = createFakePost(firstCreatedUser.id);
+			const response = await request(app)
+				.post(`/blogs/${firstCreatedUser.id}/posts`)
+				.auth(adminLogin, adminPassword, { type: 'basic' })
+				.send(fakePost);
+			expect(response.statusCode).toStrictEqual(HttpStatusesEnum.CREATED);
+			const { title, shortDescription, blogId, blogName, content } = response.body as PostOutputInterface;
+			expect(title).toStrictEqual(fakePost.title);
+			expect(shortDescription).toStrictEqual(fakePost.shortDescription);
+			expect(blogId).toStrictEqual(firstCreatedUser.id);
+			expect(blogName).toStrictEqual(firstCreatedUser.name);
+			expect(content).toStrictEqual(fakePost.content);
+		});
+
+		it("Shouldn't create new post for invalid blog id", async () => {
+			const fakeId = faker.database.mongodbObjectId();
+			const fakePost = createFakePost(firstCreatedUser.id);
+			const response = await request(app)
+				.post(`/blogs/${fakeId}/posts`)
+				.auth(adminLogin, adminPassword, { type: 'basic' })
+				.send(fakePost);
+			expect(response.statusCode).toStrictEqual(HttpStatusesEnum.NOT_FOUND);
+		});
+
+		it("Shouldn't create new post without credentials", async () => {
+			const fakePost = createFakePost(firstCreatedUser.id);
+			const response = await request(app).post(`/blogs/${firstCreatedUser.id}/posts`).send(fakePost);
+			expect(response.statusCode).toStrictEqual(HttpStatusesEnum.NOT_AUTHORIZED);
+		});
+
+		it("Shouldn't create new post for valid blog id and invalid post data", async () => {
+			const response = await request(app)
+				.post(`/blogs/${firstCreatedUser.id}/posts`)
+				.auth(adminLogin, adminPassword, { type: 'basic' })
+				.send({});
+			expect(response.statusCode).toStrictEqual(HttpStatusesEnum.BAD_REQUEST);
 		});
 	});
 });
