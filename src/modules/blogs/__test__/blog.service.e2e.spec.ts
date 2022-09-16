@@ -131,18 +131,22 @@ describe('e2e Blog Router Tests', () => {
 		});
 
 		it('Should create new post for valid blog id', async () => {
-			const fakePost = createFakePost(firstCreatedUser.id);
-			const response = await request(app)
-				.post(`/blogs/${firstCreatedUser.id}/posts`)
-				.auth(adminLogin, adminPassword, { type: 'basic' })
-				.send(fakePost);
-			expect(response.statusCode).toStrictEqual(HttpStatusesEnum.CREATED);
-			const { title, shortDescription, blogId, blogName, content } = response.body as PostOutputInterface;
-			expect(title).toStrictEqual(fakePost.title);
-			expect(shortDescription).toStrictEqual(fakePost.shortDescription);
-			expect(blogId).toStrictEqual(firstCreatedUser.id);
-			expect(blogName).toStrictEqual(firstCreatedUser.name);
-			expect(content).toStrictEqual(fakePost.content);
+			try {
+				const fakePost = createFakePost(firstCreatedUser.id);
+				const response = await request(app)
+					.post(`/blogs/${firstCreatedUser.id}/posts`)
+					.auth(adminLogin, adminPassword, { type: 'basic' })
+					.send(fakePost);
+				expect(response.statusCode).toStrictEqual(HttpStatusesEnum.CREATED);
+				const { title, shortDescription, blogId, blogName, content } = response.body as PostOutputInterface;
+				expect(title).toStrictEqual(fakePost.title);
+				expect(shortDescription).toStrictEqual(fakePost.shortDescription);
+				expect(blogId).toStrictEqual(firstCreatedUser.id);
+				expect(blogName).toStrictEqual(firstCreatedUser.name);
+				expect(content).toStrictEqual(fakePost.content);
+			} catch (error) {
+				console.log(error);
+			}
 		});
 
 		it("Shouldn't create new post for invalid blog id", async () => {

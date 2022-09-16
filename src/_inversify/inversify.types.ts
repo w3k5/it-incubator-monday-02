@@ -12,9 +12,23 @@ const IOC_TYPES = {
 	PostService: Symbol.for('PostService'),
 	BlogService: Symbol.for('BlogService'),
 	BlogController: Symbol.for('BlogController'),
-	PostDatabaseRepository: Symbol.for('PostDatabaseRepository'),
 	PostController: Symbol.for('PostController'),
 	ErrorBoundaryService: Symbol.for('ErrorBoundaryService'),
+	PostDatabaseRepository: Symbol.for('PostDatabaseRepository'),
 };
 
-export { IOC_TYPES };
+const SERVICES_TYPES = {
+	CommentsService: Symbol.for('CommentsService'),
+};
+
+const REPOSITORIES_TYPES = {
+	PostQueryRepository: Symbol.for('PostQueryRepository'),
+	CommentsQueryRepository: Symbol.for('CommentsQueryRepository'),
+	CommentsCommandRepository: Symbol.for('CommentsCommandRepository'),
+};
+
+const MIDDLEWARES_TYPES = {
+	AuthBearerMiddleware: Symbol.for('AuthBearerMiddleware'),
+};
+
+export { IOC_TYPES, MIDDLEWARES_TYPES, REPOSITORIES_TYPES, SERVICES_TYPES };

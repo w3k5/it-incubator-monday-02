@@ -4,6 +4,8 @@ import { HttpStatusesEnum } from '../../enums';
 import { injectable } from 'inversify';
 import { AbstractErrorBoundaryService } from './errorBoundaryService.types';
 import { NotAuthorizedError } from './notAuthorizedError';
+import { ValidationError } from 'class-validator';
+import { ErrorMessageInterface } from '@app/interfaces';
 
 @injectable()
 export class ErrorBoundaryService implements AbstractErrorBoundaryService {
@@ -17,5 +19,17 @@ export class ErrorBoundaryService implements AbstractErrorBoundaryService {
 		}
 
 		return response.status(HttpStatusesEnum.SERVER_ERROR).send({ error: error.message || error });
+	}
+
+	generateErrorFromClassValidator(errors: ValidationError[]): ErrorMessageInterface {
+		return {
+			errorsMessages: errors.map(({ constraints, property }) => {
+				const constraintsFirstError = constraints ? Object.values(constraints)[0] : 'Something went wrong';
+				return {
+					message: constraintsFirstError,
+					field: property,
+				};
+			}),
+		};
 	}
 }

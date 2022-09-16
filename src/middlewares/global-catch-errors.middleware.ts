@@ -6,5 +6,5 @@ export const globalCatchErrorsMiddleware = (
 	request: Request,
 	response: Response,
 ) => {
-	return response.status(status).send({ status, message, error, route, endpoint });
+	return response.status(500).send(error);
 };

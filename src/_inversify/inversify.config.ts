@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 import { Container } from 'inversify';
-import { IOC_TYPES } from './inversify.types';
+import { IOC_TYPES, MIDDLEWARES_TYPES, REPOSITORIES_TYPES, SERVICES_TYPES } from './inversify.types';
 import {
 	AbstractAuthController,
 	AbstractAuthService,
@@ -34,6 +34,15 @@ import {
 } from './imports';
 import { AbstractPostController } from '../modules/post/types/post.controller.types';
 import { PostController } from '../modules/post/post.controller';
+import { AuthBearerMiddleware } from '../modules/auth/middlewares/auth.bearer.middleware';
+import { AbstractCommentsQueryRepository } from '../modules/comments/types/comments.repository.query.abstract';
+import { CommentsQueryRepository } from '../modules/comments/comments.repository.query';
+import { AbstractPostRepositoryQueryTypes } from '../modules/post/types/post.repository.query.types';
+import { PostRepositoryQuery } from '../modules/post/post.repository.query';
+import { AbstractCommentsRepository } from '../modules/comments/types/comments.repository.abstract';
+import { CommentsRepository } from '../modules/comments/comments.repository';
+import { AbstractCommentsService } from '../modules/comments/types/comments.service.abstract';
+import { CommentsService } from '../modules/comments/comments.service';
 
 const iocContainer = new Container();
 
@@ -88,10 +97,26 @@ iocContainer
 	.bind<AbstractPostDatabaseRepository>(IOC_TYPES.PostDatabaseRepository)
 	.to(PostDatabaseRepository)
 	.inSingletonScope();
+iocContainer
+	.bind<AbstractPostRepositoryQueryTypes>(REPOSITORIES_TYPES.PostQueryRepository)
+	.to(PostRepositoryQuery)
+	.inSingletonScope();
 iocContainer.bind<AbstractPostController>(IOC_TYPES.PostController).to(PostController).inSingletonScope();
 
 const postService = iocContainer.get<AbstractPostService>(IOC_TYPES.PostService);
 const postController = iocContainer.get<AbstractPostController>(IOC_TYPES.PostController);
+/*	====================================================================================== */
+
+/*	================================ Comments Services =================================== */
+iocContainer
+	.bind<AbstractCommentsQueryRepository>(REPOSITORIES_TYPES.CommentsQueryRepository)
+	.to(CommentsQueryRepository)
+	.inSingletonScope();
+iocContainer
+	.bind<AbstractCommentsRepository>(REPOSITORIES_TYPES.CommentsCommandRepository)
+	.to(CommentsRepository)
+	.inSingletonScope();
+iocContainer.bind<AbstractCommentsService>(SERVICES_TYPES.CommentsService).to(CommentsService).inSingletonScope();
 /*	====================================================================================== */
 
 // TODO: Требуется разобраться с этим модулем, разбить, описать интерфейсы
@@ -100,6 +125,10 @@ iocContainer.bind(IOC_TYPES.TestingService).to(TestingDomain).inSingletonScope()
 
 const testingService = iocContainer.get(IOC_TYPES.TestingService);
 /*	====================================================================================== */
+
+// Middlewares
+
+iocContainer.bind(MIDDLEWARES_TYPES.AuthBearerMiddleware).to(AuthBearerMiddleware).inSingletonScope();
 
 export {
 	userController,
@@ -113,4 +142,5 @@ export {
 	postService,
 	passwordService,
 	tokenService,
+	iocContainer,
 };

@@ -32,7 +32,7 @@ import { postService } from '../../_inversify/inversify.config';
 export class BlogsController implements AbstractBlogController {
 	constructor(
 		@inject(IOC_TYPES.BlogService) private readonly blogService: AbstractBlogService,
-		// @inject(IOC_TYPES.PostService) private readonly postService: AbstractPostService,
+		// @inject(IOC_TYPES.PostService) private readonly _postService: AbstractPostService,
 		@inject(IOC_TYPES.ErrorBoundaryService) private readonly errorBoundary: AbstractErrorBoundaryService,
 	) {}
 
@@ -54,6 +54,7 @@ export class BlogsController implements AbstractBlogController {
 	): Promise<EmptyResponse> {
 		try {
 			const { id } = params;
+			// TODO: should be outside that layer (validator)
 			if (!this.checkId(id)) {
 				return response.status(HttpStatusesEnum.NOT_FOUND).send();
 			}
@@ -65,6 +66,7 @@ export class BlogsController implements AbstractBlogController {
 		}
 	}
 
+	// TODO: SQRS
 	async getAllBlogs(
 		{ query }: GetAllBlogControllerRequest,
 		response: GetAllBlogControllerResponse,
@@ -86,6 +88,7 @@ export class BlogsController implements AbstractBlogController {
 					sortBy,
 					sortDirection,
 				});
+
 			const result: GetAllEntities<BlogOutputInterface> = {
 				pageSize,
 				page: pageNumber,
@@ -99,6 +102,7 @@ export class BlogsController implements AbstractBlogController {
 		}
 	}
 
+	// TODO: SQRS
 	async getBlogById(
 		{ params: { id } }: GetBlogByIdControllerRequest,
 		response: GetBlogByIdControllerResponse,
@@ -126,10 +130,7 @@ export class BlogsController implements AbstractBlogController {
 		}
 	}
 
-	private checkId(id: string): boolean {
-		return ObjectId.isValid(id);
-	}
-
+	// TODO: SQRS
 	public async getPostsByBlogId(
 		{ params: { blogId }, query }: GetPostsByBlogIdControllerRequest,
 		response: GetPostsByBlogIdControllerResponse,
@@ -179,5 +180,9 @@ export class BlogsController implements AbstractBlogController {
 		} catch (error) {
 			return this.errorBoundary.sendError<CreatePostByBlogIdControllerResponse>(response, error);
 		}
+	}
+
+	private checkId(id: string): boolean {
+		return ObjectId.isValid(id);
 	}
 }

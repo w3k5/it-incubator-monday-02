@@ -14,37 +14,44 @@ import { userRouter } from './modules/user/router';
 import { authRouter } from './modules/auth/router';
 import { blogsRouter } from './modules/blogs/blogs.router';
 import { postRouter } from './modules/post/post.router';
+import { InversifyExpressServer } from 'inversify-express-utils';
+import { iocContainer } from './_inversify/inversify.config';
 
 /**
  * Setup
  */
 config();
-export const app = express();
+export const expressApp = express();
 
 /**
  * Packages Middlewares
  */
-app.use(cors());
-app.use(bodyParser.json());
-if (process.env.APP_MODE === 'development') {
-	app.use(loggerMiddleware);
+expressApp.use(cors());
+expressApp.use(bodyParser.json());
+if (process.env.expressApp_MODE === 'development') {
+	expressApp.use(loggerMiddleware);
 }
 
 /**
- * App Middlewares
+ * expressApp Middlewares
  */
-app.use(requestCounterMiddleware);
-app.use(blackListMiddleware);
+expressApp.use(requestCounterMiddleware);
+expressApp.use(blackListMiddleware);
 
 // Описывается в уроках, не работает в тестах домашнего задания - Отключено
-// app.use(contentTypeCheckerMiddleware);
+// expressApp.use(contentTypeCheckerMiddleware);
 
 /**
  * Routes
  */
-app.use('/posts', postRouter);
-app.use('/blogs', blogsRouter);
-app.use('/testing', testingRouter);
-app.use('/users', userRouter);
-app.use('/auth', authRouter);
-app.use(globalCatchErrorsMiddleware);
+expressApp.use('/posts', postRouter);
+expressApp.use('/blogs', blogsRouter);
+expressApp.use('/testing', testingRouter);
+expressApp.use('/users', userRouter);
+expressApp.use('/auth', authRouter);
+// expressApp.use(globalCatchErrorsMiddleware);
+import './modules/comments/comments.controller';
+import './modules/post/post.controller.inversify';
+
+const server = new InversifyExpressServer(iocContainer, null, null, expressApp);
+export const app = server.build();

@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
-import { SortDirectionEnum } from '@app/enums';
+import { SortDirectionEnum } from '../../enums';
+import { IsoDate, ModelID, UserEmail, UserLogin } from '../../modules/_base/types';
 
 export type RequestWithBody<Body> = Request<never, never, Body, never>;
 export type RequestWithQuery<Query> = Request<never, never, never, Query>;
@@ -48,3 +49,10 @@ export type ServerError = {
 // 	totalCount: number;
 // 	items: Entity[];
 // }
+
+export interface AuthUserTokenInterface {
+	candidateLogin: UserLogin;
+	email: UserEmail;
+	createdAt: IsoDate;
+	id: ModelID;
+}

@@ -60,7 +60,7 @@ describe('E2E Auth Router Test', () => {
 
 		it('204 Auth with valid login password', async () => {
 			const response = await request(app).post('/auth/login').send({ login, password });
-			expect(response.statusCode).toEqual(HttpStatusesEnum.NO_CONTENT);
+			expect(response.statusCode).toEqual(HttpStatusesEnum.OK);
 		});
 
 		it('401 with bad login', async () => {

@@ -1,4 +1,4 @@
-import { HttpStatusesEnum } from '@app/enums';
+import { HttpStatusesEnum } from '../enums';
 
 export interface ErrorInterface {
 	field: string;
