@@ -66,6 +66,7 @@ class PostControllerInversify extends BaseHttpController {
 
 	@httpGet('/:id/comments')
 	private async getPostsForSpecifiedPostById(
+		@response() response: Response,
 		@requestParam('id') id: string,
 		@queryParam('pageNumber') pageNumber = 1,
 		@queryParam('pageSize') pageSize = 10,
@@ -81,6 +82,12 @@ class PostControllerInversify extends BaseHttpController {
 				sortBy,
 				sortDirection,
 			});
+
+			const postCandidate = await this.postQueryRepository.getById(id);
+
+			if (!postCandidate) {
+				return response.status(HttpStatusesEnum.NOT_FOUND).send();
+			}
 
 			const { documents, totalCount, pagesCount } = await this.commentsQueryRepository.getAllCommentsById(
 				id,
@@ -98,7 +105,9 @@ class PostControllerInversify extends BaseHttpController {
 			return result;
 		} catch (error) {
 			if (Array.isArray(error)) {
-				return this.errorBoundaryService.generateErrorFromClassValidator(error);
+				return response
+					.status(HttpStatusesEnum.BAD_REQUEST)
+					.send(this.errorBoundaryService.generateErrorFromClassValidator(error));
 			}
 			return error;
 		}
