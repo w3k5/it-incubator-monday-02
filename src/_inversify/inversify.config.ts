@@ -8,7 +8,6 @@ import {
 	AbstractBlogService,
 	AbstractTokenService,
 	AbstractUserDatabaseRepository,
-	AuthController,
 	AuthService,
 	BlogsController,
 	BlogsService,
@@ -72,10 +71,8 @@ const userController = iocContainer.get<AbstractUserController>(IOC_TYPES.UserCo
 /*	====================================================================================== */
 
 /*	================================== Auth Services ===================================== */
-iocContainer.bind<AbstractAuthController>(IOC_TYPES.AuthController).to(AuthController).inSingletonScope();
 iocContainer.bind<AbstractAuthService>(IOC_TYPES.AuthService).to(AuthService).inSingletonScope();
 
-const authController = iocContainer.get<AbstractAuthController>(IOC_TYPES.AuthController);
 const authService = iocContainer.get<AbstractAuthService>(IOC_TYPES.AuthService);
 /*	====================================================================================== */
 
@@ -132,7 +129,6 @@ iocContainer.bind(MIDDLEWARES_TYPES.AuthBearerMiddleware).to(AuthBearerMiddlewar
 
 export {
 	userController,
-	authController,
 	authService,
 	testingService,
 	blogController,

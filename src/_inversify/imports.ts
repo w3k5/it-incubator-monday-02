@@ -15,7 +15,6 @@ export { AbstractUserDatabaseRepository } from '../modules/user/repository/_repo
 export { UserDatabaseRepository } from '../modules/user/repository/repository';
 export { DateServiceInterface } from '../services/dateService/interfaces';
 export { DateService } from '../services/dateService';
-export { AuthController } from '../modules/auth/controller/auth.controller';
 export { AbstractAuthController } from '../modules/auth/controller/auth.controller.types';
 export { AbstractAuthService } from '../modules/auth/service/auth.service.types';
 export { AuthService } from '../modules/auth/service/auth.service';

@@ -1,6 +1,6 @@
 import { GetAllRepositoryResponse, ModelID } from '../../_base/types';
 import { Nullable } from '../../../_common/types';
-import { CommentDatabaseModel, CommentOutputModel } from '../entities';
+import { CommentDatabaseModel } from '../entities';
 import { GetAllCommentsQueryParams } from './_comments.common.types';
 
 export abstract class AbstractCommentsQueryRepository {
