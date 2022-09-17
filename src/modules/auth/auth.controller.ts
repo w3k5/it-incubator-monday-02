@@ -90,7 +90,18 @@ export class AuthController extends BaseHttpController implements AbstractAuthCo
 	) {
 		try {
 			const validateBody = await transformAndValidate(ConfirmationCodeBodyDto, confirmationCodeBodyDto);
-			const isActivated = await this.activationService.activate(validateBody.code);
+			const isNotActivated = await this.activationService.activate(validateBody.code);
+			if (!isNotActivated) {
+				const errorMessage: ErrorMessageInterface = {
+					errorsMessages: [
+						{
+							message: 'User already activated',
+							field: 'email',
+						},
+					],
+				};
+				return response.status(HttpStatusesEnum.BAD_REQUEST).send(errorMessage);
+			}
 			return response.status(HttpStatusesEnum.NO_CONTENT).send();
 		} catch (error) {
 			if (Array.isArray(error)) {
@@ -116,6 +127,18 @@ export class AuthController extends BaseHttpController implements AbstractAuthCo
 			const activationCandidate = await this.activationQueryRepository.getActivationInstanceByUserId(userCandidate._id);
 			if (!activationCandidate) {
 				return response.status(HttpStatusesEnum.NO_CONTENT).send();
+			}
+
+			if (activationCandidate.isActivated) {
+				const errorMessage: ErrorMessageInterface = {
+					errorsMessages: [
+						{
+							message: 'User already activated',
+							field: 'email',
+						},
+					],
+				};
+				return response.status(HttpStatusesEnum.BAD_REQUEST).send(errorMessage);
 			}
 
 			await this.authService.resendConfirmation(validatedBody.email, activationCandidate.code);
