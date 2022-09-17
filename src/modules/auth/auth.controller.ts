@@ -15,6 +15,7 @@ import { AbstractActivationService } from '../activation/types/activation.servic
 import { ResendingCodeBodyDto } from './dto/resendingCodeBody.dto';
 import { AbstractUserDatabaseRepository } from '../user/repository/_repository.types';
 import { AbstractActivationRepositoryQuery } from '../activation/types/activation.repository.query.abstract';
+import { ErrorMessageInterface } from '@app/interfaces';
 
 @controller('/auth')
 export class AuthController extends BaseHttpController implements AbstractAuthController {
@@ -58,6 +59,18 @@ export class AuthController extends BaseHttpController implements AbstractAuthCo
 	async registration(@response() response: Response, @requestBody() body: RegisterBodyDto) {
 		try {
 			const validatedBody = await transformAndValidate(RegisterBodyDto, body);
+			const userCandidate = await this.userDatabaseRepository.getByLogin(validatedBody.email);
+			if (userCandidate) {
+				const errorMessage: ErrorMessageInterface = {
+					errorsMessages: [
+						{
+							message: 'User with that email already exists',
+							field: 'email',
+						},
+					],
+				};
+				return response.status(HttpStatusesEnum.BAD_REQUEST).send(errorMessage);
+			}
 			const result = await this.authService.registration(validatedBody);
 			return response.status(HttpStatusesEnum.NO_CONTENT).send();
 		} catch (error) {
