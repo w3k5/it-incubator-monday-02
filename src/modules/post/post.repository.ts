@@ -41,17 +41,14 @@ export class PostDatabaseRepository extends LogicalBaseRepository implements Abs
 	}: GetAllPostQueryParams): Promise<GetAllRepositoryResponse<PostDatabase>> {
 		const skip = this.skipCount({ pageSize, pageNumber });
 		const sortDirectionToNumber = sortDirection === SortDirectionEnum.asc ? 1 : -1;
-		const totalCount = await PostModel.countDocuments({
-			$or: [{ blogId: { $regex: blogId ?? '' } }],
-		});
+		const filter = blogId ? { blogId } : {};
+		const totalCount = await PostModel.countDocuments(filter);
 
 		if (!totalCount) {
 			return { documents: [], totalCount: 0, pagesCount: 0 };
 		}
 
-		const documents = await PostModel.find({
-			$or: [{ blogId: { $regex: blogId ?? '' } }],
-		})
+		const documents = await PostModel.find(filter)
 			.sort({ [sortBy]: sortDirectionToNumber })
 			.limit(pageSize)
 			.skip(skip);

@@ -1,8 +1,13 @@
 import 'reflect-metadata';
 import { Container } from 'inversify';
-import { IOC_TYPES, MIDDLEWARES_TYPES, REPOSITORIES_TYPES, SERVICES_TYPES } from './inversify.types';
 import {
-	AbstractAuthController,
+	IOC_TYPES,
+	MIDDLEWARES_TYPES,
+	REPOSITORIES_TYPES,
+	SERVICES_TYPES,
+	GLOBAL_SERVICES_TYPES,
+} from './inversify.types';
+import {
 	AbstractAuthService,
 	AbstractBlogController,
 	AbstractBlogService,
@@ -30,18 +35,26 @@ import {
 	PostDatabaseRepository,
 	ErrorBoundaryService,
 	AbstractErrorBoundaryService,
+	CommentsRepository,
+	PostController,
+	AbstractCommentsRepository,
+	PostRepositoryQuery,
+	AbstractCommentsService,
+	AbstractActivationService,
+	AbstractPostController,
+	ActivationRepositoryCommand,
+	AbstractCommentsQueryRepository,
+	CommentsQueryRepository,
+	CommentsService,
+	ActivationService,
+	AuthBearerMiddleware,
+	AbstractActivationRepositoryCommand,
+	ActivationRepositoryQuery,
+	AbstractPostRepositoryQueryTypes,
+	AbstractActivationRepositoryQuery,
 } from './imports';
-import { AbstractPostController } from '../modules/post/types/post.controller.types';
-import { PostController } from '../modules/post/post.controller';
-import { AuthBearerMiddleware } from '../modules/auth/middlewares/auth.bearer.middleware';
-import { AbstractCommentsQueryRepository } from '../modules/comments/types/comments.repository.query.abstract';
-import { CommentsQueryRepository } from '../modules/comments/comments.repository.query';
-import { AbstractPostRepositoryQueryTypes } from '../modules/post/types/post.repository.query.types';
-import { PostRepositoryQuery } from '../modules/post/post.repository.query';
-import { AbstractCommentsRepository } from '../modules/comments/types/comments.repository.abstract';
-import { CommentsRepository } from '../modules/comments/comments.repository';
-import { AbstractCommentsService } from '../modules/comments/types/comments.service.abstract';
-import { CommentsService } from '../modules/comments/comments.service';
+import { AbstractMailerService } from '../services/mailer/mailer.service.abstract';
+import { MailerService } from '../services/mailer/mailer.service';
 
 const iocContainer = new Container();
 
@@ -53,6 +66,7 @@ iocContainer
 	.bind<AbstractErrorBoundaryService>(IOC_TYPES.ErrorBoundaryService)
 	.to(ErrorBoundaryService)
 	.inSingletonScope();
+iocContainer.bind<AbstractMailerService>(GLOBAL_SERVICES_TYPES.EmailService).to(MailerService).inSingletonScope();
 
 const passwordService = iocContainer.get<PasswordServiceInterface>(IOC_TYPES.PasswordService);
 const tokenService = iocContainer.get<AbstractTokenService>(IOC_TYPES.TokenService);
@@ -68,12 +82,6 @@ iocContainer
 
 const userService = iocContainer.get<AbstractUserService>(IOC_TYPES.UserService);
 const userController = iocContainer.get<AbstractUserController>(IOC_TYPES.UserController);
-/*	====================================================================================== */
-
-/*	================================== Auth Services ===================================== */
-iocContainer.bind<AbstractAuthService>(IOC_TYPES.AuthService).to(AuthService).inSingletonScope();
-
-const authService = iocContainer.get<AbstractAuthService>(IOC_TYPES.AuthService);
 /*	====================================================================================== */
 
 /*	================================== Blog Services ===================================== */
@@ -114,6 +122,26 @@ iocContainer
 	.to(CommentsRepository)
 	.inSingletonScope();
 iocContainer.bind<AbstractCommentsService>(SERVICES_TYPES.CommentsService).to(CommentsService).inSingletonScope();
+/*	====================================================================================== */
+
+/*	==================================== Activation ====================================== */
+iocContainer
+	.bind<AbstractActivationRepositoryQuery>(REPOSITORIES_TYPES.ActivationQueryRepository)
+	.to(ActivationRepositoryQuery)
+	.inSingletonScope();
+iocContainer
+	.bind<AbstractActivationRepositoryCommand>(REPOSITORIES_TYPES.ActivationCommandRepository)
+	.to(ActivationRepositoryCommand)
+	.inSingletonScope();
+
+iocContainer.bind<AbstractActivationService>(SERVICES_TYPES.ActivationService).to(ActivationService).inSingletonScope();
+
+/*	====================================================================================== */
+
+/*	================================== Auth Services ===================================== */
+iocContainer.bind<AbstractAuthService>(IOC_TYPES.AuthService).to(AuthService).inSingletonScope();
+
+const authService = iocContainer.get<AbstractAuthService>(IOC_TYPES.AuthService);
 /*	====================================================================================== */
 
 // TODO: Требуется разобраться с этим модулем, разбить, описать интерфейсы

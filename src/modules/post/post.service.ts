@@ -7,6 +7,7 @@ import { PostDatabase, PostInputInterface, PostInputUpdateInterface, PostOutputI
 import { GetAllRepositoryResponse, ModelID } from '../_base/types';
 import { AbstractBlogDatabaseRepository } from '../blogs/types/blogs.repository.types';
 import { NotFoundError } from '../../_common/errors';
+import { ObjectId } from 'mongodb';
 
 @injectable()
 export class PostService implements AbstractPostService {
@@ -65,7 +66,7 @@ export class PostService implements AbstractPostService {
 		const { blogName } = await this.getPostById(id);
 		return await this.postDatabaseRepository.updateById(id, {
 			title,
-			blogId,
+			blogId: new ObjectId(blogId),
 			content,
 			shortDescription,
 			blogName,

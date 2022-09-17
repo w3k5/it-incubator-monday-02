@@ -1,12 +1,5 @@
-import {
-	DatabaseInterface,
-	HashedPassword,
-	IsoDate,
-	ModelID,
-	UnhashedPassword,
-	UserEmail,
-	UserLogin,
-} from '../../../_base/types';
+import { DatabaseInterfaceV2, HashedPassword, UnhashedPassword, UserEmail, UserLogin } from '../../../_base/types';
+import { ObjectId } from 'mongodb';
 
 interface UserBaseModel {
 	email: UserEmail;
@@ -18,11 +11,11 @@ interface UserInputInterface extends UserBaseModel {
 }
 
 interface UserOutputInterface extends UserBaseModel {
-	createdAt: IsoDate;
-	id: ModelID;
+	createdAt: Date;
+	id: string;
 }
 
-type UserDatabase = UserBaseModel & DatabaseInterface & { password: HashedPassword };
+type UserDatabase = UserBaseModel & DatabaseInterfaceV2 & { password: HashedPassword };
 
 /**
  * EXPORTS

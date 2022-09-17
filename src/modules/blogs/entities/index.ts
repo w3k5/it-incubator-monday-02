@@ -1,4 +1,4 @@
-import { DatabaseInterface, IsoDate, ModelID } from '../../_base/types';
+import { DatabaseInterfaceV2, IsoDate, ModelID } from '../../_base/types';
 
 interface BlogBaseModel {
 	name: string;
@@ -6,12 +6,12 @@ interface BlogBaseModel {
 }
 
 interface BlogOutputInterface extends BlogBaseModel {
-	createdAt: IsoDate;
+	createdAt: Date;
 	id: ModelID;
 }
 
 type BlogInputInterface = BlogBaseModel;
 
-type BlogDatabase = BlogBaseModel & DatabaseInterface;
+type BlogDatabase = BlogBaseModel & DatabaseInterfaceV2;
 
 export { BlogOutputInterface, BlogInputInterface, BlogDatabase };

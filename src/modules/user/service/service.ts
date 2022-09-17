@@ -1,12 +1,13 @@
 import { injectable, inject } from 'inversify';
 
-import { AbstractUserService } from '@models/user/service/_service.types';
+import { AbstractUserService } from '../../user/service/_service.types';
 import { UserDatabase, UserInputInterface, UserOutputInterface } from '@models/user/types/entities';
 import { PasswordServiceInterface } from '../../../services/passwordService/interfaces';
 import { IOC_TYPES } from '../../../_inversify/inversify.types';
 import { AbstractUserDatabaseRepository } from '../repository/_repository.types';
 import { GetAllUsersQueryParams } from '@models/user/controllers/controller.types';
 import { GetAllRepositoryResponse, HashedPassword, ModelID } from '../../_base/types';
+import { RegisterBodyDto } from '../../auth/dto/registerBody.dto';
 
 @injectable()
 export class UserService implements AbstractUserService {
@@ -23,6 +24,11 @@ export class UserService implements AbstractUserService {
 		const hashedPassword: HashedPassword = await this.passwordService.hashPassword(unhashedPassword);
 		const newUser = await this.userDatabaseRepository.create({ login, email, password: hashedPassword });
 		return this.prepareUserModel(newUser);
+	}
+
+	public async createUserV2({ login, email, password: unhashedPassword }: RegisterBodyDto): Promise<UserDatabase> {
+		const hashedPassword: HashedPassword = await this.passwordService.hashPassword(unhashedPassword);
+		return this.userDatabaseRepository.create({ login, email, password: hashedPassword });
 	}
 
 	public async deleteUser(id: ModelID): Promise<boolean> {

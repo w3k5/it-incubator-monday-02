@@ -16,18 +16,25 @@ const IOC_TYPES = {
 	PostDatabaseRepository: Symbol.for('PostDatabaseRepository'),
 };
 
+const GLOBAL_SERVICES_TYPES = {
+	EmailService: Symbol.for('EmailService'),
+};
+
 const SERVICES_TYPES = {
 	CommentsService: Symbol.for('CommentsService'),
+	ActivationService: Symbol.for('ActivationService'),
 };
 
 const REPOSITORIES_TYPES = {
 	PostQueryRepository: Symbol.for('PostQueryRepository'),
 	CommentsQueryRepository: Symbol.for('CommentsQueryRepository'),
 	CommentsCommandRepository: Symbol.for('CommentsCommandRepository'),
+	ActivationQueryRepository: Symbol.for('ActivationQueryRepository'),
+	ActivationCommandRepository: Symbol.for('ActivationCommandRepository'),
 };
 
 const MIDDLEWARES_TYPES = {
 	AuthBearerMiddleware: Symbol.for('AuthBearerMiddleware'),
 };
 
-export { IOC_TYPES, MIDDLEWARES_TYPES, REPOSITORIES_TYPES, SERVICES_TYPES };
+export { IOC_TYPES, MIDDLEWARES_TYPES, REPOSITORIES_TYPES, SERVICES_TYPES, GLOBAL_SERVICES_TYPES };
