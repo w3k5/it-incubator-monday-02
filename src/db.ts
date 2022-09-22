@@ -6,6 +6,7 @@ const dbName = process.env.DB_NAME || 'monday';
 const dbUri = process.env.MONGO_URI;
 
 if (!dbUri) {
+	console.log('process env', process.env);
 	throw new Error('MongoDB URI is not defined!');
 }
 
