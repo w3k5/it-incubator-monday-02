@@ -29,7 +29,7 @@ export class PostController implements AbstractPostController {
 	) {}
 
 	public async createPost(
-		{ body: { content, title, shortDescription, blogId } }: CreatePostControllerRequest,
+		{ body: { title, shortDescription, blogId, content } }: CreatePostControllerRequest,
 		response: CreatePostControllerResponse,
 	): Promise<CreatePostControllerResponse> {
 		try {

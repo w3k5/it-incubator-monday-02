@@ -4,12 +4,12 @@ import { CreateActivationServiceDatabaseModel } from './interfaces/createActivat
 import { ActivationDatabaseModel } from './entities';
 import { ActivationModel } from './activation.schema';
 import { IOC_TYPES } from '../../_inversify/inversify.types';
-import { DateServiceInterface } from '../../services/dateService/interfaces';
+import { AbstractDateService } from '../../services/dateService/interfaces';
 import { UUIDV4 } from '../_base/types';
 
 @injectable()
 export class ActivationRepositoryCommand implements AbstractActivationRepositoryCommand {
-	constructor(@inject(IOC_TYPES.DateService) private readonly dateService: DateServiceInterface) {}
+	constructor(@inject(IOC_TYPES.DateService) private readonly dateService: AbstractDateService) {}
 
 	async createActivation({ userId, code }: CreateActivationServiceDatabaseModel): Promise<ActivationDatabaseModel> {
 		const createdAt = this.dateService.now();

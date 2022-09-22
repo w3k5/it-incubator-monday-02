@@ -14,15 +14,15 @@ import {
 	AbstractTokenService,
 	AbstractUserDatabaseRepository,
 	AuthService,
-	BlogsController,
-	BlogsService,
+	_deprecatedBlogsController,
+	_deprecatedBlogsService,
 	DateService,
-	DateServiceInterface,
+	AbstractDateService,
 	PasswordService,
 	PasswordServiceInterface,
 	TestingDomain,
 	AbstractBlogDatabaseRepository,
-	BlogsDatabaseRepository,
+	_deprecatedBlogsDatabaseRepository,
 	TokenService,
 	UserController,
 	AbstractUserController,
@@ -60,7 +60,7 @@ const iocContainer = new Container();
 
 /*	================================ Global Services ===================================== */
 iocContainer.bind<PasswordServiceInterface>(IOC_TYPES.PasswordService).to(PasswordService).inSingletonScope();
-iocContainer.bind<DateServiceInterface>(IOC_TYPES.DateService).to(DateService).inSingletonScope();
+iocContainer.bind<AbstractDateService>(IOC_TYPES.DateService).to(DateService).inSingletonScope();
 iocContainer.bind<AbstractTokenService>(IOC_TYPES.TokenService).to(TokenService).inSingletonScope();
 iocContainer
 	.bind<AbstractErrorBoundaryService>(IOC_TYPES.ErrorBoundaryService)
@@ -87,10 +87,10 @@ const userController = iocContainer.get<AbstractUserController>(IOC_TYPES.UserCo
 /*	================================== Blog Services ===================================== */
 iocContainer
 	.bind<AbstractBlogDatabaseRepository>(IOC_TYPES.BlogDatabaseRepository)
-	.to(BlogsDatabaseRepository)
+	.to(_deprecatedBlogsDatabaseRepository)
 	.inSingletonScope();
-iocContainer.bind<AbstractBlogService>(IOC_TYPES.BlogService).to(BlogsService).inSingletonScope();
-iocContainer.bind<AbstractBlogController>(IOC_TYPES.BlogController).to(BlogsController).inSingletonScope();
+iocContainer.bind<AbstractBlogService>(IOC_TYPES.BlogService).to(_deprecatedBlogsService).inSingletonScope();
+iocContainer.bind<AbstractBlogController>(IOC_TYPES.BlogController).to(_deprecatedBlogsController).inSingletonScope();
 
 const blogController = iocContainer.get<AbstractBlogController>(IOC_TYPES.BlogController);
 const blogService = iocContainer.get<AbstractBlogService>(IOC_TYPES.BlogService);

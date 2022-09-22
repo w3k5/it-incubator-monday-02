@@ -1,13 +1,10 @@
-import { injectable } from 'inversify';
-import { AbstractDateService } from './interfaces';
+import { Injectable } from '@nestjs/common';
+import { AbstractDateService } from '../dateService/interfaces';
 import { IsoDate } from '../../modules/_base/types';
 
 const dayjs = require('dayjs');
 
-@injectable()
-/**
- * @deprecated
- */
+@Injectable()
 export class DateService implements AbstractDateService {
 	/**
 	 * @deprecated требуется хранить в базе реальную дату, а не строку

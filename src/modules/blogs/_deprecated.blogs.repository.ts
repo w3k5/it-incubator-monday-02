@@ -2,10 +2,10 @@ import { AbstractBlogDatabaseRepository } from './types/blogs.repository.types';
 import { inject, injectable } from 'inversify';
 import { LogicalBaseRepository } from '../_base/repository';
 import { IOC_TYPES } from '../../_inversify/inversify.types';
-import { DateServiceInterface } from '../../services/dateService/interfaces';
-import { CreateBlogRepositoryDto } from './dto/createBlogRepositoryDto';
+import { AbstractDateService } from '../../services/dateService/interfaces';
+import { _deprecatedCreateBlogRepositoryDto } from './dto/_deprecated.createBlogRepositoryDto';
 import { BlogDatabase } from './entities';
-import { UpdateBlogRepositoryDto } from './dto/updateBlogRepositoryDto';
+import { _deprecatedUpdateBlogRepositoryDto } from './dto/_deprecated.updateBlogRepositoryDto';
 import { GetAllBlogQueryParams } from './types/_blog.common.types';
 import { GetAllRepositoryResponse, ModelID } from '../_base/types';
 import { BlogModel } from './blogs.schema';
@@ -13,12 +13,20 @@ import { SortDirectionEnum } from '../../enums';
 import { Nullable } from '../../_common/types';
 
 @injectable()
-export class BlogsDatabaseRepository extends LogicalBaseRepository implements AbstractBlogDatabaseRepository {
-	constructor(@inject(IOC_TYPES.DateService) private readonly dateService: DateServiceInterface) {
+export class _deprecatedBlogsDatabaseRepository
+	extends LogicalBaseRepository
+	implements AbstractBlogDatabaseRepository
+{
+	constructor(@inject(IOC_TYPES.DateService) private readonly dateService: AbstractDateService) {
 		super();
 	}
 
-	create({ name, youtubeUrl }: CreateBlogRepositoryDto): Promise<BlogDatabase> {
+	/**
+	 * @deprecated
+	 * @param name
+	 * @param youtubeUrl
+	 */
+	create({ name, youtubeUrl }: _deprecatedCreateBlogRepositoryDto): Promise<BlogDatabase> {
 		const createdAt = this.dateService.iso();
 		return BlogModel.create({ name, youtubeUrl, createdAt });
 	}
@@ -66,7 +74,7 @@ export class BlogsDatabaseRepository extends LogicalBaseRepository implements Ab
 		return candidate || null;
 	}
 
-	async updateById(_id: ModelID, { name, youtubeUrl }: UpdateBlogRepositoryDto): Promise<boolean> {
+	async updateById(_id: ModelID, { name, youtubeUrl }: _deprecatedUpdateBlogRepositoryDto): Promise<boolean> {
 		const updated = await BlogModel.updateOne({ _id }, { name, youtubeUrl });
 		return !!updated.modifiedCount;
 	}

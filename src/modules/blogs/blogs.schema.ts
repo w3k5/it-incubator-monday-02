@@ -9,4 +9,4 @@ const BlogSchema = new Schema<BlogDatabase>({
 
 const BlogModel = mongoose.model('blogs', BlogSchema);
 
-export { BlogModel };
+export { BlogModel, BlogSchema };

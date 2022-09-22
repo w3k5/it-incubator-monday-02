@@ -2,7 +2,7 @@ import { NextFunction, Response } from 'express';
 import { BlogInputInterface, BlogOutputInterface } from '../entities';
 import { GetAllBlogQueryParams } from './_blog.common.types';
 import { ModelID } from '../../_base/types';
-import { UpdateBlogRepositoryDto } from '../dto/updateBlogRepositoryDto';
+import { _deprecatedUpdateBlogRepositoryDto } from '../dto/_deprecated.updateBlogRepositoryDto';
 import {
 	EmptyResponse,
 	GetAllEntities,
@@ -44,7 +44,7 @@ type CreateBlogControllerHandler = (
 ) => Promise<CreateBlogControllerResponse>;
 
 // Update Blog (Request, Response, Method)
-type UpdateBlogControllerRequest = RequestWithBodyAndParams<UpdateBlogRepositoryDto, { id: ModelID }>;
+type UpdateBlogControllerRequest = RequestWithBodyAndParams<_deprecatedUpdateBlogRepositoryDto, { id: ModelID }>;
 type UpdateBlogControllerResponse = Response<boolean>;
 type UpdateBlogControllerHandler = (
 	request: UpdateBlogControllerRequest,

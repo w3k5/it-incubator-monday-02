@@ -1,16 +1,16 @@
 import { inject, injectable } from 'inversify';
+import { ObjectId } from 'mongodb';
 import { AbstractCommentsRepository } from './types/comments.repository.abstract';
 import { CreateCommentDatabaseDto, CreateCommentDto } from './dto/createComment.dto';
 import { CommentDatabaseModel } from './entities';
 import { CommentModel } from './comments.schema';
-import { ObjectId } from 'mongodb';
 import { IOC_TYPES } from '../../_inversify/inversify.types';
-import { DateServiceInterface } from '../../services/dateService/interfaces';
+import { AbstractDateService } from '../../services/dateService/interfaces';
 import { ModelID } from '../_base/types';
 
 @injectable()
 export class CommentsRepository implements AbstractCommentsRepository {
-	constructor(@inject(IOC_TYPES.DateService) private readonly dateService: DateServiceInterface) {}
+	constructor(@inject(IOC_TYPES.DateService) private readonly dateService: AbstractDateService) {}
 
 	async create({ userId, userLogin, content, postId }: CreateCommentDatabaseDto): Promise<CommentDatabaseModel> {
 		const convertedUserId = this.convertIdToMongoId(userId);
@@ -26,10 +26,6 @@ export class CommentsRepository implements AbstractCommentsRepository {
 		});
 	}
 
-	async drop(): Promise<void> {
-		await CommentModel.deleteMany({});
-	}
-
 	private convertIdToMongoId(id: ModelID) {
 		return new ObjectId(id);
 	}
@@ -42,5 +38,9 @@ export class CommentsRepository implements AbstractCommentsRepository {
 	async delete(_id: ModelID): Promise<boolean> {
 		const deleteResult = await CommentModel.deleteOne({ _id });
 		return !!deleteResult.deletedCount;
+	}
+
+	async drop(): Promise<void> {
+		await CommentModel.deleteMany({});
 	}
 }

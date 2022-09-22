@@ -2,9 +2,11 @@ import { runDb } from './db';
 import { app as expressApp } from './app';
 import { NestFactory } from '@nestjs/core';
 import { ExpressAdapter } from '@nestjs/platform-express';
-import { AppModule } from './modules/app/app.module';
+import { AppModule } from './app.module';
 import { BadRequestException, ValidationPipe } from '@nestjs/common';
 import { HttpExceptionFilter } from './_common/errors/exception-filters/http-exception.filter';
+import { BadRequestEmptyExceptionFilter } from './_common/errors/exception-filters/bad-request-empty-exception.filter';
+import { BadRequestExceptionFilter } from './_common/errors/exception-filters/bad-request-exception.filter';
 
 const port = process.env.PORT || 3000;
 
@@ -28,7 +30,7 @@ const bootstrap = async () => {
 			},
 		}),
 	);
-	app.useGlobalFilters(new HttpExceptionFilter());
+	app.useGlobalFilters(new BadRequestEmptyExceptionFilter(), new BadRequestExceptionFilter());
 	await app.listen(port);
 	console.log(`IT-Incubator has been started at port: ${port}`);
 };

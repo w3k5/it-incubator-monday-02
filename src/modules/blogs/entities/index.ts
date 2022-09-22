@@ -14,4 +14,4 @@ type BlogInputInterface = BlogBaseModel;
 
 type BlogDatabase = BlogBaseModel & DatabaseInterfaceV2;
 
-export { BlogOutputInterface, BlogInputInterface, BlogDatabase };
+export { BlogOutputInterface, BlogInputInterface, BlogDatabase, BlogBaseModel };

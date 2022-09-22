@@ -9,7 +9,7 @@ import { loggerMiddleware } from './middlewares/loggerMiddleware';
 
 import { testingRouter } from './routes/testing-router';
 import { userRouter } from './modules/user/router';
-import { blogsRouter } from './modules/blogs/blogs.router';
+import { _deprecatedBlogsRouter } from './modules/blogs/_deprecated.blogs.router';
 import { postRouter } from './modules/post/post.router';
 import { InversifyExpressServer } from 'inversify-express-utils';
 import { iocContainer } from './_inversify/inversify.config';
@@ -42,7 +42,7 @@ expressApp.use(blackListMiddleware);
  * Routes
  */
 expressApp.use('/posts', postRouter);
-expressApp.use('/blogs', blogsRouter);
+expressApp.use('/blogs', _deprecatedBlogsRouter);
 expressApp.use('/testing', testingRouter);
 expressApp.use('/users', userRouter);
 import './modules/comments/comments.controller';

@@ -2,14 +2,16 @@ import { ExceptionFilter, Catch, ArgumentsHost, HttpException, BadRequestExcepti
 import { Response } from 'express';
 import { ErrorInterface } from '@app/interfaces';
 
-@Catch(HttpException)
-export class HttpExceptionFilter implements ExceptionFilter {
+@Catch(BadRequestException)
+export class BadRequestExceptionFilter implements ExceptionFilter {
 	catch(exception: HttpException, host: ArgumentsHost) {
-		console.log(1);
 		const ctx = host.switchToHttp();
 		const response = ctx.getResponse<Response>();
 		const status = exception.getStatus();
+		const message = (exception.getResponse() as any).message as ErrorInterface[];
 
-		response.status(status).send();
+		response.status(status).json({
+			errorsMessages: message,
+		});
 	}
 }

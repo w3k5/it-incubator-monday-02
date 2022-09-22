@@ -2,7 +2,7 @@ import { LogicalBaseRepository } from '../_base/repository';
 import { AbstractPostDatabaseRepository } from './types/post.repository.types';
 import { inject, injectable } from 'inversify';
 import { IOC_TYPES } from '../../_inversify/inversify.types';
-import { DateServiceInterface } from '../../services/dateService/interfaces';
+import { AbstractDateService } from '../../services/dateService/interfaces';
 import { GetAllPostQueryParams } from './types/_post.common.types';
 import { UpdatePostRepositoryDto } from './dto/updatePostRepositoryDto';
 import { GetAllRepositoryResponse, ModelID } from '../_base/types';
@@ -14,7 +14,7 @@ import { Nullable } from '../../_common/types';
 
 @injectable()
 export class PostDatabaseRepository extends LogicalBaseRepository implements AbstractPostDatabaseRepository {
-	constructor(@inject(IOC_TYPES.DateService) private readonly dateService: DateServiceInterface) {
+	constructor(@inject(IOC_TYPES.DateService) private readonly dateService: AbstractDateService) {
 		super();
 	}
 

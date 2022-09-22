@@ -4,7 +4,7 @@ import { CreateUserRepositoryDto } from '@models/user/types/dto/createUserReposi
 import { UserDatabase } from '@models/user/types/entities';
 import { UserModel } from '../schema';
 import { IOC_TYPES } from '../../../_inversify/inversify.types';
-import { DateServiceInterface } from '../../../services/dateService/interfaces';
+import { AbstractDateService } from '../../../services/dateService/interfaces';
 import { GetAllUsersQueryParams } from '@models/user/controllers/controller.types';
 import { SortDirectionEnum } from '../../../enums';
 import { LogicalBaseRepository } from '../../_base/repository';
@@ -12,7 +12,7 @@ import { GetAllRepositoryResponse } from '../../_base/types';
 
 @injectable()
 export class UserDatabaseRepository extends LogicalBaseRepository implements AbstractUserDatabaseRepository {
-	constructor(@inject(IOC_TYPES.DateService) private readonly dateService: DateServiceInterface) {
+	constructor(@inject(IOC_TYPES.DateService) private readonly dateService: AbstractDateService) {
 		super();
 	}
 

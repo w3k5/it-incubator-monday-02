@@ -1,7 +1,7 @@
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import { faker } from '@faker-js/faker';
 import { blogService, postService, userService } from '../../../_inversify/inversify.config';
-import mongoose from 'mongoose';
+import mongoose, { Connection } from 'mongoose';
 import { PostInputInterface, PostOutputInterface } from '../../post/entities';
 import request from 'supertest';
 import { app } from '../../../app';
@@ -9,6 +9,13 @@ import { BlogInputInterface, BlogOutputInterface } from '../entities';
 import { HttpStatusesEnum } from '../../../enums';
 import { GetAllEntities } from '../../../_common/types';
 import { ErrorInterface } from '../../../interfaces';
+import { NestExpressApplication } from '@nestjs/platform-express';
+import { INestApplication } from '@nestjs/common';
+import { BlogsModule } from '../blogs.module';
+import { Test } from '@nestjs/testing';
+import { getConnectionToken, MongooseModule } from '@nestjs/mongoose';
+import { CreateBlogDto } from '../dto/createBlog.dto';
+import supertest from 'supertest';
 
 describe('e2e Blog Router Tests', () => {
 	const adminLogin = process.env.LOGIN;
@@ -20,7 +27,7 @@ describe('e2e Blog Router Tests', () => {
 
 	let mongoServer: MongoMemoryServer;
 
-	const createFakeValidBlog = (): BlogInputInterface => {
+	const createFakeValidBlog = (): CreateBlogDto => {
 		return {
 			youtubeUrl: faker.internet.url(),
 			name: faker.internet.userName().slice(0, 7),
@@ -65,6 +72,7 @@ describe('e2e Blog Router Tests', () => {
 	afterEach(async () => {
 		// await userService.drop();
 	});
+
 	describe('Get Posts by Blog ID', () => {
 		const firstValidUser: BlogInputInterface = createFakeValidBlog();
 		const secondValidUser: BlogInputInterface = createFakeValidBlog();
