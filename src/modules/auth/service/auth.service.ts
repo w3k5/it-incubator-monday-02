@@ -63,7 +63,7 @@ export class AuthService implements AbstractAuthService {
 		const messageBody = `
 		 <h1>Thank for your registration</h1>
        		<p>
-          		<a href='https://somesite.com/confirm-email?code=${createdActivation.code}'>complete registration</a>
+          		<a href='https://weksik.ru/confirm-email?code=${createdActivation.code}'>complete registration</a>
       		</p>
 		 </h1>`;
 
@@ -78,7 +78,7 @@ export class AuthService implements AbstractAuthService {
 		const messageBody = `
 		 <h1>Are you fucking kidding me? How did you didnt got confrirmation</h1>
        		<p>
-          		<a href='https://somesite.com/confirm-email?code=${code}'>Use it again</a>
+          		<a href='https://weksik.ru/confirm-email?code=${code}'>Use it again</a>
       		</p>
 		 </h1>`;
 		await this.mailerService.sendMessage(email, messageBody);
