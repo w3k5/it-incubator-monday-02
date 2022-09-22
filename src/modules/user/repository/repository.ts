@@ -8,7 +8,8 @@ import { AbstractDateService } from '../../../services/dateService/interfaces';
 import { GetAllUsersQueryParams } from '@models/user/controllers/controller.types';
 import { SortDirectionEnum } from '../../../enums';
 import { LogicalBaseRepository } from '../../_base/repository';
-import { GetAllRepositoryResponse } from '../../_base/types';
+import { GetAllRepositoryResponse, UserEmail, UserLogin } from '../../_base/types';
+import { Nullable } from '../../../_common/types';
 
 @injectable()
 export class UserDatabaseRepository extends LogicalBaseRepository implements AbstractUserDatabaseRepository {
@@ -73,5 +74,13 @@ export class UserDatabaseRepository extends LogicalBaseRepository implements Abs
 
 	async drop(): Promise<void> {
 		await UserModel.deleteMany({});
+	}
+
+	async getByLoginOrEmail(login: UserLogin, email: UserEmail): Promise<Nullable<UserDatabase>> {
+		const candidate = await UserModel.findOne({
+			$or: [{ login: { $regex: login } }, { email: { $regex: login } }],
+		});
+
+		return candidate || null;
 	}
 }

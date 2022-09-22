@@ -59,13 +59,16 @@ export class AuthController extends BaseHttpController implements AbstractAuthCo
 	async registration(@response() response: Response, @requestBody() body: RegisterBodyDto) {
 		try {
 			const validatedBody = await transformAndValidate(RegisterBodyDto, body);
-			const userCandidate = await this.userDatabaseRepository.getByLogin(validatedBody.email);
+			const userCandidate = await this.userDatabaseRepository.getByLoginOrEmail(
+				validatedBody.login,
+				validatedBody.email,
+			);
 			if (userCandidate) {
 				const errorMessage: ErrorMessageInterface = {
 					errorsMessages: [
 						{
 							message: 'User with that email already exists',
-							field: 'email',
+							field: 'login',
 						},
 					],
 				};
@@ -96,7 +99,7 @@ export class AuthController extends BaseHttpController implements AbstractAuthCo
 					errorsMessages: [
 						{
 							message: 'User already activated',
-							field: 'email',
+							field: 'code',
 						},
 					],
 				};
@@ -122,7 +125,15 @@ export class AuthController extends BaseHttpController implements AbstractAuthCo
 			const validatedBody = await transformAndValidate(ResendingCodeBodyDto, resendingCodeBody);
 			const userCandidate = await this.userDatabaseRepository.getByLogin(validatedBody.email);
 			if (!userCandidate) {
-				return response.status(HttpStatusesEnum.NO_CONTENT).send();
+				const errorMessage: ErrorMessageInterface = {
+					errorsMessages: [
+						{
+							message: 'User with that email is not exists',
+							field: 'email',
+						},
+					],
+				};
+				return response.status(HttpStatusesEnum.BAD_REQUEST).send(errorMessage);
 			}
 			const activationCandidate = await this.activationQueryRepository.getActivationInstanceByUserId(userCandidate._id);
 			if (!activationCandidate) {
@@ -134,7 +145,7 @@ export class AuthController extends BaseHttpController implements AbstractAuthCo
 					errorsMessages: [
 						{
 							message: 'User already activated',
-							field: 'email',
+							field: 'code',
 						},
 					],
 				};
