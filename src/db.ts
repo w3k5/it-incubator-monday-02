@@ -7,7 +7,7 @@ const dbUri = process.env.MONGO_URI;
 
 if (!dbUri) {
 	console.log('process env', process.env);
-	throw new Error('MongoDB URI is not defined!');
+	throw new Error('Something wrong with MongoDB uri');
 }
 
 export const runDb = async () => {
