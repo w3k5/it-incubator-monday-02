@@ -1,8 +1,8 @@
 version: '3.9'
 services:
   api:
-    image: incubator-api:2
     build: .
+    image: "incubator-api:3"
     ports:
       - 3000:3000
     network_mode: bridge
