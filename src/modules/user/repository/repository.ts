@@ -66,7 +66,15 @@ export class UserDatabaseRepository extends LogicalBaseRepository implements Abs
 
 	async getByLogin(login: string): Promise<UserDatabase | null> {
 		const candidate = await UserModel.findOne({
-			$or: [{ login: { $regex: login } }, { email: { $regex: login } }],
+			$or: [{ login: { $regex: login } }],
+		});
+
+		return candidate || null;
+	}
+
+	async getByEmail(email: UserEmail): Promise<Nullable<UserDatabase>> {
+		const candidate = await UserModel.findOne({
+			$or: [{ email: { $regex: email } }],
 		});
 
 		return candidate || null;

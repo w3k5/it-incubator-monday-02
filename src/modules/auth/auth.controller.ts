@@ -1,21 +1,21 @@
-import { BaseHttpController, controller, httpPost, request, requestBody, response } from 'inversify-express-utils';
-import { AbstractAuthController, LoginRequest, LoginResponse } from './controller/auth.controller.types';
-import { inject } from 'inversify';
-import { IOC_TYPES, REPOSITORIES_TYPES, SERVICES_TYPES } from '../../_inversify/inversify.types';
-import { AbstractAuthService } from './service/auth.service.types';
-import { AbstractTokenService, Token } from '../../services/tokenService/interfaces';
-import { AbstractErrorBoundaryService } from '../../_common/errors/errorBoundaryService.types';
-import { HttpStatusesEnum } from '../../enums';
-import { LoginBodyDto } from './dto/loginBody.dto';
-import { transformAndValidate } from 'class-transformer-validator';
-import { Response } from 'express';
-import { RegisterBodyDto } from './dto/registerBody.dto';
-import { ConfirmationCodeBodyDto } from './dto/confirmationCodeBody.dto';
-import { AbstractActivationService } from '../activation/types/activation.service.abstract';
-import { ResendingCodeBodyDto } from './dto/resendingCodeBody.dto';
-import { AbstractUserDatabaseRepository } from '../user/repository/_repository.types';
-import { AbstractActivationRepositoryQuery } from '../activation/types/activation.repository.query.abstract';
-import { ErrorMessageInterface } from '@app/interfaces';
+import {BaseHttpController, controller, httpPost, request, requestBody, response} from 'inversify-express-utils';
+import {AbstractAuthController, LoginRequest, LoginResponse} from './controller/auth.controller.types';
+import {inject} from 'inversify';
+import {IOC_TYPES, REPOSITORIES_TYPES, SERVICES_TYPES} from '../../_inversify/inversify.types';
+import {AbstractAuthService} from './service/auth.service.types';
+import {AbstractTokenService, Token} from '../../services/tokenService/interfaces';
+import {AbstractErrorBoundaryService} from '../../_common/errors/errorBoundaryService.types';
+import {HttpStatusesEnum} from '../../enums';
+import {LoginBodyDto} from './dto/loginBody.dto';
+import {transformAndValidate} from 'class-transformer-validator';
+import {Response} from 'express';
+import {RegisterBodyDto} from './dto/registerBody.dto';
+import {ConfirmationCodeBodyDto} from './dto/confirmationCodeBody.dto';
+import {AbstractActivationService} from '../activation/types/activation.service.abstract';
+import {ResendingCodeBodyDto} from './dto/resendingCodeBody.dto';
+import {AbstractUserDatabaseRepository} from '../user/repository/_repository.types';
+import {AbstractActivationRepositoryQuery} from '../activation/types/activation.repository.query.abstract';
+import {ErrorMessageInterface} from '@app/interfaces';
 
 @controller('/auth')
 export class AuthController extends BaseHttpController implements AbstractAuthController {
@@ -44,7 +44,7 @@ export class AuthController extends BaseHttpController implements AbstractAuthCo
 				login: validatedBody.login,
 				password: validatedBody.password,
 			});
-			return response.status(HttpStatusesEnum.OK).send({ accessToken: result });
+			return response.status(HttpStatusesEnum.OK).send({accessToken: result});
 		} catch (error) {
 			if (Array.isArray(error)) {
 				return response
@@ -59,16 +59,26 @@ export class AuthController extends BaseHttpController implements AbstractAuthCo
 	async registration(@response() response: Response, @requestBody() body: RegisterBodyDto) {
 		try {
 			const validatedBody = await transformAndValidate(RegisterBodyDto, body);
-			const userCandidate = await this.userDatabaseRepository.getByLoginOrEmail(
-				validatedBody.login,
-				validatedBody.email,
-			);
-			if (userCandidate) {
+			const userCandidateByLogin = await this.userDatabaseRepository.getByLogin(validatedBody.login);
+			const userCandidateByEmail = await this.userDatabaseRepository.getByEmail(validatedBody.email);
+			if (userCandidateByLogin) {
+				const errorMessage: ErrorMessageInterface = {
+					errorsMessages: [
+						{
+							message: 'User with that login already exists',
+							field: 'login',
+						},
+					],
+				};
+				return response.status(HttpStatusesEnum.BAD_REQUEST).send(errorMessage);
+			}
+
+			if (userCandidateByEmail) {
 				const errorMessage: ErrorMessageInterface = {
 					errorsMessages: [
 						{
 							message: 'User with that email already exists',
-							field: 'login',
+							field: 'email',
 						},
 					],
 				};
@@ -145,7 +155,7 @@ export class AuthController extends BaseHttpController implements AbstractAuthCo
 					errorsMessages: [
 						{
 							message: 'User already activated',
-							field: 'code',
+							field: 'email',
 						},
 					],
 				};
