@@ -27,7 +27,7 @@ export class AuthService implements AbstractAuthService {
 	) {}
 
 	public async auth({ login, password }: LoginUserDto): Promise<Token> {
-		const candidate = await this.userRepository.getByLogin(login);
+		const candidate = await this.userRepository.getByLoginOrEmail(login);
 
 		if (!candidate) {
 			throw new NotAuthorizedError();
@@ -75,10 +75,11 @@ export class AuthService implements AbstractAuthService {
 	}
 
 	public async resendConfirmation(email: UserEmail, code: string): Promise<void> {
+		const newCode = this.activationService.updateActivationCode(code);
 		const messageBody = `
 		 <h1>Are you fucking kidding me? How did you didnt got confrirmation</h1>
        		<p>
-          		<a href='https://weksik.ru/confirm-email?code=${code}'>Use it again</a>
+          		<a href='https://weksik.ru/confirm-email?code=${newCode}'>Use it again</a>
       		</p>
 		 </h1>`;
 		await this.mailerService.sendMessage(email, messageBody);

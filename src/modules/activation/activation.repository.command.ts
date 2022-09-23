@@ -25,4 +25,9 @@ export class ActivationRepositoryCommand implements AbstractActivationRepository
 		const activationResult = await ActivationModel.updateOne({ code }, { isActivated: true });
 		return !!activationResult.modifiedCount;
 	}
+
+	async updateActivationCode(oldCode: UUIDV4, newCode: UUIDV4): Promise<boolean> {
+		const updateResult = await ActivationModel.updateOne({ code: oldCode }, { code: newCode });
+		return !!updateResult.modifiedCount;
+	}
 }

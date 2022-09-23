@@ -7,4 +7,5 @@ export abstract class AbstractActivationRepositoryCommand implements AbstractBas
 	abstract drop: () => Promise<void>;
 	abstract createActivation: (dto: CreateActivationServiceDatabaseModel) => Promise<ActivationDatabaseModel>;
 	abstract activate: (code: UUIDV4) => Promise<boolean>;
+	abstract updateActivationCode: (oldCode: UUIDV4, newCode: UUIDV4) => Promise<boolean>;
 }

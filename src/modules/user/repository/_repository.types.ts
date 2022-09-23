@@ -12,5 +12,5 @@ export abstract class AbstractUserDatabaseRepository implements AbstractBaseRepo
 	abstract getAll: (params: GetAllUsersQueryParams) => Promise<GetAllRepositoryResponse<UserDatabase>>;
 	abstract getByLogin: (login: UserLogin) => Promise<Nullable<UserDatabase>>;
 	abstract getByEmail: (email: UserEmail) => Promise<Nullable<UserDatabase>>;
-	abstract getByLoginOrEmail: (login: UserLogin, email: UserEmail) => Promise<Nullable<UserDatabase>>;
+	abstract getByLoginOrEmail: (login: UserLogin | UserEmail) => Promise<Nullable<UserDatabase>>;
 }

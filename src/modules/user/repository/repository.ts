@@ -84,7 +84,7 @@ export class UserDatabaseRepository extends LogicalBaseRepository implements Abs
 		await UserModel.deleteMany({});
 	}
 
-	async getByLoginOrEmail(login: UserLogin, email: UserEmail): Promise<Nullable<UserDatabase>> {
+	async getByLoginOrEmail(login: UserLogin | UserEmail): Promise<Nullable<UserDatabase>> {
 		const candidate = await UserModel.findOne({
 			$or: [{ login: { $regex: login } }, { email: { $regex: login } }],
 		});
