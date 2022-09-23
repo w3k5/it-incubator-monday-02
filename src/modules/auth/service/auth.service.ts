@@ -75,7 +75,7 @@ export class AuthService implements AbstractAuthService {
 	}
 
 	public async resendConfirmation(email: UserEmail, code: string): Promise<void> {
-		const newCode = this.activationService.updateActivationCode(code);
+		const newCode = await this.activationService.updateActivationCode(code);
 		const messageBody = `
 		 <h1>Are you fucking kidding me? How did you didnt got confrirmation</h1>
        		<p>

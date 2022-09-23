@@ -1,7 +1,7 @@
 version: '3.9'
 services:
   api:
-    image: incubator-api:1
+    image: incubator-api:2
     build: .
     ports:
       - 3000:3000
