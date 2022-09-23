@@ -1,21 +1,21 @@
-import {BaseHttpController, controller, httpPost, request, requestBody, response} from 'inversify-express-utils';
-import {AbstractAuthController, LoginRequest, LoginResponse} from './controller/auth.controller.types';
-import {inject} from 'inversify';
-import {IOC_TYPES, REPOSITORIES_TYPES, SERVICES_TYPES} from '../../_inversify/inversify.types';
-import {AbstractAuthService} from './service/auth.service.types';
-import {AbstractTokenService, Token} from '../../services/tokenService/interfaces';
-import {AbstractErrorBoundaryService} from '../../_common/errors/errorBoundaryService.types';
-import {HttpStatusesEnum} from '../../enums';
-import {LoginBodyDto} from './dto/loginBody.dto';
-import {transformAndValidate} from 'class-transformer-validator';
-import {Response} from 'express';
-import {RegisterBodyDto} from './dto/registerBody.dto';
-import {ConfirmationCodeBodyDto} from './dto/confirmationCodeBody.dto';
-import {AbstractActivationService} from '../activation/types/activation.service.abstract';
-import {ResendingCodeBodyDto} from './dto/resendingCodeBody.dto';
-import {AbstractUserDatabaseRepository} from '../user/repository/_repository.types';
-import {AbstractActivationRepositoryQuery} from '../activation/types/activation.repository.query.abstract';
-import {ErrorMessageInterface} from '@app/interfaces';
+import { BaseHttpController, controller, httpPost, request, requestBody, response } from 'inversify-express-utils';
+import { AbstractAuthController, LoginRequest, LoginResponse } from './controller/auth.controller.types';
+import { inject } from 'inversify';
+import { IOC_TYPES, REPOSITORIES_TYPES, SERVICES_TYPES } from '../../_inversify/inversify.types';
+import { AbstractAuthService } from './service/auth.service.types';
+import { AbstractTokenService, Token } from '../../services/tokenService/interfaces';
+import { AbstractErrorBoundaryService } from '../../_common/errors/errorBoundaryService.types';
+import { HttpStatusesEnum } from '../../enums';
+import { LoginBodyDto } from './dto/loginBody.dto';
+import { transformAndValidate } from 'class-transformer-validator';
+import { Response } from 'express';
+import { RegisterBodyDto } from './dto/registerBody.dto';
+import { ConfirmationCodeBodyDto } from './dto/confirmationCodeBody.dto';
+import { AbstractActivationService } from '../activation/types/activation.service.abstract';
+import { ResendingCodeBodyDto } from './dto/resendingCodeBody.dto';
+import { AbstractUserDatabaseRepository } from '../user/repository/_repository.types';
+import { AbstractActivationRepositoryQuery } from '../activation/types/activation.repository.query.abstract';
+import { ErrorMessageInterface } from '@app/interfaces';
 
 @controller('/auth')
 export class AuthController extends BaseHttpController implements AbstractAuthController {
@@ -44,7 +44,7 @@ export class AuthController extends BaseHttpController implements AbstractAuthCo
 				login: validatedBody.login,
 				password: validatedBody.password,
 			});
-			return response.status(HttpStatusesEnum.OK).send({accessToken: result});
+			return response.status(HttpStatusesEnum.OK).send({ accessToken: result });
 		} catch (error) {
 			if (Array.isArray(error)) {
 				return response
@@ -62,27 +62,15 @@ export class AuthController extends BaseHttpController implements AbstractAuthCo
 			const userCandidateByLogin = await this.userDatabaseRepository.getByLogin(validatedBody.login);
 			const userCandidateByEmail = await this.userDatabaseRepository.getByEmail(validatedBody.email);
 			if (userCandidateByLogin) {
-				const errorMessage: ErrorMessageInterface = {
-					errorsMessages: [
-						{
-							message: 'User with that login already exists',
-							field: 'login',
-						},
-					],
-				};
-				return response.status(HttpStatusesEnum.BAD_REQUEST).send(errorMessage);
+				return response
+					.status(HttpStatusesEnum.BAD_REQUEST)
+					.send(this.generateError('User with that login' + ' already exists', 'login'));
 			}
 
 			if (userCandidateByEmail) {
-				const errorMessage: ErrorMessageInterface = {
-					errorsMessages: [
-						{
-							message: 'User with that email already exists',
-							field: 'email',
-						},
-					],
-				};
-				return response.status(HttpStatusesEnum.BAD_REQUEST).send(errorMessage);
+				return response
+					.status(HttpStatusesEnum.BAD_REQUEST)
+					.send(this.generateError('User with that email already exists', 'email'));
 			}
 			const result = await this.authService.registration(validatedBody);
 			return response.status(HttpStatusesEnum.NO_CONTENT).send();
@@ -105,15 +93,7 @@ export class AuthController extends BaseHttpController implements AbstractAuthCo
 			const validateBody = await transformAndValidate(ConfirmationCodeBodyDto, confirmationCodeBodyDto);
 			const isNotActivated = await this.activationService.activate(validateBody.code);
 			if (!isNotActivated) {
-				const errorMessage: ErrorMessageInterface = {
-					errorsMessages: [
-						{
-							message: 'User already activated',
-							field: 'code',
-						},
-					],
-				};
-				return response.status(HttpStatusesEnum.BAD_REQUEST).send(errorMessage);
+				return response.status(HttpStatusesEnum.BAD_REQUEST).send(this.generateError('User already activated', 'code'));
 			}
 			return response.status(HttpStatusesEnum.NO_CONTENT).send();
 		} catch (error) {
@@ -133,17 +113,11 @@ export class AuthController extends BaseHttpController implements AbstractAuthCo
 	) {
 		try {
 			const validatedBody = await transformAndValidate(ResendingCodeBodyDto, resendingCodeBody);
-			const userCandidate = await this.userDatabaseRepository.getByLogin(validatedBody.email);
+			const userCandidate = await this.userDatabaseRepository.getByEmail(validatedBody.email);
 			if (!userCandidate) {
-				const errorMessage: ErrorMessageInterface = {
-					errorsMessages: [
-						{
-							message: 'User with that email is not exists',
-							field: 'email',
-						},
-					],
-				};
-				return response.status(HttpStatusesEnum.BAD_REQUEST).send(errorMessage);
+				return response
+					.status(HttpStatusesEnum.BAD_REQUEST)
+					.send(this.generateError('User with that email is not exists', 'email'));
 			}
 			const activationCandidate = await this.activationQueryRepository.getActivationInstanceByUserId(userCandidate._id);
 			if (!activationCandidate) {
@@ -151,15 +125,9 @@ export class AuthController extends BaseHttpController implements AbstractAuthCo
 			}
 
 			if (activationCandidate.isActivated) {
-				const errorMessage: ErrorMessageInterface = {
-					errorsMessages: [
-						{
-							message: 'User already activated',
-							field: 'email',
-						},
-					],
-				};
-				return response.status(HttpStatusesEnum.BAD_REQUEST).send(errorMessage);
+				return response
+					.status(HttpStatusesEnum.BAD_REQUEST)
+					.send(this.generateError('User already activated', 'email'));
 			}
 
 			await this.authService.resendConfirmation(validatedBody.email, activationCandidate.code);
@@ -173,5 +141,16 @@ export class AuthController extends BaseHttpController implements AbstractAuthCo
 			}
 			return this.errorBoundary.sendError<Response>(response, error);
 		}
+	}
+
+	private generateError(message: string, field: string): ErrorMessageInterface {
+		return {
+			errorsMessages: [
+				{
+					message,
+					field,
+				},
+			],
+		};
 	}
 }
